@@ -1,6 +1,7 @@
 'use client';
 
 import Navigation from '@/app/_components/nav/Navigation';
+import ProgressBar from '@/app/_components/tasks/ProgressBar';
 import TaskListItem from '@/app/_components/tasks/TaskListItem';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -42,6 +43,7 @@ export default function Dashboard() {
       is_completed: false,
     },
   ]);
+  const [finishedTaskCount, setFinishedTaskCount] = useState(0);
 
   const handleCheckClick = (taskId: number) => {
     setMockData(prev =>
@@ -69,6 +71,10 @@ export default function Dashboard() {
     console.log(today);
   }, [today]);
 
+  useEffect(() => {
+    setFinishedTaskCount(mockData.filter(task => task.is_completed).length);
+  }, [mockData]);
+
   return (
     <div className='flex h-full min-h-screen min-w-[1440px] bg-[#FAFAFA]'>
       <Navigation />
@@ -89,12 +95,12 @@ export default function Dashboard() {
           </div>
           <div className='text-secondary-500 mt-[35px] mb-[12px] flex justify-between text-[20px] font-semibold'>
             <span>Task Done</span>
-            <span>1/5</span>
+            <span>{`${finishedTaskCount} / ${mockData.length}`}</span>
           </div>
-          <div className='relative h-[8px] rounded-[8px] bg-[#546fff47]'>
-            <div className='bg-primary-500 h-[8px] w-[140px] rounded-[8px]'></div>
-            <div className='bg-primary-500 border-primary-0 absolute top-[-4px] left-[132px] h-[16px] w-[16px] rounded-[16px] border-2'></div>
-          </div>
+          <ProgressBar
+            finishedTaskCount={finishedTaskCount}
+            totalTaskCount={mockData.length}
+          />
           <div className='text-secondary-500 mt-[14px]'>
             <ul className='flex flex-col gap-y-[10px]'>
               {mockData.map((task, index) => {
