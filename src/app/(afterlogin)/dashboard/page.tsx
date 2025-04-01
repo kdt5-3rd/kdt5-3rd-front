@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 export default function Dashboard() {
+  const [currentTime, setCurrentTime] = useState('');
   const [today, setToday] = useState('');
   const [mockData, setMockData] = useState([
     {
@@ -45,6 +46,17 @@ export default function Dashboard() {
   ]);
   const [finishedTaskCount, setFinishedTaskCount] = useState(0);
 
+  const getCurrentTime = () => {
+    const currentDate = new Date();
+    const timeString = Intl.DateTimeFormat('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    }).format(currentDate);
+
+    setCurrentTime(timeString);
+  };
+
   const handleCheckClick = (taskId: number) => {
     setMockData(prev =>
       prev.map(task =>
@@ -54,6 +66,15 @@ export default function Dashboard() {
       ),
     );
   };
+
+  useEffect(() => {
+    getCurrentTime();
+    const interval = setInterval(() => {
+      getCurrentTime();
+    }, 1000);
+
+    return () => clearInterval(interval);
+  });
 
   useEffect(() => {
     const todayDate = new Date();
@@ -67,8 +88,6 @@ export default function Dashboard() {
         ' ' +
         weekday,
     );
-
-    console.log(today);
   }, [today]);
 
   useEffect(() => {
@@ -120,7 +139,7 @@ export default function Dashboard() {
       <div className='w-[436px] shrink-0 bg-[#F5F5F7]'>
         <div className='px-[32px] pt-[49px]'>
           <div className='text-secondary-500 text-[40px] font-medium'>
-            7:10 AM
+            {currentTime}
           </div>
           <div className='text-secondary-500 bg-primary-0 border-primary-100 mt-[26px] w-full rounded-[10px] border-1 px-[22px] py-[17px]'>
             <div className='flex items-center text-[24px] font-medium'>
