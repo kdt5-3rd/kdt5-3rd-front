@@ -1,11 +1,13 @@
 'use client';
 
+import TaskListItem from '@/app/_components/tasks/TaskListItem';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Dashboard() {
   const [activeNavIndex, setActiveNavIndex] = useState(0);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [today, setToday] = useState('');
   const [mockData, setMockData] = useState([
     {
       task_id: 1,
@@ -15,7 +17,7 @@ export default function Dashboard() {
       end_time: '',
       address: '경기도 수원시 ...',
       place_name: 'Cafe ABC',
-      location: null,
+      location: { lat: '', lng: '' },
       is_completed: true,
     },
     {
@@ -47,18 +49,30 @@ export default function Dashboard() {
   };
 
   const handleCheckClick = (taskId: number) => {
-    setMockData(prev => {
-      return prev.map(task => {
-        if (task.task_id === taskId) {
-          return {
-            ...task,
-            is_completed: !task.is_completed,
-          };
-        }
-        return task;
-      });
-    });
+    setMockData(prev =>
+      prev.map(task =>
+        task.task_id === taskId
+          ? { ...task, is_completed: !task.is_completed }
+          : task,
+      ),
+    );
   };
+
+  useEffect(() => {
+    const todayDate = new Date();
+    const weekday = todayDate.toLocaleString('en-US', { weekday: 'long' });
+    setToday(
+      Intl.DateTimeFormat('ko-KR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }).format(todayDate) +
+        ' ' +
+        weekday,
+    );
+
+    console.log(today);
+  }, [today]);
 
   return (
     <div className='flex h-full min-h-screen min-w-[1440px] bg-[#FAFAFA]'>
@@ -120,7 +134,7 @@ export default function Dashboard() {
                 오늘의 일정
               </p>
               <span className='text-primary-500 text-[30px] font-semibold'>
-                2025. 04. 01 Tuesday
+                {today}
               </span>
             </div>
             <div className='flex items-end'>
@@ -139,88 +153,12 @@ export default function Dashboard() {
             <ul className='flex flex-col gap-y-[10px]'>
               {mockData.map((task, index) => {
                 return (
-                  <li className='flex' key={index}>
-                    <div
-                      className={`bg-primary-0 flex min-h-[76px] w-full items-center rounded-l-[10px] border-1 px-[23px] py-[18px] ${task.is_completed ? 'bg-primary-300 border-primary-300' : 'bg-primary-0 border-primary-100'}`}
-                    >
-                      <div className='flex w-full items-start'>
-                        <input
-                          type='checkbox'
-                          checked={task.is_completed}
-                          onChange={() => handleCheckClick(task.task_id)}
-                          className={
-                            'bg-primary-100 checked:bg-primary-0 h-[30px] w-[30px] cursor-pointer appearance-none rounded-[10px] bg-[auto_26px] checked:bg-[url(/assets/check.png)] checked:bg-center checked:bg-no-repeat'
-                          }
-                        />
-                        <div
-                          className={`flex w-full justify-between ${task.is_completed ? 'text-primary-100' : 'text-secondary-500'}`}
-                        >
-                          <div
-                            className={`ml-[19px] text-[20px] font-semibold ${task.is_completed && 'line-through'}`}
-                          >
-                            <span>{task.title}</span>
-                            {task.location && (
-                              <div className='mt-[10px] mb-[10px] flex text-[16px] font-medium'>
-                                <div className='mr-[5px] h-[20px] w-[20px]'>
-                                  <Image
-                                    src='/assets/location.png'
-                                    width={20}
-                                    height={20}
-                                    alt='location icon'
-                                  />
-                                </div>
-                                {task.place_name}
-                              </div>
-                            )}
-                            {task.memo && (
-                              <ul className='flex list-disc flex-col gap-y-[6px] text-[16px] font-medium'>
-                                <li className='ml-[20px]'>{task.memo}</li>
-                              </ul>
-                            )}
-                          </div>
-                          <div className='text-right text-[20px] font-medium'>
-                            {task.start_time && (
-                              <span>
-                                {new Intl.DateTimeFormat('en-US', {
-                                  hour: 'numeric',
-                                  minute: '2-digit',
-                                  hour12: true,
-                                }).format(new Date(task.start_time))}
-                              </span>
-                            )}
-                            {task.end_time && (
-                              <>
-                                <span className='block'>~</span>
-                                <span>
-                                  {new Intl.DateTimeFormat('en-US', {
-                                    hour: 'numeric',
-                                    minute: '2-digit',
-                                    hour12: true,
-                                  }).format(new Date(task.end_time))}
-                                </span>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      className={`group relative min-h-[76px] w-[10px] rounded-r-[10px] transition-all duration-300 hover:w-[97px] hover:cursor-pointer ${task.is_completed ? 'bg-primary-100' : 'bg-primary-300'}`}
-                    >
-                      <div className='text-primary-0 invisible absolute top-0 left-0 flex h-full flex-col text-[18px] font-medium group-hover:visible'>
-                        <button className='bg-primary-500 hover:bg-primary-600 h-full w-0 cursor-pointer overflow-hidden text-ellipsis transition-all duration-300 group-hover:w-[75px]'>
-                          <span className='transform opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100'>
-                            수정
-                          </span>
-                        </button>
-                        <button className='bg-error-600 hover:bg-error-700 h-full w-0 cursor-pointer overflow-hidden text-ellipsis transition-all duration-300 group-hover:w-[75px]'>
-                          <span className='transform opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100'>
-                            삭제
-                          </span>
-                        </button>
-                      </div>
-                    </div>
-                  </li>
+                  <TaskListItem
+                    task={task}
+                    index={index}
+                    key={index}
+                    handleCheckClick={handleCheckClick}
+                  />
                 );
               })}
             </ul>
