@@ -3,9 +3,31 @@
 import Image from 'next/image';
 import { useState } from 'react';
 
+interface NavItem {
+  id: number;
+  title: string;
+  icon: string;
+  activeIcon: string;
+}
+
 function Navigation() {
   const [activeNavIndex, setActiveNavIndex] = useState(0);
   const [isLoggedIn] = useState(false);
+
+  const navItems: NavItem[] = [
+    {
+      id: 0,
+      title: 'Home',
+      icon: '/assets/category.png',
+      activeIcon: '/assets/category-dark.png',
+    },
+    {
+      id: 1,
+      title: '일정 관리',
+      icon: '/assets/book.png',
+      activeIcon: '/assets/book-dark.png',
+    },
+  ];
 
   const handleNavClick = (index: number) => {
     setActiveNavIndex(index);
@@ -17,30 +39,23 @@ function Navigation() {
         똘개비
       </div>
       <ul className='text-secondary-300 mt-[52px] flex flex-col gap-y-[24px]'>
-        <li
-          className={`flex cursor-pointer items-center px-[20px] py-[10px] hover:rounded-[10px] ${activeNavIndex === 0 ? 'text-secondary-500 rounded-[10px] bg-[#F5F5F7]' : 'hover:bg-[#F5F5F7]'}`}
-          onClick={() => handleNavClick(0)}
-        >
-          <Image
-            src={`${activeNavIndex === 0 ? '/assets/category-dark.png' : '/assets/category.png'}`}
-            width={24}
-            height={24}
-            alt='category icon'
-          />
-          <span className='ml-[12px] text-[14px] font-semibold'>Home</span>
-        </li>
-        <li
-          className={`flex cursor-pointer items-center px-[20px] py-[10px] hover:rounded-[10px] ${activeNavIndex === 1 ? 'text-secondary-500 rounded-[10px] bg-[#F5F5F7]' : 'hover:bg-[#F5F5F7]'}`}
-          onClick={() => handleNavClick(1)}
-        >
-          <Image
-            src={`${activeNavIndex === 1 ? '/assets/book-dark.png' : '/assets/book.png'}`}
-            width={24}
-            height={24}
-            alt='book icon'
-          />
-          <span className='ml-[12px] text-[14px] font-semibold'>일정 관리</span>
-        </li>
+        {navItems.map(navItem => (
+          <li
+            key={navItem.id}
+            className={`flex cursor-pointer items-center px-[20px] py-[10px] hover:rounded-[10px] ${activeNavIndex === navItem.id ? 'text-secondary-500 rounded-[10px] bg-[#F5F5F7]' : 'hover:bg-[#F5F5F7]'}`}
+            onClick={() => handleNavClick(navItem.id)}
+          >
+            <Image
+              src={`${activeNavIndex === navItem.id ? navItem.activeIcon : navItem.icon}`}
+              width={24}
+              height={24}
+              alt='category icon'
+            />
+            <span className='ml-[12px] text-[14px] font-semibold'>
+              {navItem.title}
+            </span>
+          </li>
+        ))}
       </ul>
 
       <div className='text-secondary-300 hover:text-secondary-500 absolute bottom-[24px] flex cursor-pointer items-center px-[20px] py-[10px] hover:rounded-[10px]'>
