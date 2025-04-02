@@ -1,3 +1,4 @@
+import { formatTime } from '@/app/_utils';
 import Image from 'next/image';
 
 interface TaskProps {
@@ -58,25 +59,11 @@ function TaskListItem({ task, index, handleCheckClick }: TaskProps) {
               )}
             </div>
             <div className='text-right text-[20px] font-medium'>
-              {task.start_time && (
-                <span>
-                  {new Intl.DateTimeFormat('en-US', {
-                    hour: 'numeric',
-                    minute: '2-digit',
-                    hour12: true,
-                  }).format(new Date(task.start_time))}
-                </span>
-              )}
+              {task.start_time && <span>{formatTime(task.start_time)}</span>}
               {task.end_time && (
                 <>
                   <span className='block'>~</span>
-                  <span>
-                    {new Intl.DateTimeFormat('en-US', {
-                      hour: 'numeric',
-                      minute: '2-digit',
-                      hour12: true,
-                    }).format(new Date(task.end_time))}
-                  </span>
+                  <span>{formatTime(task.end_time)}</span>
                 </>
               )}
             </div>
@@ -87,13 +74,13 @@ function TaskListItem({ task, index, handleCheckClick }: TaskProps) {
         className={`group relative min-h-[76px] w-[10px] rounded-r-[10px] transition-all duration-300 hover:w-[97px] hover:cursor-pointer ${task.is_completed ? 'bg-primary-100' : 'bg-primary-300'}`}
       >
         <div className='text-primary-0 invisible absolute top-0 left-0 flex h-full flex-col text-[18px] font-medium group-hover:visible'>
-          <button className='bg-primary-500 hover:bg-primary-600 h-full w-0 cursor-pointer overflow-hidden text-ellipsis transition-all duration-300 group-hover:w-[75px]'>
-            <span className='transform opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100'>
+          <button className='bg-primary-500 hover:bg-primary-600 h-full w-0 cursor-pointer overflow-hidden whitespace-nowrap transition-all duration-300 group-hover:w-[75px]'>
+            <span className='transform opacity-0 transition-all duration-300 group-hover:opacity-100'>
               수정
             </span>
           </button>
-          <button className='bg-error-600 hover:bg-error-700 h-full w-0 cursor-pointer overflow-hidden text-ellipsis transition-all duration-300 group-hover:w-[75px]'>
-            <span className='transform opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100'>
+          <button className='bg-error-600 hover:bg-error-700 h-full w-0 cursor-pointer overflow-hidden whitespace-nowrap transition-all duration-300 group-hover:w-[75px]'>
+            <span className='transform opacity-0 transition-all duration-300 group-hover:opacity-100'>
               삭제
             </span>
           </button>
