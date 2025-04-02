@@ -74,7 +74,7 @@ export default function Dashboard() {
     }, 1000);
 
     return () => clearInterval(interval);
-  });
+  }, []);
 
   useEffect(() => {
     const todayDate = new Date();
@@ -88,7 +88,7 @@ export default function Dashboard() {
         ' ' +
         weekday,
     );
-  }, [today]);
+  }, []);
 
   useEffect(() => {
     setFinishedTaskCount(mockData.filter(task => task.is_completed).length);
@@ -127,7 +127,7 @@ export default function Dashboard() {
                   <TaskListItem
                     task={task}
                     index={index}
-                    key={index}
+                    key={task.task_id}
                     handleCheckClick={handleCheckClick}
                   />
                 );
