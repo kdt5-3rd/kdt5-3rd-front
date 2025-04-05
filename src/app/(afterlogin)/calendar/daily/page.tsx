@@ -78,9 +78,9 @@ export default function Daily() {
   }, [mockData]);
 
   return (
-    <div className='text-secondary-500 inline-flex h-full min-h-screen bg-[#FAFAFA]'>
+    <div className='text-secondary-500 inline-flex h-full min-h-screen w-full bg-[#FAFAFA]'>
       <Navigation />
-      <div className='bg-primary-0 h-full min-w-[752px]'>
+      <div className='bg-primary-0 h-full w-full min-w-[752px]'>
         <div className='flex flex-col'>
           <BoardTitle title={'오늘의 일정'}>
             <div className='flex gap-[20px]'>
