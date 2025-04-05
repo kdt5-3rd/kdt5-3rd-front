@@ -43,7 +43,7 @@ function TaskListItem({ task, index, handleCheckClick }: TaskProps) {
                 <div className='mt-[10px] mb-[10px] flex text-[16px] font-medium'>
                   <div className='mr-[5px] h-[20px] w-[20px]'>
                     <Image
-                      src='/assets/location.png'
+                      src={`${task.is_completed ? '/assets/location-light.png' : '/assets/location.png'}`}
                       width={20}
                       height={20}
                       alt='location icon'
