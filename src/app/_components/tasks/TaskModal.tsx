@@ -52,7 +52,9 @@ const dateRegex = /(\d{4}\/\d{2}\/\d{2})/;
 function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
   const [isOpenDayPicker, setIsOpenDayPicker] = useState(false);
   const [value, setValue] = useState<Task>(task ?? initialTask);
-  const parts = format(value.start_time, 'yyyy/MM/dd hh:mm a').split(dateRegex);
+  const DayAndTimeArray = format(value.start_time, 'yyyy/MM/dd hh:mm a').split(
+    dateRegex,
+  );
 
   const handleCloseButton = () => {
     setIsOpen(false);
@@ -119,7 +121,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
                 />
                 {
                   <div>
-                    {parts.map((part, index) => {
+                    {DayAndTimeArray.map((part, index) => {
                       return dateRegex.test(part) ? (
                         <strong key={index}>{part}</strong>
                       ) : (
