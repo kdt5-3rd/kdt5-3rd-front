@@ -11,7 +11,10 @@ function NormalInput({ children, className = '', ...rest }: NormalInputProps) {
       className={`${className} flex gap-[16px] rounded-lg border border-[#BAC8FF] bg-[#FFFFFF] p-[16px] placeholder-[#54577A]`}
     >
       {children}
-      <input {...rest} className='flex-1 outline-none' />
+      <input
+        {...rest}
+        className='flex-1 outline-none read-only:cursor-default'
+      />
     </div>
   );
 }
