@@ -8,13 +8,13 @@ import { formatTime } from '@/app/_utils';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
-interface SchedlueItem {
+interface ScheduleItem {
   id: number;
   title: string;
 }
 
 export default function Daily() {
-  const scheduleTypes: SchedlueItem[] = [
+  const scheduleTypes: ScheduleItem[] = [
     { id: 0, title: 'Day' },
     { id: 1, title: 'Week' },
     { id: 2, title: 'Month' },
