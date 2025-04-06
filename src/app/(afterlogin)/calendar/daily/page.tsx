@@ -4,6 +4,7 @@ import BoardTitle from '@/app/_components/common/BoardTitle';
 import Navigation from '@/app/_components/nav/Navigation';
 import ProgressBar from '@/app/_components/tasks/ProgressBar';
 import TaskListItem from '@/app/_components/tasks/TaskListItem';
+import { Task } from '@/app/_types';
 import { formatTime } from '@/app/_utils';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -55,7 +56,7 @@ export default function Daily() {
       is_completed: false,
     },
   ]);
-  const [pendingTask, setPendingTask] = useState<typeof mockData>([]);
+  const [pendingTask, setPendingTask] = useState<Task[]>([]);
   const [finishedTaskCount, setFinishedTaskCount] = useState(0);
 
   const handleScheduleTypeClick = (index: number) => {
@@ -106,7 +107,7 @@ export default function Daily() {
             </div>
           </BoardTitle>
           <div className='flex h-full justify-between bg-[#FAFAFA] px-[32px] py-[24px]'>
-            <div className='min-w-[752px] mr-[34px]'>
+            <div className='mr-[34px] min-w-[752px]'>
               <div className='mb-[18px] flex justify-between'>
                 <span className='text-[24px] font-semibold'>Todos</span>
                 <button className='bg-primary-400 hover:bg-primary-500 h-[40px] w-[40px] cursor-pointer rounded-[10px] bg-[url(/assets/plus-small.png)] bg-center bg-no-repeat'></button>
