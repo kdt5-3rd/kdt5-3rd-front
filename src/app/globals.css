@@ -22,8 +22,12 @@
   --secondary-300: oklch(0.67 0.0622 280.33);
   --secondary-200: oklch(0.83 0.0476 280.02);
   --secondary-100: oklch(0.91 0.0245 280.84);
+  --error-100: oklch(0.94 0.0374 62.17);
   --error-600: oklch(0.58 0.215 29.73);
   --error-700: oklch(0.5 0.1947 28.16);
+  --error-900: oklch(0.37 0.1441 21.96);
+  --success-100:oklch(0.98 0.055 115.11);
+  --success-900: oklch(0.46 0.1247 132.4);
 }
 
 @font-face {
