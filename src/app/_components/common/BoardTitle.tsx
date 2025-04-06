@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 interface BoardTitleProps {
   title: string;
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 function BoardTitle(props: BoardTitleProps) {
