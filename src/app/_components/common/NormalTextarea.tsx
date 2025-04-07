@@ -18,26 +18,24 @@ function NormalTextarea({
   children,
   className = '',
   value,
-  onChange,
   ...rest
 }: NormalTextareaProps) {
-  const [text, setText] = useState(value ?? '');
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setText(e.target.value);
-
-    if (onChange) onChange(e);
-  };
-
-  useEffect(() => {
+  const adjustHeight = () => {
     const ref = textareaRef.current;
 
     if (ref) {
       ref.style.height = 'auto';
       ref.style.height = ref.scrollHeight + 'px';
     }
-  }, [text]);
+  };
+
+  useEffect(() => {
+    if (!value) return;
+
+    adjustHeight();
+  }, [value]);
 
   return (
     <div
@@ -47,7 +45,8 @@ function NormalTextarea({
       <textarea
         {...rest}
         ref={textareaRef}
-        onChange={handleChange}
+        value={value}
+        onInput={adjustHeight}
         className='scroll-none flex-1 resize-none outline-none'
       />
     </div>
