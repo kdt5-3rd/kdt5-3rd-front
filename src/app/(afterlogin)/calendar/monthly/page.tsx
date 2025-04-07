@@ -8,6 +8,7 @@ import { format, getDay, parse, startOfWeek } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import '../calendar.css';
+import { Task } from '@/app/_types';
 
 interface ScheduleItem {
   id: number;
@@ -57,21 +58,14 @@ export default function Monthly() {
     },
   ]);
   const [finishedTaskCount, setFinishedTaskCount] = useState(0);
-  const [calendarMockData] = useState(
-    mockData.map(task => ({
-      ...task,
-      start_time: new Date(task.start_time),
-      end_time: new Date(task.end_time || task.start_time),
-    })),
-  );
-  const locales = { ko };
+  const [calendarMockData, setCalendarMockData] = useState<Task[]>([]);
 
   const localizer = dateFnsLocalizer({
     format,
     parse,
     startOfWeek,
     getDay,
-    locales,
+    locales: { ko },
   });
 
   const handleScheduleTypeClick = (index: number) => {
@@ -79,6 +73,16 @@ export default function Monthly() {
   };
 
   useEffect(() => {
+    if (mockData && mockData.length > 0) {
+      const formattedData = mockData.map(task => ({
+        ...task,
+        start_time: new Date(task.start_time),
+        end_time: new Date(task.end_time || task.start_time),
+      }));
+
+      setCalendarMockData(formattedData);
+    }
+
     setFinishedTaskCount(mockData.filter(task => task.is_completed).length);
   }, [mockData]);
 
