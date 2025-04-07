@@ -40,7 +40,6 @@ export default function Weekly() {
       place_name: 'Zep 4번 룸',
       location: { lat: '127.1086228', lng: '37.4012191' },
       is_completed: false,
-      allDay: true,
     },
     {
       task_id: 3,
