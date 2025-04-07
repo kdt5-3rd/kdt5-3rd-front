@@ -7,13 +7,14 @@ import {
   Dispatch,
   SetStateAction,
   useCallback,
+  useEffect,
   useState,
 } from 'react';
-import { Task } from '@/app/_types';
+import { TaskCalendar } from '@/app/_types';
 
 import 'react-day-picker/style.css';
 import DayPickerModal from './DayPickerModal';
-import { format, formatISO } from 'date-fns';
+import { format } from 'date-fns';
 
 type Mode = 'add' | 'edit';
 
@@ -21,7 +22,7 @@ interface TaskModalProps {
   mode: Mode;
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  task: Task | null;
+  task: TaskCalendar | null;
 }
 
 const modalMode: Record<Mode, { title: string; buttonLabel: string }> = {
@@ -39,8 +40,8 @@ const initialTask = {
   task_id: 0,
   title: '',
   memo: '',
-  start_time: formatISO(new Date()),
-  end_time: '',
+  start_time: new Date(),
+  end_time: new Date(),
   address: '',
   place_name: '',
   location: { lat: '', lng: '' },
@@ -51,7 +52,7 @@ const dateRegex = /(\d{4}\/\d{2}\/\d{2})/;
 
 function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
   const [isOpenDayPicker, setIsOpenDayPicker] = useState(false);
-  const [value, setValue] = useState<Task>(task ?? initialTask);
+  const [value, setValue] = useState<TaskCalendar>(initialTask);
   const DayAndTimeArray = format(value.start_time, 'yyyy/MM/dd hh:mm a').split(
     dateRegex,
   );
@@ -62,9 +63,9 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
 
   const handleInputChange = useCallback(
     (
-      field: keyof Task,
+      field: keyof TaskCalendar,
       e?: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-      value?: string,
+      value?: Date,
     ) => {
       setValue(prev => ({
         ...prev,
@@ -75,6 +76,16 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
   );
 
   const handleSubmit = () => {};
+
+  useEffect(() => {
+    if (!task) return;
+
+    setValue({
+      ...task,
+      start_time: new Date(task.start_time),
+      end_time: new Date(task.end_time),
+    });
+  }, [task]);
 
   return (
     isOpen && (

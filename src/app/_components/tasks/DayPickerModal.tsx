@@ -1,7 +1,7 @@
 'use client';
 
-import { Task } from '@/app/_types';
-import { format, formatISO, parseISO, setHours, setMinutes } from 'date-fns';
+import { TaskCalendar } from '@/app/_types';
+import { format, setHours, setMinutes } from 'date-fns';
 import {
   ChangeEvent,
   ChangeEventHandler,
@@ -17,11 +17,11 @@ interface DateAndTimePickerProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   onChange: (
-    field: keyof Task,
+    field: keyof TaskCalendar,
     e?: ChangeEvent<HTMLTextAreaElement>,
-    value?: string,
+    value?: Date,
   ) => void;
-  value: string;
+  value: Date;
 }
 
 function DayPickerModal({
@@ -31,9 +31,7 @@ function DayPickerModal({
   value,
 }: DateAndTimePickerProps) {
   const pickerRef = useRef<HTMLDivElement>(null);
-  const [selected, setSelected] = useState<Date>(
-    value ? parseISO(value) : new Date(),
-  );
+  const [selected, setSelected] = useState<Date>(value ?? new Date());
   const [timeValue, setTimeValue] = useState<string>(
     value ? format(value, 'hh:mm') : '00:00',
   );
@@ -69,7 +67,7 @@ function DayPickerModal({
   useEffect(() => {
     if (!selected) return;
 
-    onChange('start_time', undefined, formatISO(selected));
+    onChange('start_time', undefined, selected);
   }, [selected, onChange]);
 
   useEffect(() => {

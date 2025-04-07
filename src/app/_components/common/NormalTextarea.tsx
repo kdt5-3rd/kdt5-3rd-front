@@ -1,13 +1,6 @@
 'use client';
 
-import {
-  ChangeEvent,
-  ComponentPropsWithRef,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { ComponentPropsWithRef, ReactNode, useEffect, useRef } from 'react';
 
 interface NormalTextareaProps extends ComponentPropsWithRef<'textarea'> {
   children?: ReactNode;
