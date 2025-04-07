@@ -8,10 +8,13 @@ interface NormalInputProps extends ComponentPropsWithRef<'input'> {
 function NormalInput({ children, className = '', ...rest }: NormalInputProps) {
   return (
     <div
-      className={`${className} flex gap-[16px] rounded-lg border border-[#BAC8FF] bg-[#FFFFFF] p-[16px] placeholder-[#54577A]`}
+      className={`${className} bg-primary-0 border-primary-200 placeholder-secondary-400 flex gap-[16px] rounded-lg border p-[16px]`}
     >
       {children}
-      <input {...rest} className='flex-1 outline-none' />
+      <input
+        {...rest}
+        className='flex-1 outline-none read-only:cursor-default'
+      />
     </div>
   );
 }

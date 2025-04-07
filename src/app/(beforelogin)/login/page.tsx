@@ -7,7 +7,7 @@ export default function Login() {
     <div className='relative inset-0 h-dvh w-dvw bg-[#FAFAFA]'>
       <div className='absolute top-1/2 left-1/2 flex w-[392px] -translate-1/2 flex-col'>
         <div className='mb-[10px] flex flex-col gap-[30px]'>
-          <div className='text-center text-6xl font-bold text-[#10197A]'>
+          <div className='text-primary-900 text-center text-6xl font-bold'>
             똘개비
           </div>
           <form className='flex flex-col gap-[30px]'>
@@ -32,11 +32,11 @@ export default function Login() {
             <SubmitButton>로그인</SubmitButton>
           </form>
         </div>
-        <div className='text-center text-lg text-[#8E92BC]'>
+        <div className='text-secondary-300 text-center text-lg'>
           아직 회원이 아니신가요?{' '}
           <Link
             href='/register'
-            className='cursor-pointer text-[#54577A] underline'
+            className='text-secondary-400 cursor-pointer underline'
           >
             회원가입
           </Link>
