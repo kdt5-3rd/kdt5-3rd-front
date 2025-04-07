@@ -22,19 +22,13 @@ function NormalTextarea({
 }: NormalTextareaProps) {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-  const adjustHeight = () => {
+  useEffect(() => {
     const ref = textareaRef.current;
 
     if (ref) {
       ref.style.height = 'auto';
       ref.style.height = ref.scrollHeight + 'px';
     }
-  };
-
-  useEffect(() => {
-    if (!value) return;
-
-    adjustHeight();
   }, [value]);
 
   return (
@@ -46,7 +40,6 @@ function NormalTextarea({
         {...rest}
         ref={textareaRef}
         value={value}
-        onInput={adjustHeight}
         className='scroll-none flex-1 resize-none outline-none'
       />
     </div>
