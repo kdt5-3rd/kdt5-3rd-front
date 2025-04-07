@@ -18,7 +18,7 @@ interface DateAndTimePickerProps {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   onChange: (
     field: keyof Task,
-    e?: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e?: ChangeEvent<HTMLTextAreaElement>,
     value?: string,
   ) => void;
   value: string;
