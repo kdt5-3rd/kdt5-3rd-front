@@ -17,3 +17,7 @@ export interface TaskCalendar extends Task {
   start_time: Date;
   end_time: Date;
 }
+
+export interface TaskCalendarAllDay extends TaskCalendar {
+  allDay?: boolean;
+}
