@@ -8,7 +8,7 @@ import { format, getDay, parse, startOfWeek } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import '../calendar.css';
-import { Task } from '@/app/_types';
+import { TaskCalendar } from '@/app/_types';
 
 interface ScheduleItem {
   id: number;
@@ -58,7 +58,7 @@ export default function Monthly() {
     },
   ]);
   const [finishedTaskCount, setFinishedTaskCount] = useState(0);
-  const [calendarMockData, setCalendarMockData] = useState<Task[]>([]);
+  const [calendarMockData, setCalendarMockData] = useState<TaskCalendar[]>([]);
 
   const localizer = dateFnsLocalizer({
     format,

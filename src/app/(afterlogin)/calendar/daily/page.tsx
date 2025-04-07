@@ -4,7 +4,7 @@ import BoardTitle from '@/app/_components/common/BoardTitle';
 import Navigation from '@/app/_components/nav/Navigation';
 import ProgressBar from '@/app/_components/tasks/ProgressBar';
 import TaskListItem from '@/app/_components/tasks/TaskListItem';
-import { Task } from '@/app/_types';
+import { TaskPayload } from '@/app/_types';
 import { formatTime } from '@/app/_utils';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -56,7 +56,7 @@ export default function Daily() {
       is_completed: false,
     },
   ]);
-  const [pendingTask, setPendingTask] = useState<Task[]>([]);
+  const [pendingTask, setPendingTask] = useState<TaskPayload[]>([]);
   const [finishedTaskCount, setFinishedTaskCount] = useState(0);
 
   const handleScheduleTypeClick = (index: number) => {
