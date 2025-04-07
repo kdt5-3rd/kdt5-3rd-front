@@ -79,12 +79,12 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
   return (
     isOpen && (
       <div className='fixed inset-0 z-50 flex h-dvh w-dvw items-center justify-center bg-[rgba(84,87,122,0.3)]'>
-        <div className='w-[708px] rounded-[10px] bg-[#FFFFFF] px-[40px] py-[30px] shadow-[0_0_30px_0_rgba(84,87,122,0.7)] *:w-full'>
+        <div className='bg-primary-0 w-[708px] rounded-[10px] px-[40px] py-[30px] shadow-[0_0_30px_0_rgba(84,87,122,0.7)] *:w-full'>
           <div className='mb-[30px] flex justify-between'>
             <p className='text-3xl font-semibold'>{modalMode[mode].title}</p>
             <button
               onClick={handleCloseButton}
-              className='flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-[10px] bg-[#7E95FF]'
+              className='bg-primary-400 flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-[10px]'
             >
               <Image
                 src='/assets/close-white.png'

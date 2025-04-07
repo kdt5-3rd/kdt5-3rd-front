@@ -89,7 +89,7 @@ function DayPickerModal({
   return (
     <div
       ref={pickerRef}
-      className='absolute mt-[46px] flex flex-col gap-[30px] rounded-[10px] bg-[#FFFFFF] p-2.5 shadow-lg'
+      className='bg-primary-0 absolute mt-[46px] flex flex-col gap-[30px] rounded-[10px] p-2.5 shadow-lg'
     >
       <DayPicker
         animate
