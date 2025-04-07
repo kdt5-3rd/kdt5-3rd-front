@@ -102,6 +102,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
                 placeholder='제목'
                 value={value.title}
                 onChange={e => handleInputChange('title', e)}
+                required
               />
             </fieldset>
             <fieldset
