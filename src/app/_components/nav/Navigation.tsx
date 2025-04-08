@@ -34,10 +34,6 @@ function Navigation() {
     },
   ];
 
-  // const handleNavClick = (index: number) => {
-  //   setActiveNavIndex(index);
-  // };
-
   return (
     <div className='bg-primary-0 relative w-[252px] shrink-0 px-[32px]'>
       <div className='text-primary-900 mt-[44px] text-center text-[24px] font-bold'>
