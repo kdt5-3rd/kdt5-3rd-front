@@ -55,7 +55,7 @@
   width: 18px;
 }
 
-.rbc-row:nth-child(3n + 2) {
+.rbc-month-view .rbc-row:nth-child(3n + 2) {
   .rbc-event {
     background-color: var(--primary-900);
     color: var(--primary-900);
@@ -79,7 +79,7 @@
   }
 }
 
-.rbc-row:nth-child(3n + 3) {
+.rbc-month-view .rbc-row:nth-child(3n + 3) {
   .rbc-event {
     background-color: var(--success-900);
     color: var(--success-900);
@@ -103,7 +103,7 @@
   }
 }
 
-.rbc-row:nth-child(3n + 1) {
+.rbc-month-view .rbc-row:nth-child(3n + 1) {
   .rbc-event {
     background-color: var(--error-900);
     color: var(--error-900);
