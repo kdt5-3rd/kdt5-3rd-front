@@ -10,7 +10,7 @@ export default function Login() {
           <div className='text-primary-900 text-center text-6xl font-bold'>
             똘개비
           </div>
-          <form className='flex flex-col gap-[30px]'>
+          <form className='flex flex-col gap-[30px] text-secondary-500'>
             <div className='flex flex-col gap-[10px]'>
               <div className='flex flex-col gap-[6px]'>
                 <label htmlFor='id' className='text-xl'>
