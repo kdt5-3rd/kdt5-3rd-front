@@ -2,25 +2,15 @@
 
 import BoardTitle from '@/app/_components/common/BoardTitle';
 import Navigation from '@/app/_components/nav/Navigation';
-import ProgressBar from '@/app/_components/tasks/ProgressBar';
 import TaskListItem from '@/app/_components/tasks/TaskListItem';
 import { TaskPayload } from '@/app/_types';
 import { formatTime } from '@/app/_utils';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-
-interface ScheduleItem {
-  id: number;
-  title: string;
-}
+import CalendarType from '../_components/CalendarType';
+import Progress from '../_components/Progress';
 
 export default function Daily() {
-  const scheduleTypes: ScheduleItem[] = [
-    { id: 0, title: 'Day' },
-    { id: 1, title: 'Week' },
-    { id: 2, title: 'Month' },
-  ];
-  const [activeScheduleIndex, setActiveScheduleIndex] = useState(0);
   const [mockData, setMockData] = useState([
     {
       task_id: 1,
@@ -59,10 +49,6 @@ export default function Daily() {
   const [pendingTask, setPendingTask] = useState<TaskPayload[]>([]);
   const [finishedTaskCount, setFinishedTaskCount] = useState(0);
 
-  const handleScheduleTypeClick = (index: number) => {
-    setActiveScheduleIndex(index);
-  };
-
   const handleCheckClick = (taskId: number) => {
     setMockData(prev =>
       prev.map(task =>
@@ -84,27 +70,11 @@ export default function Daily() {
       <div className='bg-primary-0 h-full w-full min-w-[752px]'>
         <div className='flex flex-col'>
           <BoardTitle title={'오늘의 일정'}>
-            <div className='flex gap-[20px]'>
-              {scheduleTypes.map(type => (
-                <button
-                  key={type.id}
-                  className={`border-primary-200 cursor-pointer rounded-[10px] border-1 px-[44px] py-[8px] text-[20px] font-semibold ${activeScheduleIndex === type.id && 'bg-primary-400 text-primary-0'}`}
-                  onClick={() => handleScheduleTypeClick(type.id)}
-                >
-                  {type.title}
-                </button>
-              ))}
-            </div>
-            <div className='flex max-w-[752px] items-center justify-between gap-[20px] text-[20px] font-semibold'>
-              <span className='whitespace-nowrap'>달성률</span>
-              <div className='w-full'>
-                <ProgressBar
-                  finishedTaskCount={finishedTaskCount}
-                  totalTaskCount={mockData.length}
-                />
-              </div>
-              <span className='whitespace-nowrap'>{`${finishedTaskCount} / ${mockData.length}`}</span>
-            </div>
+            <CalendarType />
+            <Progress
+              finishedTaskCount={finishedTaskCount}
+              totalTaskCount={mockData.length}
+            />
           </BoardTitle>
           <div className='flex h-full justify-between bg-[#FAFAFA] px-[32px] py-[24px]'>
             <div className='mr-[34px] min-w-[752px]'>
