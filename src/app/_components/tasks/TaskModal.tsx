@@ -99,6 +99,10 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
     setIsOpen(false);
   };
 
+  const handleSubmitDelete = () => {
+    setIsOpen(false);
+  };
+
   useEffect(() => {
     if (!task) return;
 
@@ -207,7 +211,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
             {modalMode[mode].deleteButtonLabel && (
               <SubmitButton
                 type='button'
-                onClick={handleSubmit}
+                onClick={handleSubmitDelete}
                 className='bg-error-600!'
               >
                 {modalMode[mode].deleteButtonLabel}
