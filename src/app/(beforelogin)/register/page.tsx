@@ -10,7 +10,7 @@ export default function Register() {
           <div className='text-primary-900 text-center text-6xl font-bold'>
             회원가입
           </div>
-          <form className='flex flex-col gap-[30px]'>
+          <form className='text-secondary-500 flex flex-col gap-[30px]'>
             <div className='flex flex-col gap-[10px]'>
               <div className='flex flex-col gap-[6px]'>
                 <label htmlFor='id' className='text-xl'>
