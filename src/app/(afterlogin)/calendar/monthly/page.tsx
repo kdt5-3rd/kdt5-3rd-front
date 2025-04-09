@@ -4,15 +4,18 @@ import BoardTitle from '@/app/_components/common/BoardTitle';
 import Navigation from '@/app/_components/nav/Navigation';
 import { ko } from 'date-fns/locale';
 import { format, getDay, parse, startOfWeek } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import './monthlyCalendar.css';
 import { TaskCalendar } from '@/app/_types';
 import CalendarType from '../_components/CalendarType';
 import Progress from '../_components/Progress';
 import CalendarContainer from '../_components/CalendarContainer';
+import TaskModal from '@/app/_components/tasks/TaskModal';
 
 export default function Monthly() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectEvent, setSelectEvent] = useState<TaskCalendar | null>(null);
   const [mockData] = useState([
     {
       task_id: 1,
@@ -59,6 +62,11 @@ export default function Monthly() {
     locales: { ko },
   });
 
+  const onSelectEvent = useCallback((event: TaskCalendar) => {
+    setIsOpen(true);
+    setSelectEvent(event);
+  }, []);
+
   useEffect(() => {
     if (mockData && mockData.length > 0) {
       const formattedData = mockData.map(task => ({
@@ -95,11 +103,18 @@ export default function Monthly() {
                 toolbar={false}
                 events={calendarMockData}
                 views={['month']}
+                onSelectEvent={onSelectEvent}
               ></Calendar>
             </div>
           </CalendarContainer>
         </div>
       </div>
+      <TaskModal
+        mode='detail'
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        task={selectEvent}
+      />
     </div>
   );
 }

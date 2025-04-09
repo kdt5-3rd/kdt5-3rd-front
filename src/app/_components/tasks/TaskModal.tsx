@@ -10,22 +10,25 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { TaskCalendar } from '@/app/_types';
+import { TaskCalendar, TaskPayload } from '@/app/_types';
 
 import 'react-day-picker/style.css';
 import DayPickerModal from './DayPickerModal';
 import { format } from 'date-fns';
 
-type Mode = 'add' | 'edit';
+export type ModalMode = 'add' | 'edit' | 'detail';
 
 interface TaskModalProps {
-  mode: Mode;
+  mode: ModalMode | null;
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  task: TaskCalendar | null;
+  task: TaskPayload | TaskCalendar | null;
 }
 
-const modalMode: Record<Mode, { title: string; buttonLabel: string }> = {
+const modalMode: Record<
+  ModalMode,
+  { title: string; buttonLabel: string; deleteButtonLabel?: string }
+> = {
   add: {
     title: 'Todo 추가',
     buttonLabel: '추가',
@@ -33,6 +36,11 @@ const modalMode: Record<Mode, { title: string; buttonLabel: string }> = {
   edit: {
     title: 'Todo 수정',
     buttonLabel: '수정',
+  },
+  detail: {
+    title: 'Todo 상세',
+    buttonLabel: '수정',
+    deleteButtonLabel: '삭제',
   },
 };
 
@@ -50,9 +58,21 @@ const initialTask = {
 
 const dateRegex = /(\d{4}\/\d{2}\/\d{2})/;
 
+const formattedTask = (task: TaskPayload | TaskCalendar): TaskCalendar => {
+  if (task.start_time instanceof Date) return task as TaskCalendar;
+
+  return {
+    ...task,
+    start_time: new Date(task.start_time),
+    end_time: new Date(task.end_time),
+  };
+};
+
 function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
   const [isOpenDayPicker, setIsOpenDayPicker] = useState(false);
-  const [value, setValue] = useState<TaskCalendar>(initialTask);
+  const [value, setValue] = useState<TaskCalendar>(
+    task ? formattedTask(task) : initialTask,
+  );
   const DayAndTimeArray = format(value.start_time, 'yyyy/MM/dd hh:mm a').split(
     dateRegex,
   );
@@ -75,7 +95,13 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
     [],
   );
 
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    setIsOpen(false);
+  };
+
+  const handleSubmitDelete = () => {
+    setIsOpen(false);
+  };
 
   useEffect(() => {
     if (!task) return;
@@ -86,6 +112,8 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
       end_time: new Date(task.end_time),
     });
   }, [task]);
+
+  if (!mode) return;
 
   return (
     isOpen && (
@@ -176,9 +204,20 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
               />
             </fieldset>
           </form>
-          <SubmitButton type='button' onClick={handleSubmit}>
-            {modalMode[mode].buttonLabel}
-          </SubmitButton>
+          <div className='flex gap-[20px] *:flex-1'>
+            <SubmitButton type='button' onClick={handleSubmit}>
+              {modalMode[mode].buttonLabel}
+            </SubmitButton>
+            {modalMode[mode].deleteButtonLabel && (
+              <SubmitButton
+                type='button'
+                onClick={handleSubmitDelete}
+                className='bg-error-600!'
+              >
+                {modalMode[mode].deleteButtonLabel}
+              </SubmitButton>
+            )}
+          </div>
         </div>
       </div>
     )
