@@ -9,8 +9,10 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import CalendarType from '../_components/CalendarType';
 import Progress from '../_components/Progress';
+import TaskModal from '@/app/_components/tasks/TaskModal';
 
 export default function Daily() {
+  const [isOpen, setIsOpen] = useState(false);
   const [mockData, setMockData] = useState([
     {
       task_id: 1,
@@ -59,6 +61,8 @@ export default function Daily() {
     );
   };
 
+  const addTask = () => setIsOpen(true);
+
   useEffect(() => {
     setFinishedTaskCount(mockData.filter(task => task.is_completed).length);
     setPendingTask(mockData.filter(task => !task.is_completed));
@@ -80,7 +84,10 @@ export default function Daily() {
             <div className='mr-[34px] min-w-[752px]'>
               <div className='mb-[18px] flex justify-between'>
                 <span className='text-[24px] font-semibold'>Todos</span>
-                <button className='bg-primary-400 hover:bg-primary-500 h-[40px] w-[40px] cursor-pointer rounded-[10px] bg-[url(/assets/plus-small.png)] bg-center bg-no-repeat'></button>
+                <button
+                  onClick={addTask}
+                  className='bg-primary-400 hover:bg-primary-500 h-[40px] w-[40px] cursor-pointer rounded-[10px] bg-[url(/assets/plus-small.png)] bg-center bg-no-repeat'
+                ></button>
               </div>
               <ul className='flex flex-col gap-y-[10px]'>
                 {mockData.map((task, index) => {
@@ -148,6 +155,7 @@ export default function Daily() {
           </div>
         </div>
       </div>
+      <TaskModal mode='add' isOpen={isOpen} setIsOpen={setIsOpen} task={null} />
     </div>
   );
 }
