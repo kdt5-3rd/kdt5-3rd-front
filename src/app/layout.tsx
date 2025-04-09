@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: '똘개비',
@@ -13,9 +14,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`antialiased`}>
-        {children}
-      </body>
+      <head>
+        <Script
+          strategy='beforeInteractive'
+          type='text/javascript'
+          src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${process.env.MAP_CLIENT_ID}`}
+        ></Script>
+      </head>
+      <body className={`antialiased`}>{children}</body>
     </html>
   );
 }
