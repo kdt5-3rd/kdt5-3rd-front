@@ -5,10 +5,10 @@ import Navigation from '@/app/_components/nav/Navigation';
 import TaskListItem from '@/app/_components/tasks/TaskListItem';
 import { TaskPayload } from '@/app/_types';
 import { formatTime } from '@/app/_utils';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import CalendarType from '../_components/CalendarType';
 import Progress from '../_components/Progress';
+import MapDisplay from '../_components/MapDisplay';
 
 export default function Daily() {
   const [mockData, setMockData] = useState([
@@ -31,7 +31,7 @@ export default function Daily() {
       end_time: '',
       address: '경기도 수원시 ...',
       place_name: 'Zep 4번 룸',
-      location: { lat: '127.1086228', lng: '37.4012191' },
+      location: { lat: '37.484543', lng: '127.010808' },
       is_completed: false,
     },
     {
@@ -42,7 +42,7 @@ export default function Daily() {
       end_time: '2025-03-11T14:00:00',
       address: '경기도 수원시 ...',
       place_name: 'Cafe DEF',
-      location: { lat: '127.1086228', lng: '37.4012191' },
+      location: { lat: '37.498014', lng: '127.027616' },
       is_completed: false,
     },
   ]);
@@ -133,12 +133,7 @@ export default function Daily() {
                         <span>{formatTime(task.start_time)}</span>
                       </div>
                       <div className='bg-primary-0 border-primary-200 mt-[20px] flex h-[180px] items-center justify-center rounded-[10px] border-1'>
-                        <Image
-                          src='/assets/map.png'
-                          width={40}
-                          height={40}
-                          alt='map icon'
-                        />
+                        <MapDisplay taskId={task.task_id} location={task.location} />
                       </div>
                     </div>
                   );
