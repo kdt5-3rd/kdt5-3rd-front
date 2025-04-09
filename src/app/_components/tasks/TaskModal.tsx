@@ -10,22 +10,22 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { TaskCalendar } from '@/app/_types';
+import { TaskCalendar, TaskPayload } from '@/app/_types';
 
 import 'react-day-picker/style.css';
 import DayPickerModal from './DayPickerModal';
 import { format } from 'date-fns';
 
-type Mode = 'add' | 'edit';
+type ModalMode = 'add' | 'edit';
 
 interface TaskModalProps {
-  mode: Mode;
+  mode: ModalMode | null;
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  task: TaskCalendar | null;
+  task: TaskPayload | null;
 }
 
-const modalMode: Record<Mode, { title: string; buttonLabel: string }> = {
+const modalMode: Record<ModalMode, { title: string; buttonLabel: string }> = {
   add: {
     title: 'Todo 추가',
     buttonLabel: '추가',
@@ -50,9 +50,17 @@ const initialTask = {
 
 const dateRegex = /(\d{4}\/\d{2}\/\d{2})/;
 
+const formattedTask = (task: TaskPayload) => ({
+  ...task,
+  start_time: new Date(task.start_time),
+  end_time: new Date(task.end_time),
+});
+
 function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
   const [isOpenDayPicker, setIsOpenDayPicker] = useState(false);
-  const [value, setValue] = useState<TaskCalendar>(initialTask);
+  const [value, setValue] = useState<TaskCalendar>(
+    task ? formattedTask(task) : initialTask,
+  );
   const DayAndTimeArray = format(value.start_time, 'yyyy/MM/dd hh:mm a').split(
     dateRegex,
   );
@@ -75,7 +83,9 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
     [],
   );
 
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    setIsOpen(false);
+  };
 
   useEffect(() => {
     if (!task) return;
@@ -86,6 +96,8 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
       end_time: new Date(task.end_time),
     });
   }, [task]);
+
+  if (!mode) return;
 
   return (
     isOpen && (
