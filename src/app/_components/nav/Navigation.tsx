@@ -23,7 +23,7 @@ function Navigation() {
       title: 'Home',
       icon: '/assets/category.png',
       activeIcon: '/assets/category-dark.png',
-      href: '/dashboard',
+      href: '/',
     },
     {
       id: 1,
