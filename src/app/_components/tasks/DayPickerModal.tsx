@@ -1,5 +1,6 @@
 'use client';
 
+import useOutsideClick from '@/app/_hooks';
 import { TaskCalendar } from '@/app/_types';
 import { format, setHours, setMinutes } from 'date-fns';
 import {
@@ -8,13 +9,11 @@ import {
   Dispatch,
   SetStateAction,
   useEffect,
-  useRef,
   useState,
 } from 'react';
 import { DayPicker } from 'react-day-picker';
 
 interface DateAndTimePickerProps {
-  isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   onChange: (
     field: keyof TaskCalendar,
@@ -25,12 +24,11 @@ interface DateAndTimePickerProps {
 }
 
 function DayPickerModal({
-  isOpen,
   setIsOpen,
   onChange,
   value,
 }: DateAndTimePickerProps) {
-  const pickerRef = useRef<HTMLDivElement>(null);
+  const pickerRef = useOutsideClick(() => setIsOpen(false));
   const [selected, setSelected] = useState<Date>(value ?? new Date());
   const [timeValue, setTimeValue] = useState<string>(
     value ? format(value, 'hh:mm') : '00:00',
@@ -70,24 +68,10 @@ function DayPickerModal({
     onChange('start_time', undefined, selected);
   }, [selected, onChange]);
 
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const outsideClick = (e: MouseEvent) => {
-      if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', outsideClick);
-
-    return () => document.removeEventListener('mousedown', outsideClick);
-  }, [pickerRef, isOpen, setIsOpen]);
-
   return (
     <div
       ref={pickerRef}
-      className='bg-primary-0 absolute mt-[46px] flex flex-col gap-[10px] rounded-[10px] p-2.5 shadow-lg'
+      className='z-999 bg-primary-0 absolute mt-[46px] flex flex-col gap-[10px] rounded-[10px] p-2.5 shadow-lg'
     >
       <DayPicker
         animate
