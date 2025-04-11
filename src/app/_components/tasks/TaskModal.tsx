@@ -190,41 +190,11 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
             </fieldset>
             <fieldset className='relative flex items-center gap-[20px] *:first:text-xl *:first:font-semibold *:last:flex-1'>
               <label htmlFor='location'>위치</label>
-              {mode === 'edit' || mode === 'add' ? (
-                <>
-                  <div className='flex flex-grow justify-between'>
-                    <NormalInput
-                      placeholder='위치'
-                      value={value.place_name}
-                      className='mr-[10px] flex-grow'
-                      onChange={e => handleInputChange('place_name', e)}
-                    >
-                      <Image
-                        src='/assets/location-line.png'
-                        alt='calendar icon'
-                        width={24}
-                        height={24}
-                      />
-                    </NormalInput>
-                    <SubmitButton
-                      type='button'
-                      className='pr-[14px] pl-[14px] font-semibold'
-                      onClick={() => setIsOpenLocationModal(true)}
-                    >
-                      검색하기
-                    </SubmitButton>
-                  </div>
-                  {isOpenLocationModal && (
-                    <LocationModal
-                      setIsOpen={setIsOpenLocationModal}
-                      setPlaceName={name => handlePlaceNameChange(name)}
-                    />
-                  )}
-                </>
-              ) : (
+              <div className='flex flex-grow justify-between'>
                 <NormalInput
                   placeholder='위치'
                   value={value.place_name}
+                  className='mr-[10px] flex-grow'
                   onChange={e => handleInputChange('place_name', e)}
                 >
                   <Image
@@ -234,6 +204,19 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
                     height={24}
                   />
                 </NormalInput>
+                <SubmitButton
+                  type='button'
+                  className='pr-[14px] pl-[14px] font-semibold'
+                  onClick={() => setIsOpenLocationModal(true)}
+                >
+                  검색하기
+                </SubmitButton>
+              </div>
+              {isOpenLocationModal && (
+                <LocationModal
+                  setIsOpen={setIsOpenLocationModal}
+                  setPlaceName={name => handlePlaceNameChange(name)}
+                />
               )}
             </fieldset>
             <fieldset className='flex gap-[20px] *:first:mt-2 *:first:text-xl *:first:font-semibold *:last:flex-1'>
