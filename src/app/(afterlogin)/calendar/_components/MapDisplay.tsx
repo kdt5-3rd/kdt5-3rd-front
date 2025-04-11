@@ -13,6 +13,8 @@ function MapDisplay({ taskId, location }: mapProps) {
   const mapRef = useRef<naver.maps.Map | null>(null);
 
   const center = useMemo(() => {
+    if (!location || !location.lat || !location.lng) return null;
+
     return new naver.maps.LatLng(
       parseFloat(location.lat),
       parseFloat(location.lng),
@@ -20,7 +22,7 @@ function MapDisplay({ taskId, location }: mapProps) {
   }, [location]);
 
   useEffect(() => {
-    if (!location.lat || !location.lng) return;
+    if (!center) return;
 
     const initMap = () => {
       if (mapRef.current) {
@@ -41,7 +43,7 @@ function MapDisplay({ taskId, location }: mapProps) {
       script.onload = initMap;
       document.head.appendChild(script);
     }
-  }, [taskId, center, location]);
+  }, [taskId, center]);
 
   if (!location.lat || !location.lng) {
     return (
