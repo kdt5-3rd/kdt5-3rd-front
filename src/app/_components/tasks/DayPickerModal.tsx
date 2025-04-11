@@ -1,6 +1,6 @@
 'use client';
 
-import useOutsideClick from '@/app/_hooks';
+import useOutsideClick from '@/app/_hooks/useOutSideClick';
 import { TaskCalendar } from '@/app/_types';
 import { format, setHours, setMinutes } from 'date-fns';
 import {

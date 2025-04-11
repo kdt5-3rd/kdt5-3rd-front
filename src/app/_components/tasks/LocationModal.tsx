@@ -4,8 +4,8 @@ import Image from 'next/image';
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
 import NormalInput from '../common/NormalInput';
 import SubmitButton from '../common/SubmitButton';
-import { searchLocation } from '@/app/_apis';
-import useOutsideClick from '@/app/_hooks';
+import { searchLocation } from '@/app/_apis/searchLocation';
+import useOutsideClick from '@/app/_hooks/useOutSideClick';
 
 interface LocationModalProps {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
