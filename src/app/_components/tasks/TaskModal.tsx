@@ -15,6 +15,7 @@ import { TaskCalendar, TaskPayload } from '@/app/_types';
 import 'react-day-picker/style.css';
 import DayPickerModal from './DayPickerModal';
 import { format } from 'date-fns';
+import LocationModal from './LocationModal';
 
 export type ModalMode = 'add' | 'edit' | 'detail';
 
@@ -70,6 +71,7 @@ const formattedTask = (task: TaskPayload | TaskCalendar): TaskCalendar => {
 
 function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
   const [isOpenDayPicker, setIsOpenDayPicker] = useState(false);
+  const [isOpenLocationModal, setIsOpenLocationModal] = useState(false);
   const [value, setValue] = useState<TaskCalendar>(
     task ? formattedTask(task) : initialTask,
   );
@@ -94,6 +96,13 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
     },
     [],
   );
+
+  const handlePlaceNameChange = (name: string) => {
+    setValue(prev => ({
+      ...prev,
+      place_name: name,
+    }));
+  };
 
   const handleSubmit = () => {
     setIsOpen(false);
@@ -172,7 +181,6 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
                 }
                 {isOpenDayPicker && (
                   <DayPickerModal
-                    isOpen={isOpenDayPicker}
                     setIsOpen={setIsOpenDayPicker}
                     onChange={handleInputChange}
                     value={value.start_time}
@@ -180,20 +188,36 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
                 )}
               </NormalInput>
             </fieldset>
-            <fieldset className='flex items-center gap-[20px] *:first:text-xl *:first:font-semibold *:last:flex-1'>
+            <fieldset className='relative flex items-center gap-[20px] *:first:text-xl *:first:font-semibold *:last:flex-1'>
               <label htmlFor='location'>위치</label>
-              <NormalInput
-                placeholder='위치'
-                value={value.place_name}
-                onChange={e => handleInputChange('place_name', e)}
-              >
-                <Image
-                  src='/assets/location-light.png'
-                  alt='calendar icon'
-                  width={24}
-                  height={24}
+              <div className='flex flex-grow justify-between'>
+                <NormalInput
+                  placeholder='위치'
+                  value={value.place_name}
+                  className='mr-[10px] flex-grow'
+                  onChange={e => handleInputChange('place_name', e)}
+                >
+                  <Image
+                    src='/assets/location-line.png'
+                    alt='calendar icon'
+                    width={24}
+                    height={24}
+                  />
+                </NormalInput>
+                <SubmitButton
+                  type='button'
+                  className='pr-[14px] pl-[14px] font-semibold'
+                  onClick={() => setIsOpenLocationModal(true)}
+                >
+                  검색하기
+                </SubmitButton>
+              </div>
+              {isOpenLocationModal && (
+                <LocationModal
+                  setIsOpen={setIsOpenLocationModal}
+                  setPlaceName={name => handlePlaceNameChange(name)}
                 />
-              </NormalInput>
+              )}
             </fieldset>
             <fieldset className='flex gap-[20px] *:first:mt-2 *:first:text-xl *:first:font-semibold *:last:flex-1'>
               <label htmlFor='memo'>메모</label>
