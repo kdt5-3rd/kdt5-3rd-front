@@ -44,11 +44,11 @@ function LocationModal({ setIsOpen, setPlaceName }: LocationModalProps) {
     try {
       const results = await searchLocation(searchPlace);
 
-      if (results) {
-        setSearchResults(results.data);
-      } else {
-        console.error('API 호출에 실패했습니다.');
+      if (!results) {
+        return console.error('API 호출에 실패했습니다.');
       }
+
+      setSearchResults(results.data);
     } catch (error) {
       console.error('API 호출 중 에러가 발생했습니다:', error);
     }
