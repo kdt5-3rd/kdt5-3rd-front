@@ -5,6 +5,7 @@ import NormalTextarea from '../common/NormalTextarea';
 import {
   ChangeEvent,
   Dispatch,
+  FocusEvent,
   SetStateAction,
   useCallback,
   useEffect,
@@ -14,9 +15,10 @@ import { TaskCalendar, TaskPayload } from '@/app/_types';
 
 import 'react-day-picker/style.css';
 import DayPickerModal from './DayPickerModal';
-import { format, isEqual } from 'date-fns';
+import { format, isEqual as isDateEqual } from 'date-fns';
 import LocationModal from './LocationModal';
-import { validateDateTime } from '@/app/_utils/dateTimeUtil';
+import { validateDateTime, validateBlank } from '@/app/_utils/validateUtil';
+import isEqual from 'lodash/isEqual';
 
 export type ModalMode = 'add' | 'edit' | 'detail';
 
@@ -71,7 +73,7 @@ const formattedDateText = (start: Date, end: Date) => {
   const startDate = format(start, 'yyyy/MM/dd');
   const startTime = format(start, 'hh:mm a');
 
-  if (isEqual(start, end)) {
+  if (isDateEqual(start, end)) {
     return (
       <span className='whitespace-nowrap'>
         <strong>{startDate}</strong> {startTime}
@@ -99,7 +101,8 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
   const [value, setValue] = useState<TaskCalendar>(
     task ? formattedTask(task) : initialTask,
   );
-  const [isInvalidDate, setIsInvalidDate] = useState(true);
+  const [isInvalidDate, setIsInvalidDate] = useState(false);
+  const [isInvalidTitle, setIsInvalidTitle] = useState(false);
 
   const handleCloseButton = () => {
     setIsOpen(false);
@@ -126,6 +129,13 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
     }));
   };
 
+  const handleBlurTitle = (e: FocusEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    if (value === '') return setIsInvalidTitle(true);
+    setIsInvalidTitle(false);
+  };
+
   const handleConfirm = () => {
     setIsOpen(false);
   };
@@ -140,7 +150,10 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
   }, [task]);
 
   useEffect(() => {
+    if (isEqual(value, initialTask)) return;
+
     setIsInvalidDate(!validateDateTime(value.start_time, value.end_time));
+    setIsInvalidTitle(!validateBlank(value.title));
   }, [value]);
 
   if (!mode) return;
@@ -167,12 +180,21 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
           <form className='mb-[20px] flex flex-col gap-[12px] rounded-[10px] bg-[#FAFAFA] p-2.5'>
             <fieldset className={`items-center ${BASE_STYLE}`}>
               <label htmlFor='title'>제목</label>
-              <NormalInput
-                placeholder='제목'
-                value={value.title}
-                onChange={e => handleFieldChange('title', e)}
-                required
-              />
+              <div className='flex flex-col gap-[5px]'>
+                <NormalInput
+                  placeholder='제목'
+                  isError={isInvalidTitle}
+                  value={value.title}
+                  onChange={e => handleFieldChange('title', e)}
+                  onBlur={handleBlurTitle}
+                  required
+                />
+                {isInvalidTitle && (
+                  <span className='text-error-600'>
+                    제목은 필수 작성입니다.
+                  </span>
+                )}
+              </div>
             </fieldset>
             <fieldset
               className={`items-center ${BASE_STYLE}`}
