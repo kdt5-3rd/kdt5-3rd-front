@@ -16,6 +16,7 @@ import 'react-day-picker/style.css';
 import DayPickerModal from './DayPickerModal';
 import { format, isEqual } from 'date-fns';
 import LocationModal from './LocationModal';
+import { validateDateTime } from '@/app/_utils/dateTimeUtil';
 
 export type ModalMode = 'add' | 'edit' | 'detail';
 
@@ -98,6 +99,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
   const [value, setValue] = useState<TaskCalendar>(
     task ? formattedTask(task) : initialTask,
   );
+  const [isInvalidDate, setIsInvalidDate] = useState(true);
 
   const handleCloseButton = () => {
     setIsOpen(false);
@@ -137,6 +139,10 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
     setValue(formattedTask(task));
   }, [task]);
 
+  useEffect(() => {
+    setIsInvalidDate(!validateDateTime(value.start_time, value.end_time));
+  }, [value]);
+
   if (!mode) return;
 
   return (
@@ -173,25 +179,36 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
               onClick={() => setOpenModal('dayPicker')}
             >
               <label htmlFor='date'>날짜</label>
-              <NormalInput readOnly className='*:last:hidden'>
-                <Image
-                  src='/assets/calendar-light.png'
-                  alt='calendar icon'
-                  width={24}
-                  height={24}
-                />
-                {formattedDateText(value.start_time, value.end_time)}
-                {openModal === 'dayPicker' && (
-                  <DayPickerModal
-                    closeModal={() => setOpenModal(null)}
-                    onChange={handleFieldChange}
-                    value={{
-                      from: value.start_time,
-                      to: value.end_time,
-                    }}
+              <div className='flex flex-col gap-[5px]'>
+                <NormalInput
+                  readOnly
+                  className='*:last:hidden'
+                  isError={isInvalidDate}
+                >
+                  <Image
+                    src='/assets/calendar-light.png'
+                    alt='calendar icon'
+                    width={24}
+                    height={24}
                   />
+                  {formattedDateText(value.start_time, value.end_time)}
+                  {openModal === 'dayPicker' && (
+                    <DayPickerModal
+                      closeModal={() => setOpenModal(null)}
+                      onChange={handleFieldChange}
+                      value={{
+                        from: value.start_time,
+                        to: value.end_time,
+                      }}
+                    />
+                  )}
+                </NormalInput>
+                {isInvalidDate && (
+                  <span className='text-error-600'>
+                    시작 시각이 종료 시각보다 늦습니다.
+                  </span>
                 )}
-              </NormalInput>
+              </div>
             </fieldset>
             <fieldset className={`relative items-center ${BASE_STYLE}`}>
               <label htmlFor='location'>위치</label>
