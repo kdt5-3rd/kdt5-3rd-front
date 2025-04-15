@@ -14,8 +14,13 @@ import { TaskCalendar, TaskPayload } from '@/app/_types';
 
 import 'react-day-picker/style.css';
 import DayPickerModal from './DayPickerModal';
-import { format } from 'date-fns';
+import { format, isEqual as isDateEqual } from 'date-fns';
 import LocationModal from './LocationModal';
+import {
+  validateIsAfterDateTime,
+  validateIsBlank,
+} from '@/app/_utils/validateUtil';
+import isEqual from 'lodash/isEqual';
 
 export type ModalMode = 'add' | 'edit' | 'detail';
 
@@ -57,33 +62,56 @@ const initialTask = {
   is_completed: false,
 };
 
-const dateRegex = /(\d{4}\/\d{2}\/\d{2})/;
-
 const formattedTask = (task: TaskPayload | TaskCalendar): TaskCalendar => {
   if (task.start_time instanceof Date) return task as TaskCalendar;
 
-  return {
-    ...task,
-    start_time: new Date(task.start_time),
-    end_time: new Date(task.end_time),
-  };
+  const start_time = new Date(task.start_time);
+  const end_time = task.end_time ? new Date(task.end_time) : start_time;
+
+  return { ...task, start_time, end_time };
+};
+
+const formattedDateText = (start: Date, end: Date) => {
+  const startDate = format(start, 'yyyy/MM/dd');
+  const startTime = format(start, 'hh:mm a');
+
+  if (isDateEqual(start, end)) {
+    return (
+      <span className='whitespace-nowrap'>
+        <strong>{startDate}</strong> {startTime}
+      </span>
+    );
+  }
+
+  const endDate = format(end, 'yyyy/MM/dd');
+  const endTime = format(end, 'hh:mm a');
+
+  return (
+    <span className='whitespace-nowrap'>
+      <strong>{startDate}</strong> {startTime} ~ <strong>{endDate}</strong>{' '}
+      {endTime}
+    </span>
+  );
 };
 
 function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
-  const [isOpenDayPicker, setIsOpenDayPicker] = useState(false);
-  const [isOpenLocationModal, setIsOpenLocationModal] = useState(false);
+  const BASE_STYLE =
+    'flex gap-[20px] *:first:text-xl *:first:font-semibold *:last:flex-1';
+  const [openModal, setOpenModal] = useState<null | 'dayPicker' | 'location'>(
+    null,
+  );
   const [value, setValue] = useState<TaskCalendar>(
     task ? formattedTask(task) : initialTask,
   );
-  const DayAndTimeArray = format(value.start_time, 'yyyy/MM/dd hh:mm a').split(
-    dateRegex,
-  );
+  const [isInvalidDate, setIsInvalidDate] = useState(false);
+  const [isInvalidTitle, setIsInvalidTitle] = useState(false);
+  const [isInvalidValue, setIsInvalidValue] = useState(true);
 
   const handleCloseButton = () => {
     setIsOpen(false);
   };
 
-  const handleInputChange = useCallback(
+  const handleFieldChange = useCallback(
     (
       field: keyof TaskCalendar,
       e?: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -104,23 +132,35 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleConfirm = () => {
     setIsOpen(false);
   };
 
-  const handleSubmitDelete = () => {
+  const handleDelete = () => {
     setIsOpen(false);
   };
 
   useEffect(() => {
     if (!task) return;
-
-    setValue({
-      ...task,
-      start_time: new Date(task.start_time),
-      end_time: new Date(task.end_time),
-    });
+    setValue(formattedTask(task));
   }, [task]);
+
+  useEffect(() => {
+    if (isEqual(value, initialTask)) return setIsInvalidValue(true);
+
+    const isBlankTitle = validateIsBlank(value.title);
+    const isAfterTime = validateIsAfterDateTime(
+      value.start_time,
+      value.end_time,
+    );
+
+    setIsInvalidTitle(isBlankTitle);
+    setIsInvalidDate(isAfterTime);
+
+    if (!isBlankTitle && !isAfterTime) return setIsInvalidValue(false);
+
+    setIsInvalidValue(true);
+  }, [value]);
 
   if (!mode) return;
 
@@ -144,58 +184,67 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
           </div>
 
           <form className='mb-[20px] flex flex-col gap-[12px] rounded-[10px] bg-[#FAFAFA] p-2.5'>
-            <fieldset className='flex items-center gap-[20px] *:first:text-xl *:first:font-semibold *:last:flex-1'>
+            <fieldset className={`items-center ${BASE_STYLE}`}>
               <label htmlFor='title'>제목</label>
-              <NormalInput
-                placeholder='제목'
-                value={value.title}
-                onChange={e => handleInputChange('title', e)}
-                required
-              />
+              <div className='flex flex-col gap-[5px]'>
+                <NormalInput
+                  placeholder='제목'
+                  isError={isInvalidTitle}
+                  value={value.title}
+                  onChange={e => handleFieldChange('title', e)}
+                  required
+                />
+                {isInvalidTitle && (
+                  <span className='text-error-600'>
+                    제목은 필수 작성입니다.
+                  </span>
+                )}
+              </div>
             </fieldset>
             <fieldset
-              className='flex items-center gap-[20px] *:first:text-xl *:first:font-semibold *:last:flex-1'
-              onClick={() => setIsOpenDayPicker(true)}
+              className={`items-center ${BASE_STYLE}`}
+              onClick={() => setOpenModal('dayPicker')}
             >
               <label htmlFor='date'>날짜</label>
-              <NormalInput
-                readOnly
-                placeholder={value.start_time ? '' : value.start_time}
-              >
-                <Image
-                  src='/assets/calendar-light.png'
-                  alt='calendar icon'
-                  width={24}
-                  height={24}
-                />
-                {
-                  <div>
-                    {DayAndTimeArray.map((part, index) => {
-                      return dateRegex.test(part) ? (
-                        <strong key={index}>{part}</strong>
-                      ) : (
-                        part
-                      );
-                    })}
-                  </div>
-                }
-                {isOpenDayPicker && (
-                  <DayPickerModal
-                    setIsOpen={setIsOpenDayPicker}
-                    onChange={handleInputChange}
-                    value={value.start_time}
+              <div className='flex flex-col gap-[5px]'>
+                <NormalInput
+                  readOnly
+                  className='*:last:hidden'
+                  isError={isInvalidDate}
+                >
+                  <Image
+                    src='/assets/calendar-light.png'
+                    alt='calendar icon'
+                    width={24}
+                    height={24}
                   />
+                  {formattedDateText(value.start_time, value.end_time)}
+                  {openModal === 'dayPicker' && (
+                    <DayPickerModal
+                      closeModal={() => setOpenModal(null)}
+                      onChange={handleFieldChange}
+                      value={{
+                        from: value.start_time,
+                        to: value.end_time,
+                      }}
+                    />
+                  )}
+                </NormalInput>
+                {isInvalidDate && (
+                  <span className='text-error-600'>
+                    시작 시각이 종료 시각보다 늦습니다.
+                  </span>
                 )}
-              </NormalInput>
+              </div>
             </fieldset>
-            <fieldset className='relative flex items-center gap-[20px] *:first:text-xl *:first:font-semibold *:last:flex-1'>
+            <fieldset className={`relative items-center ${BASE_STYLE}`}>
               <label htmlFor='location'>위치</label>
               <div className='flex flex-grow justify-between'>
                 <NormalInput
                   placeholder='위치'
                   value={value.place_name}
                   className='mr-[10px] flex-grow'
-                  onChange={e => handleInputChange('place_name', e)}
+                  onChange={e => handleFieldChange('place_name', e)}
                 >
                   <Image
                     src='/assets/location-line.png'
@@ -207,35 +256,39 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
                 <SubmitButton
                   type='button'
                   className='pr-[14px] pl-[14px] font-semibold'
-                  onClick={() => setIsOpenLocationModal(true)}
+                  onClick={() => setOpenModal('location')}
                 >
                   검색하기
                 </SubmitButton>
               </div>
-              {isOpenLocationModal && (
+              {openModal === 'location' && (
                 <LocationModal
-                  setIsOpen={setIsOpenLocationModal}
+                  closeModal={() => setOpenModal(null)}
                   setPlaceName={name => handlePlaceNameChange(name)}
                 />
               )}
             </fieldset>
-            <fieldset className='flex gap-[20px] *:first:mt-2 *:first:text-xl *:first:font-semibold *:last:flex-1'>
+            <fieldset className={`*:first:mt-2 ${BASE_STYLE}`}>
               <label htmlFor='memo'>메모</label>
               <NormalTextarea
                 placeholder='메모'
                 value={value.memo}
-                onChange={e => handleInputChange('memo', e)}
+                onChange={e => handleFieldChange('memo', e)}
               />
             </fieldset>
           </form>
           <div className='flex gap-[20px] *:flex-1'>
-            <SubmitButton type='button' onClick={handleSubmit}>
+            <SubmitButton
+              type='button'
+              onClick={handleConfirm}
+              disabled={isInvalidValue}
+            >
               {modalMode[mode].buttonLabel}
             </SubmitButton>
             {modalMode[mode].deleteButtonLabel && (
               <SubmitButton
                 type='button'
-                onClick={handleSubmitDelete}
+                onClick={handleDelete}
                 className='bg-error-600!'
               >
                 {modalMode[mode].deleteButtonLabel}

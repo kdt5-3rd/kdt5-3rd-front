@@ -4,7 +4,7 @@ import BoardTitle from '@/app/_components/common/BoardTitle';
 import Navigation from '@/app/_components/nav/Navigation';
 import TaskListItem from '@/app/_components/tasks/TaskListItem';
 import { TaskPayload } from '@/app/_types';
-import { formatTime } from '@/app/_utils';
+import { formatTime } from '@/app/_utils/dateTimeUtil';
 import { useEffect, useState } from 'react';
 import CalendarType from '../_components/CalendarType';
 import Progress from '../_components/Progress';
@@ -140,7 +140,10 @@ export default function Daily() {
                         <span>{formatTime(task.start_time)}</span>
                       </div>
                       <div className='bg-primary-0 border-primary-200 mt-[20px] flex h-[180px] items-center justify-center rounded-[10px] border-1'>
-                        <MapDisplay taskId={task.task_id} location={task.location} />
+                        <MapDisplay
+                          taskId={task.task_id}
+                          location={task.location}
+                        />
                       </div>
                     </div>
                   );

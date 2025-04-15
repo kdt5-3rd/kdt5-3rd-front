@@ -1,4 +1,4 @@
-import { formatTime } from '@/app/_utils';
+import { formatTime } from '@/app/_utils/dateTimeUtil';
 import Image from 'next/image';
 import TaskModal from './TaskModal';
 import { useState } from 'react';

@@ -1,14 +1,14 @@
 'use client';
 
 import Image from 'next/image';
-import { Dispatch, SetStateAction, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import NormalInput from '../common/NormalInput';
 import SubmitButton from '../common/SubmitButton';
 import { searchLocation } from '@/app/_apis/searchLocation';
 import useOutsideClick from '@/app/_hooks/useOutSideClick';
 
 interface LocationModalProps {
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  closeModal: () => void;
   setPlaceName: (name: string) => void;
 }
 
@@ -24,14 +24,14 @@ interface SearchResult {
   telephone: string;
 }
 
-function LocationModal({ setIsOpen, setPlaceName }: LocationModalProps) {
-  const locationRef = useOutsideClick(() => setIsOpen(false));
+function LocationModal({ closeModal, setPlaceName }: LocationModalProps) {
+  const locationRef = useOutsideClick(closeModal);
   const inputRef = useRef<HTMLInputElement>(null);
   const [searchPlace, setSearchPlace] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
 
   const handleCloseButton = () => {
-    setIsOpen(false);
+    closeModal();
   };
 
   const handleSearchButton = async () => {
@@ -58,7 +58,7 @@ function LocationModal({ setIsOpen, setPlaceName }: LocationModalProps) {
 
   const handleSelectPlace = (selectedTitle: string) => {
     setPlaceName(selectedTitle);
-    setIsOpen(false);
+    closeModal();
   };
 
   return (

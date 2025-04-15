@@ -2,84 +2,102 @@
 
 import useOutsideClick from '@/app/_hooks/useOutSideClick';
 import { TaskCalendar } from '@/app/_types';
-import { format, setHours, setMinutes } from 'date-fns';
-import {
-  ChangeEvent,
-  ChangeEventHandler,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
-import { DayPicker } from 'react-day-picker';
+import { applyTimeToDate } from '@/app/_utils/dateTimeUtil';
+import { format } from 'date-fns';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { DateRange, DayPicker } from 'react-day-picker';
 
-interface DateAndTimePickerProps {
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+interface DayPickerProps {
+  closeModal: () => void;
   onChange: (
     field: keyof TaskCalendar,
     e?: ChangeEvent<HTMLTextAreaElement>,
     value?: Date,
   ) => void;
-  value: Date;
+  value: DateRange;
 }
 
-function DayPickerModal({
-  setIsOpen,
-  onChange,
-  value,
-}: DateAndTimePickerProps) {
-  const pickerRef = useOutsideClick(() => setIsOpen(false));
-  const [selected, setSelected] = useState<Date>(value ?? new Date());
-  const [timeValue, setTimeValue] = useState<string>(
-    value ? format(value, 'hh:mm') : '00:00',
-  );
+interface TimeRange {
+  from: string;
+  to: string;
+}
 
-  const handleTimeChange: ChangeEventHandler<HTMLInputElement> = e => {
+function DayPickerModal({ closeModal, onChange, value }: DayPickerProps) {
+  const today = new Date();
+  const pickerRef = useOutsideClick(closeModal);
+  const [selected, setSelected] = useState<DateRange>({
+    from: value.from ?? today,
+    to: value.to ?? today,
+  });
+  const [timeValue, setTimeValue] = useState<TimeRange>({
+    from: value.from ? format(value.from, 'HH:mm') : '00:00',
+    to: value.to ? format(value.to, 'HH:mm') : '00:00',
+  });
+
+  const handleTimeChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    field: 'from' | 'to',
+  ) => {
     const time = e.target.value;
-    if (!selected) {
-      setTimeValue(time);
-      return;
+    const date = selected[field];
+
+    if (!date) {
+      return setTimeValue(prev => ({ ...prev, [field]: time }));
     }
-    const [hours, minutes] = time.split(':').map(str => parseInt(str, 10));
-    const newSelectedDate = setHours(setMinutes(selected, minutes), hours);
-    setSelected(newSelectedDate);
-    setTimeValue(time);
+
+    setSelected(prev => ({ ...prev, [field]: applyTimeToDate(date, time) }));
+    setTimeValue(prev => ({ ...prev, [field]: time }));
   };
 
-  const handleDaySelect = (date: Date | undefined) => {
-    if (!timeValue || !date) {
-      if (date) setSelected(date);
-      return;
+  const handleDaySelect = (dates: DateRange) => {
+    if (!dates.from || !dates.to) {
+      return setSelected(dates);
     }
-    const [hours, minutes] = timeValue.split(':').map(str => parseInt(str, 10));
-    const newDate = new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate(),
-      hours,
-      minutes,
-    );
-    setSelected(newDate);
+
+    setSelected({
+      from: applyTimeToDate(dates.from, timeValue.from),
+      to: applyTimeToDate(dates.to, timeValue.to),
+    });
   };
 
   useEffect(() => {
     if (!selected) return;
 
-    onChange('start_time', undefined, selected);
+    onChange('start_time', undefined, selected.from);
+    onChange('end_time', undefined, selected.to ?? selected.from);
   }, [selected, onChange]);
 
   return (
     <div
       ref={pickerRef}
-      className='z-999 bg-primary-0 absolute mt-[46px] flex flex-col gap-[10px] rounded-[10px] p-2.5 shadow-lg'
+      className='bg-primary-0 absolute z-999 mt-[46px] flex gap-[10px] rounded-[10px] p-2.5 shadow-lg'
     >
       <DayPicker
+        required
         animate
-        mode='single'
+        mode='range'
         selected={selected}
         onSelect={handleDaySelect}
+        defaultMonth={selected.from ?? today}
+        min={1}
       />
-      <input type='time' value={timeValue} onChange={handleTimeChange} />
+      <div className='flex flex-col gap-[10px]'>
+        <label htmlFor='startTime'>시작 시각</label>
+        <input
+          id='startTime'
+          type='time'
+          value={timeValue.from}
+          onChange={e => handleTimeChange(e, 'from')}
+          min={'14:00'}
+        />
+        <label htmlFor='endTime'>종료 시각</label>
+        <input
+          id='endTime'
+          type='time'
+          value={timeValue.to}
+          onChange={e => handleTimeChange(e, 'to')}
+        />
+      </div>
     </div>
   );
 }

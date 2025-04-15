@@ -3,12 +3,18 @@ import { ComponentPropsWithRef, ReactNode } from 'react';
 interface NormalInputProps extends ComponentPropsWithRef<'input'> {
   children?: ReactNode;
   className?: string;
+  isError?: boolean;
 }
 
-function NormalInput({ children, className = '', ...rest }: NormalInputProps) {
+function NormalInput({
+  children,
+  className = '',
+  isError = false,
+  ...rest
+}: NormalInputProps) {
   return (
     <div
-      className={`${className} bg-primary-0 border-primary-200 placeholder-secondary-400 flex gap-[16px] rounded-lg border p-[16px]`}
+      className={`${className} ${isError ? 'border-error-600 border-2' : 'border-primary-200 border'} bg-primary-0 placeholder-secondary-400 flex gap-[16px] rounded-lg p-[16px]`}
     >
       {children}
       <input
