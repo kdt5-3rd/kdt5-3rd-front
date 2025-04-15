@@ -5,7 +5,6 @@ import NormalTextarea from '../common/NormalTextarea';
 import {
   ChangeEvent,
   Dispatch,
-  FocusEvent,
   SetStateAction,
   useCallback,
   useEffect,
@@ -17,7 +16,10 @@ import 'react-day-picker/style.css';
 import DayPickerModal from './DayPickerModal';
 import { format, isEqual as isDateEqual } from 'date-fns';
 import LocationModal from './LocationModal';
-import { validateDateTime, validateBlank } from '@/app/_utils/validateUtil';
+import {
+  validateIsAfterDateTime,
+  validateIsBlank,
+} from '@/app/_utils/validateUtil';
 import isEqual from 'lodash/isEqual';
 
 export type ModalMode = 'add' | 'edit' | 'detail';
@@ -103,6 +105,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
   );
   const [isInvalidDate, setIsInvalidDate] = useState(false);
   const [isInvalidTitle, setIsInvalidTitle] = useState(false);
+  const [isInvalidValue, setIsInvalidValue] = useState(true);
 
   const handleCloseButton = () => {
     setIsOpen(false);
@@ -129,13 +132,6 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
     }));
   };
 
-  const handleBlurTitle = (e: FocusEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-
-    if (value === '') return setIsInvalidTitle(true);
-    setIsInvalidTitle(false);
-  };
-
   const handleConfirm = () => {
     setIsOpen(false);
   };
@@ -150,10 +146,20 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
   }, [task]);
 
   useEffect(() => {
-    if (isEqual(value, initialTask)) return;
+    if (isEqual(value, initialTask)) return setIsInvalidValue(true);
 
-    setIsInvalidDate(!validateDateTime(value.start_time, value.end_time));
-    setIsInvalidTitle(!validateBlank(value.title));
+    const isBlankTitle = validateIsBlank(value.title);
+    const isAfterTime = validateIsAfterDateTime(
+      value.start_time,
+      value.end_time,
+    );
+
+    setIsInvalidTitle(isBlankTitle);
+    setIsInvalidDate(isAfterTime);
+
+    if (!isBlankTitle && !isAfterTime) return setIsInvalidValue(false);
+
+    setIsInvalidValue(true);
   }, [value]);
 
   if (!mode) return;
@@ -186,7 +192,6 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
                   isError={isInvalidTitle}
                   value={value.title}
                   onChange={e => handleFieldChange('title', e)}
-                  onBlur={handleBlurTitle}
                   required
                 />
                 {isInvalidTitle && (
@@ -273,7 +278,11 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
             </fieldset>
           </form>
           <div className='flex gap-[20px] *:flex-1'>
-            <SubmitButton type='button' onClick={handleConfirm}>
+            <SubmitButton
+              type='button'
+              onClick={handleConfirm}
+              disabled={isInvalidValue}
+            >
               {modalMode[mode].buttonLabel}
             </SubmitButton>
             {modalMode[mode].deleteButtonLabel && (
