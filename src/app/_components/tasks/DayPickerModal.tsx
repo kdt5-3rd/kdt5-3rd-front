@@ -30,8 +30,8 @@ function DayPickerModal({ closeModal, onChange, value }: DayPickerProps) {
     to: value.to ?? today,
   });
   const [timeValue, setTimeValue] = useState<TimeRange>({
-    from: value.from ? format(value.from, 'hh:mm') : '00:00',
-    to: value.to ? format(value.to, 'hh:mm') : '00:00',
+    from: value.from ? format(value.from, 'HH:mm') : '00:00',
+    to: value.to ? format(value.to, 'HH:mm') : '00:00',
   });
 
   const handleTimeChange = (
@@ -82,14 +82,17 @@ function DayPickerModal({ closeModal, onChange, value }: DayPickerProps) {
         min={1}
       />
       <div className='flex flex-col gap-[10px]'>
-        <label>시작 시간</label>
+        <label htmlFor='startTime'>시작 시각</label>
         <input
+          id='startTime'
           type='time'
           value={timeValue.from}
           onChange={e => handleTimeChange(e, 'from')}
+          min={'14:00'}
         />
-        <label>종료 시간</label>
+        <label htmlFor='endTime'>종료 시각</label>
         <input
+          id='endTime'
           type='time'
           value={timeValue.to}
           onChange={e => handleTimeChange(e, 'to')}
