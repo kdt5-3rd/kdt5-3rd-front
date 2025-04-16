@@ -7,8 +7,10 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { fetchDailyTask } from './_apis/fetchTasks';
 import { TaskPayload } from './_types';
+import TaskModal from './_components/tasks/TaskModal';
 
 export default function Dashboard() {
+  const [isOpen, setIsOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState('');
   const [today, setToday] = useState('');
   const [taskList, setTaskList] = useState<TaskPayload[]>([]);
@@ -44,6 +46,8 @@ export default function Dashboard() {
     );
   };
 
+  const addTask = () => setIsOpen(true);
+
   useEffect(() => {
     const interval = setInterval(() => {
       getCurrentTime();
@@ -72,7 +76,7 @@ export default function Dashboard() {
   }, [taskList]);
 
   return (
-    <div className='flex h-full min-h-screen min-w-[1440px] bg-[#FAFAFA]'>
+    <div className='text-secondary-500 flex h-full min-h-screen min-w-[1440px] bg-[#FAFAFA]'>
       <Navigation />
       <div className='w-full min-w-[752px]'>
         <div className='p-[32px]'>
@@ -86,7 +90,10 @@ export default function Dashboard() {
               </span>
             </div>
             <div className='flex items-end'>
-              <button className='bg-primary-400 hover:bg-primary-500 h-[50px] w-[50px] cursor-pointer rounded-[10px] bg-[url(/assets/plus-big.png)] bg-center bg-no-repeat'></button>
+              <button
+                onClick={addTask}
+                className='bg-primary-400 hover:bg-primary-500 h-[50px] w-[50px] cursor-pointer rounded-[10px] bg-[url(/assets/plus-big.png)] bg-center bg-no-repeat'
+              ></button>
             </div>
           </div>
           <div className='text-secondary-500 mt-[35px] mb-[12px] flex justify-between text-[20px] font-semibold'>
@@ -140,6 +147,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+      <TaskModal mode='add' isOpen={isOpen} setIsOpen={setIsOpen} task={null} />
     </div>
   );
 }
