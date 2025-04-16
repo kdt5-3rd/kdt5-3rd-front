@@ -5,46 +5,23 @@ import ProgressBar from '@/app/_components/tasks/ProgressBar';
 import TaskListItem from '@/app/_components/tasks/TaskListItem';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { fetchDailyTask } from './_apis/fetchTasks';
+import { TaskPayload } from './_types';
 
 export default function Dashboard() {
   const [currentTime, setCurrentTime] = useState('');
   const [today, setToday] = useState('');
-  const [mockData, setMockData] = useState([
-    {
-      task_id: 1,
-      title: '일어나기',
-      memo: '',
-      start_time: '2025-03-11T13:00:00',
-      end_time: '',
-      address: '경기도 수원시 ...',
-      place_name: 'Cafe ABC',
-      location: { lat: '', lng: '' },
-      is_completed: true,
-    },
-    {
-      task_id: 2,
-      title: 'Team meeting',
-      memo: '주간 회의',
-      start_time: '2025-03-11T13:00:00',
-      end_time: '',
-      address: '경기도 수원시 ...',
-      place_name: 'Zep 4번 룸',
-      location: { lat: '127.1086228', lng: '37.4012191' },
-      is_completed: false,
-    },
-    {
-      task_id: 3,
-      title: '구현하기',
-      memo: '수요일까지 구현해요',
-      start_time: '2025-03-11T13:00:00',
-      end_time: '2025-03-11T14:00:00',
-      address: '경기도 수원시 ...',
-      place_name: 'Cafe ABC',
-      location: { lat: '127.1086228', lng: '37.4012191' },
-      is_completed: false,
-    },
-  ]);
+  const [taskList, setTaskList] = useState<TaskPayload[]>([]);
   const [finishedTaskCount, setFinishedTaskCount] = useState(0);
+
+  const getTodayTask = async (todayDate: Date) => {
+    try {
+      const result = await fetchDailyTask(todayDate);
+      setTaskList(result);
+    } catch (error) {
+      console.error('오늘의 일정을 불러오는 중 에러가 발생했습니다. ', error);
+    }
+  };
 
   const getCurrentTime = () => {
     const currentDate = new Date();
@@ -58,7 +35,7 @@ export default function Dashboard() {
   };
 
   const handleCheckClick = (taskId: number) => {
-    setMockData(prev =>
+    setTaskList(prev =>
       prev.map(task =>
         task.task_id === taskId
           ? { ...task, is_completed: !task.is_completed }
@@ -68,7 +45,6 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    getCurrentTime();
     const interval = setInterval(() => {
       getCurrentTime();
     }, 1000);
@@ -88,11 +64,12 @@ export default function Dashboard() {
         ' ' +
         weekday,
     );
+    getTodayTask(todayDate);
   }, []);
 
   useEffect(() => {
-    setFinishedTaskCount(mockData.filter(task => task.is_completed).length);
-  }, [mockData]);
+    setFinishedTaskCount(taskList.filter(task => task.is_completed).length);
+  }, [taskList]);
 
   return (
     <div className='flex h-full min-h-screen min-w-[1440px] bg-[#FAFAFA]'>
@@ -114,15 +91,15 @@ export default function Dashboard() {
           </div>
           <div className='text-secondary-500 mt-[35px] mb-[12px] flex justify-between text-[20px] font-semibold'>
             <span>Task Done</span>
-            <span>{`${finishedTaskCount} / ${mockData.length}`}</span>
+            <span>{`${finishedTaskCount} / ${taskList.length}`}</span>
           </div>
           <ProgressBar
             finishedTaskCount={finishedTaskCount}
-            totalTaskCount={mockData.length}
+            totalTaskCount={taskList.length}
           />
           <div className='text-secondary-500 mt-[14px]'>
             <ul className='flex flex-col gap-y-[10px]'>
-              {mockData.map((task, index) => {
+              {taskList.map((task, index) => {
                 return (
                   <TaskListItem
                     task={task}
