@@ -7,50 +7,17 @@ import { format, getDay, parse, startOfWeek } from 'date-fns';
 import { useCallback, useEffect, useState } from 'react';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import './monthlyCalendar.css';
-import { TaskCalendar } from '@/app/_types';
+import { TaskCalendar, TaskPayload } from '@/app/_types';
 import CalendarType from '../_components/CalendarType';
 import Progress from '../_components/Progress';
 import CalendarContainer from '../_components/CalendarContainer';
 import TaskModal from '@/app/_components/tasks/TaskModal';
+import { fetchMonthlyTask } from '@/app/_apis/fetchTasks';
 
 export default function Monthly() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectEvent, setSelectEvent] = useState<TaskCalendar | null>(null);
-  const [mockData] = useState([
-    {
-      task_id: 1,
-      title: '일어나기',
-      memo: '',
-      start_time: '2025-04-11T09:00:00',
-      end_time: '',
-      address: '경기도 수원시 ...',
-      place_name: 'Cafe ABC',
-      location: { lat: '', lng: '' },
-      is_completed: true,
-    },
-    {
-      task_id: 2,
-      title: 'Team meeting',
-      memo: '주간 회의',
-      start_time: '2025-04-11T15:00:00',
-      end_time: '',
-      address: '경기도 수원시 ...',
-      place_name: 'Zep 4번 룸',
-      location: { lat: '127.1086228', lng: '37.4012191' },
-      is_completed: false,
-    },
-    {
-      task_id: 3,
-      title: '구현하기',
-      memo: '수요일까지 구현해요',
-      start_time: '2025-04-11T13:00:00',
-      end_time: '2025-04-13T14:00:00',
-      address: '경기도 수원시 ...',
-      place_name: 'Cafe DEF',
-      location: { lat: '127.1086228', lng: '37.4012191' },
-      is_completed: false,
-    },
-  ]);
+  const [taskList, setTaskList] = useState<TaskPayload[]>([]);
   const [finishedTaskCount, setFinishedTaskCount] = useState(0);
   const [calendarMockData, setCalendarMockData] = useState<TaskCalendar[]>([]);
 
@@ -67,9 +34,22 @@ export default function Monthly() {
     setSelectEvent(event);
   }, []);
 
+  const getMonthlyTask = async (todayDate: Date) => {
+    try {
+      const result = await fetchMonthlyTask(todayDate);
+      setTaskList(result);
+    } catch (error) {
+      console.error('오늘의 일정을 불러오는 중 에러가 발생했습니다. ', error);
+    }
+  }
+
   useEffect(() => {
-    if (mockData && mockData.length > 0) {
-      const formattedData = mockData.map(task => ({
+    getMonthlyTask(new Date());
+  }, [])
+
+  useEffect(() => {
+    if (taskList && taskList.length > 0) {
+      const formattedData = taskList.map(task => ({
         ...task,
         start_time: new Date(task.start_time),
         end_time: new Date(task.end_time || task.start_time),
@@ -78,8 +58,8 @@ export default function Monthly() {
       setCalendarMockData(formattedData);
     }
 
-    setFinishedTaskCount(mockData.filter(task => task.is_completed).length);
-  }, [mockData]);
+    setFinishedTaskCount(taskList.filter(task => task.is_completed).length);
+  }, [taskList]);
 
   return (
     <div className='text-secondary-500 inline-flex h-full min-h-screen w-full bg-[#FAFAFA]'>
@@ -90,7 +70,7 @@ export default function Monthly() {
             <CalendarType />
             <Progress
               finishedTaskCount={finishedTaskCount}
-              totalTaskCount={mockData.length}
+              totalTaskCount={taskList.length}
             />
           </BoardTitle>
           <CalendarContainer>
