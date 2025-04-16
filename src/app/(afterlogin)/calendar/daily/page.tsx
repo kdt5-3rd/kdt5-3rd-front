@@ -10,49 +10,25 @@ import CalendarType from '../_components/CalendarType';
 import Progress from '../_components/Progress';
 import MapDisplay from '../_components/MapDisplay';
 import TaskModal from '@/app/_components/tasks/TaskModal';
+import { fetchDailyTask } from '@/app/_apis/fetchTasks';
 
 export default function Daily() {
   const [isOpen, setIsOpen] = useState(false);
-  const [mockData, setMockData] = useState([
-    {
-      task_id: 1,
-      title: '일어나기',
-      memo: '',
-      start_time: '2025-03-11T13:00:00',
-      end_time: '',
-      address: '경기도 수원시 ...',
-      place_name: 'Cafe ABC',
-      location: { lat: '', lng: '' },
-      is_completed: true,
-    },
-    {
-      task_id: 2,
-      title: 'Team meeting',
-      memo: '주간 회의',
-      start_time: '2025-03-11T13:00:00',
-      end_time: '',
-      address: '경기도 수원시 ...',
-      place_name: 'Zep 4번 룸',
-      location: { lat: '37.484543', lng: '127.010808' },
-      is_completed: false,
-    },
-    {
-      task_id: 3,
-      title: '구현하기',
-      memo: '수요일까지 구현해요',
-      start_time: '2025-03-11T13:00:00',
-      end_time: '2025-03-11T14:00:00',
-      address: '경기도 수원시 ...',
-      place_name: 'Cafe DEF',
-      location: { lat: '37.498014', lng: '127.027616' },
-      is_completed: false,
-    },
-  ]);
+  const [taskList, setTaskList] = useState<TaskPayload[]>([]);
   const [pendingTask, setPendingTask] = useState<TaskPayload[]>([]);
   const [finishedTaskCount, setFinishedTaskCount] = useState(0);
 
+  const getTodayTask = async (todayDate: Date) => {
+    try {
+      const result = await fetchDailyTask(todayDate);
+      setTaskList(result);
+    } catch (error) {
+      console.error('오늘의 일정을 불러오는 중 에러가 발생했습니다. ', error);
+    }
+  };
+
   const handleCheckClick = (taskId: number) => {
-    setMockData(prev =>
+    setTaskList(prev =>
       prev.map(task =>
         task.task_id === taskId
           ? { ...task, is_completed: !task.is_completed }
@@ -64,9 +40,13 @@ export default function Daily() {
   const addTask = () => setIsOpen(true);
 
   useEffect(() => {
-    setFinishedTaskCount(mockData.filter(task => task.is_completed).length);
-    setPendingTask(mockData.filter(task => !task.is_completed));
-  }, [mockData]);
+    getTodayTask(new Date());
+  }, []);
+
+  useEffect(() => {
+    setFinishedTaskCount(taskList.filter(task => task.is_completed).length);
+    setPendingTask(taskList.filter(task => !task.is_completed));
+  }, [taskList]);
 
   return (
     <div className='text-secondary-500 inline-flex h-full min-h-screen w-full bg-[#FAFAFA]'>
@@ -77,7 +57,7 @@ export default function Daily() {
             <CalendarType />
             <Progress
               finishedTaskCount={finishedTaskCount}
-              totalTaskCount={mockData.length}
+              totalTaskCount={taskList.length}
             />
           </BoardTitle>
           <div className='flex h-full justify-between bg-[#FAFAFA] px-[32px] py-[24px]'>
@@ -90,7 +70,7 @@ export default function Daily() {
                 ></button>
               </div>
               <ul className='flex flex-col gap-y-[10px]'>
-                {mockData.map((task, index) => {
+                {taskList.map((task, index) => {
                   return (
                     <TaskListItem
                       task={task}
@@ -119,10 +99,10 @@ export default function Daily() {
                             출발
                           </span>
                           <span className='text-[20px] font-semibold'>
-                            {mockData[0].task_id === task.task_id
+                            {taskList[0].task_id === task.task_id
                               ? 'House'
                               : index === 0
-                                ? mockData[task.task_id - 2].place_name
+                                ? taskList[task.task_id - 2].place_name
                                 : pendingTask[index - 1].place_name}
                           </span>
                         </div>
@@ -137,12 +117,12 @@ export default function Daily() {
                             {task.place_name}
                           </span>
                         </div>
-                        <span>{formatTime(task.start_time)}</span>
+                        <span>{formatTime(task.end_time)}</span>
                       </div>
                       <div className='bg-primary-0 border-primary-200 mt-[20px] flex h-[180px] items-center justify-center rounded-[10px] border-1'>
                         <MapDisplay
                           taskId={task.task_id}
-                          location={task.location}
+                          location={{ lat: task.latitude, lng: task.longitude }}
                         />
                       </div>
                     </div>
