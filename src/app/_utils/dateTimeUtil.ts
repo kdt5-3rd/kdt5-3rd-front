@@ -1,4 +1,4 @@
-import { setHours, setMinutes } from 'date-fns';
+import { format, setHours, setMinutes } from 'date-fns';
 
 export const formatTime = (date: string | Date) => {
   return new Intl.DateTimeFormat('en-US', {
@@ -17,3 +17,6 @@ export const applyTimeToDate = (date: Date, time: string) => {
   const [hours, minutes] = parseTimeString(time);
   return setHours(setMinutes(date, minutes), hours);
 };
+
+export const formatDateISO8601 = (date: Date) =>
+  format(date, "yyyy-MM-dd'T'HH:mm:ss");
