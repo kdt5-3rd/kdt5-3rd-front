@@ -1,20 +1,40 @@
 import axios from 'axios';
 import { TaskPayload } from '../_types';
+import { getWeekOfMonth } from 'date-fns';
+
+type TaskParams = {
+  year: number;
+  month: number;
+  day?: number;
+  week?: number;
+};
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_SERVER_URL,
 });
 
-export const fetchDailyTask = async (date: Date): Promise<TaskPayload[]> => {
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
+const formatDateParams = (date: Date, type: 'day' | 'week' | 'month') => {
+  const dateParams: TaskParams = {
+    year: date.getFullYear(),
+    month: date.getMonth() + 1,
+  };
 
+  if (type === 'day') {
+    dateParams.day = date.getDate();
+  }
+  if (type === 'week') {
+    dateParams.week = getWeekOfMonth(date, { weekStartsOn: 0 });
+  }
+
+  return dateParams;
+};
+
+const fetchTasks = async (
+  endpoint: string,
+  params: TaskParams,
+): Promise<TaskPayload[]> => {
   try {
-    const response = await api.get('/tasks/day', {
-      params: { year, month, day },
-    });
-
+    const response = await api.get(endpoint, { params });
     return response.data.data;
   } catch (error) {
     console.error('API 호출 중 에러가 발생했습니다.', error);
@@ -22,37 +42,20 @@ export const fetchDailyTask = async (date: Date): Promise<TaskPayload[]> => {
   }
 };
 
-export const fetchWeeklyTask = async (date: Date): Promise<TaskPayload[]> => {
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-  const firstDayOfWeek = firstDay.getDay();
-  const week = Math.ceil((date.getDate() + firstDayOfWeek) / 7);
+export const fetchDailyTask = (date: Date): Promise<TaskPayload[]> => {
+  const params = formatDateParams(date, 'day');
 
-  try {
-    const response = await api.get('/tasks/week', {
-      params: { year, month, week },
-    });
-
-    return response.data.data;
-  } catch (error) {
-    console.error('API 호출 중 에러가 발생했습니다.', error);
-    return [];
-  }
+  return fetchTasks('/tasks/day', params);
 };
 
-export const fetchMonthlyTask = async (date: Date): Promise<TaskPayload[]> => {
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
+export const fetchWeeklyTask = (date: Date): Promise<TaskPayload[]> => {
+  const params = formatDateParams(date, 'week');
 
-  try {
-    const response = await api.get('/tasks/month', {
-      params: { year, month },
-    });
+  return fetchTasks('/tasks/week', params);
+};
 
-    return response.data.data;
-  } catch (error) {
-    console.error('API 호출 중 에러가 발생했습니다.', error);
-    return [];
-  }
+export const fetchMonthlyTask = (date: Date): Promise<TaskPayload[]> => {
+  const params = formatDateParams(date, 'month');
+  
+  return fetchTasks('/tasks/month', params);
 };
