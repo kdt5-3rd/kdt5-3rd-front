@@ -12,7 +12,7 @@ import CalendarType from '../_components/CalendarType';
 import Progress from '../_components/Progress';
 import CalendarContainer from '../_components/CalendarContainer';
 import TaskModal from '@/app/_components/tasks/TaskModal';
-import { fetchMonthlyTask } from '@/app/_apis/fetchTasks';
+import { getMonthlyTask } from '@/app/_apis/getTasks';
 
 export default function Monthly() {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,18 +34,18 @@ export default function Monthly() {
     setSelectEvent(event);
   }, []);
 
-  const getMonthlyTask = async (todayDate: Date) => {
+  const fetchMonthlyTask = async (todayDate: Date) => {
     try {
-      const result = await fetchMonthlyTask(todayDate);
+      const result = await getMonthlyTask(todayDate);
       setTaskList(result);
     } catch (error) {
       console.error('오늘의 일정을 불러오는 중 에러가 발생했습니다. ', error);
     }
-  }
+  };
 
   useEffect(() => {
-    getMonthlyTask(new Date());
-  }, [])
+    fetchMonthlyTask(new Date());
+  }, []);
 
   useEffect(() => {
     if (taskList && taskList.length > 0) {

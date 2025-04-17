@@ -29,33 +29,29 @@ const formatDateParams = (date: Date, type: 'day' | 'week' | 'month') => {
   return dateParams;
 };
 
-const fetchTasks = async (
+const getTasks = async (
   endpoint: string,
   params: TaskParams,
 ): Promise<TaskPayload[]> => {
-  try {
-    const response = await api.get(endpoint, { params });
-    return response.data.data;
-  } catch (error) {
-    console.error('API 호출 중 에러가 발생했습니다.', error);
-    return [];
-  }
+  const response = await api.get(endpoint, { params });
+
+  return response.data.data;
 };
 
-export const fetchDailyTask = (date: Date): Promise<TaskPayload[]> => {
+export const getDailyTask = (date: Date): Promise<TaskPayload[]> => {
   const params = formatDateParams(date, 'day');
 
-  return fetchTasks('/tasks/day', params);
+  return getTasks('/tasks/day', params);
 };
 
-export const fetchWeeklyTask = (date: Date): Promise<TaskPayload[]> => {
+export const getWeeklyTask = (date: Date): Promise<TaskPayload[]> => {
   const params = formatDateParams(date, 'week');
 
-  return fetchTasks('/tasks/week', params);
+  return getTasks('/tasks/week', params);
 };
 
-export const fetchMonthlyTask = (date: Date): Promise<TaskPayload[]> => {
+export const getMonthlyTask = (date: Date): Promise<TaskPayload[]> => {
   const params = formatDateParams(date, 'month');
-  
-  return fetchTasks('/tasks/month', params);
+
+  return getTasks('/tasks/month', params);
 };

@@ -18,7 +18,7 @@ import Progress from '../_components/Progress';
 import CalendarContainer from '../_components/CalendarContainer';
 import { TaskCalendar, TaskPayload } from '@/app/_types';
 import TaskModal from '@/app/_components/tasks/TaskModal';
-import { fetchWeeklyTask } from '@/app/_apis/fetchTasks';
+import { getWeeklyTask } from '@/app/_apis/getTasks';
 
 export default function Weekly() {
   const [isOpen, setIsOpen] = useState(false);
@@ -67,9 +67,9 @@ export default function Weekly() {
     [taskList],
   );
 
-  const getWeeklyTask = async (todayDate: Date) => {
+  const fetchWeeklyTask = async (todayDate: Date) => {
     try {
-      const result = await fetchWeeklyTask(todayDate);
+      const result = await getWeeklyTask(todayDate);
       setTaskList(result);
     } catch (error) {
       console.error('오늘의 일정을 불러오는 중 에러가 발생했습니다. ', error);
@@ -82,7 +82,7 @@ export default function Weekly() {
   }, []);
 
   useEffect(() => {
-    getWeeklyTask(new Date());
+    fetchWeeklyTask(new Date());
   }, []);
 
   return (

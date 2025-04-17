@@ -10,7 +10,7 @@ import CalendarType from '../_components/CalendarType';
 import Progress from '../_components/Progress';
 import MapDisplay from '../_components/MapDisplay';
 import TaskModal from '@/app/_components/tasks/TaskModal';
-import { fetchDailyTask } from '@/app/_apis/fetchTasks';
+import { getDailyTask } from '@/app/_apis/getTasks';
 
 export default function Daily() {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,9 +18,9 @@ export default function Daily() {
   const [pendingTask, setPendingTask] = useState<TaskPayload[]>([]);
   const [finishedTaskCount, setFinishedTaskCount] = useState(0);
 
-  const getTodayTask = async (todayDate: Date) => {
+  const fetchDailyTask = async (todayDate: Date) => {
     try {
-      const result = await fetchDailyTask(todayDate);
+      const result = await getDailyTask(todayDate);
       setTaskList(result);
     } catch (error) {
       console.error('오늘의 일정을 불러오는 중 에러가 발생했습니다. ', error);
@@ -40,7 +40,7 @@ export default function Daily() {
   const addTask = () => setIsOpen(true);
 
   useEffect(() => {
-    getTodayTask(new Date());
+    fetchDailyTask(new Date());
   }, []);
 
   useEffect(() => {

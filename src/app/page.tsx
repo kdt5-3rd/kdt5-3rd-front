@@ -5,7 +5,7 @@ import ProgressBar from '@/app/_components/tasks/ProgressBar';
 import TaskListItem from '@/app/_components/tasks/TaskListItem';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { fetchDailyTask } from './_apis/fetchTasks';
+import { getDailyTask } from './_apis/getTasks';
 import { TaskPayload } from './_types';
 import TaskModal from './_components/tasks/TaskModal';
 
@@ -16,9 +16,9 @@ export default function Dashboard() {
   const [taskList, setTaskList] = useState<TaskPayload[]>([]);
   const [finishedTaskCount, setFinishedTaskCount] = useState(0);
 
-  const getTodayTask = async (todayDate: Date) => {
+  const fetchDailyTask = async (todayDate: Date) => {
     try {
-      const result = await fetchDailyTask(todayDate);
+      const result = await getDailyTask(todayDate);
       setTaskList(result);
     } catch (error) {
       console.error('오늘의 일정을 불러오는 중 에러가 발생했습니다. ', error);
@@ -68,7 +68,7 @@ export default function Dashboard() {
         ' ' +
         weekday,
     );
-    getTodayTask(todayDate);
+    fetchDailyTask(todayDate);
   }, []);
 
   useEffect(() => {
