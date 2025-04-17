@@ -4,7 +4,8 @@ export interface Task {
   memo: string;
   address: string;
   place_name: string;
-  location: { lat: string; lng: string };
+  latitude: string;
+  longitude: string;
   is_completed: boolean;
 }
 

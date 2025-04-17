@@ -8,7 +8,7 @@ import { getDay } from 'date-fns/getDay';
 import { ko } from 'date-fns/locale';
 import './weeklyCalendar.css';
 import { Calendar, dateFnsLocalizer, DateLocalizer } from 'react-big-calendar';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import BoardTitle from '@/app/_components/common/BoardTitle';
 import { isEqual } from 'date-fns';
 import CustomWeekEvent from './CustomWeekEvent';
@@ -18,52 +18,20 @@ import Progress from '../_components/Progress';
 import CalendarContainer from '../_components/CalendarContainer';
 import { TaskCalendar, TaskPayload } from '@/app/_types';
 import TaskModal from '@/app/_components/tasks/TaskModal';
+import { getWeeklyTask } from '@/app/_apis/getTasks';
 
 export default function Weekly() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectEvent, setSelectEvent] = useState<TaskCalendar | null>(null);
-  const [mockData] = useState<TaskPayload[]>([
-    {
-      task_id: 1,
-      title: '일어나기',
-      memo: '',
-      start_time: '2025-04-07T08:00:00',
-      end_time: '2025-04-07T10:00:00',
-      address: '경기도 수원시 ...',
-      place_name: 'Cafe ABC',
-      location: { lat: '', lng: '' },
-      is_completed: true,
-    },
-    {
-      task_id: 2,
-      title: 'Team meeting',
-      memo: '주간 회의',
-      start_time: '2025-04-11T15:00:00',
-      end_time: '',
-      address: '경기도 수원시 ...',
-      place_name: 'Zep 4번 룸',
-      location: { lat: '127.1086228', lng: '37.4012191' },
-      is_completed: false,
-    },
-    {
-      task_id: 3,
-      title: '구현하기',
-      memo: '수요일까지 구현해요',
-      start_time: '2025-04-11T13:00:00',
-      end_time: '2025-04-13T14:00:00',
-      address: '경기도 수원시 ...',
-      place_name: 'Cafe DEF',
-      location: { lat: '127.1086228', lng: '37.4012191' },
-      is_completed: false,
-    },
-  ]);
-  const finishedTaskCount = mockData
-    ? mockData.filter(task => task.is_completed).length
+  const [taskList, setTaskList] = useState<TaskPayload[]>([]);
+
+  const finishedTaskCount = taskList
+    ? taskList.filter(task => task.is_completed).length
     : 0;
 
   const { formats, components, events, localizer } = useMemo(
     () => ({
-      events: mockData.map(task => {
+      events: taskList.map(task => {
         const start = new Date(task.start_time);
         const end = new Date(task.end_time || task.start_time);
 
@@ -96,12 +64,25 @@ export default function Weekly() {
         },
       },
     }),
-    [mockData],
+    [taskList],
   );
+
+  const fetchWeeklyTask = async (todayDate: Date) => {
+    try {
+      const result = await getWeeklyTask(todayDate);
+      setTaskList(result);
+    } catch (error) {
+      console.error('오늘의 일정을 불러오는 중 에러가 발생했습니다. ', error);
+    }
+  };
 
   const onSelectEvent = useCallback((event: TaskCalendar) => {
     setIsOpen(true);
     setSelectEvent(event);
+  }, []);
+
+  useEffect(() => {
+    fetchWeeklyTask(new Date());
   }, []);
 
   return (
@@ -113,7 +94,7 @@ export default function Weekly() {
             <CalendarType />
             <Progress
               finishedTaskCount={finishedTaskCount}
-              totalTaskCount={mockData.length}
+              totalTaskCount={taskList.length}
             />
           </BoardTitle>
           <CalendarContainer>
