@@ -105,18 +105,22 @@ export default function Dashboard() {
             totalTaskCount={taskList.length}
           />
           <div className='text-secondary-500 mt-[14px]'>
-            <ul className='flex flex-col gap-y-[10px]'>
-              {taskList.map((task, index) => {
-                return (
-                  <TaskListItem
-                    task={task}
-                    index={index}
-                    key={task.task_id}
-                    handleCheckClick={handleCheckClick}
-                  />
-                );
-              })}
-            </ul>
+            {taskList.length === 0 ? (
+              <div className='mt-30 text-center'>일정이 없습니다</div>
+            ) : (
+              <ul className='flex flex-col gap-y-[10px]'>
+                {taskList.map((task, index) => {
+                  return (
+                    <TaskListItem
+                      task={task}
+                      index={index}
+                      key={task.task_id}
+                      handleCheckClick={handleCheckClick}
+                    />
+                  );
+                })}
+              </ul>
+            )}
           </div>
         </div>
       </div>

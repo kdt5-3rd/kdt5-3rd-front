@@ -69,18 +69,22 @@ export default function Daily() {
                   className='bg-primary-400 hover:bg-primary-500 h-[40px] w-[40px] cursor-pointer rounded-[10px] bg-[url(/assets/plus-small.png)] bg-center bg-no-repeat'
                 ></button>
               </div>
-              <ul className='flex flex-col gap-y-[10px]'>
-                {taskList.map((task, index) => {
-                  return (
-                    <TaskListItem
-                      task={task}
-                      index={index}
-                      key={task.task_id}
-                      handleCheckClick={handleCheckClick}
-                    />
-                  );
-                })}
-              </ul>
+              {taskList.length === 0 ? (
+                <div className='w-full text-center mt-30'>일정이 없습니다</div>
+              ) : (
+                <ul className='flex flex-col gap-y-[10px]'>
+                  {taskList.map((task, index) => {
+                    return (
+                      <TaskListItem
+                        task={task}
+                        index={index}
+                        key={task.task_id}
+                        handleCheckClick={handleCheckClick}
+                      />
+                    );
+                  })}
+                </ul>
+              )}
             </div>
             <div className='min-w-[400px]'>
               <div className='mb-[18px]'>
