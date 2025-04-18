@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Script from 'next/script';
+import ReactQueryProvider from './ReactQueryProvider';
 
 export const metadata: Metadata = {
   title: '똘개비',
@@ -21,7 +22,9 @@ export default function RootLayout({
           src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${process.env.MAP_CLIENT_ID}`}
         ></Script>
       </head>
-      <body className={`antialiased`}>{children}</body>
+      <body className={`antialiased`}>
+        <ReactQueryProvider>{children}</ReactQueryProvider>
+      </body>
     </html>
   );
 }

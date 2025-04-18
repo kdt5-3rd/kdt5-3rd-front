@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.74.4",
     "@types/react-big-calendar": "^1.16.1",
     "axios": "^1.8.4",
     "date-fns": "^4.1.0",
@@ -22,6 +23,8 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@tanstack/eslint-plugin-query": "^5.73.3",
+    "@tanstack/react-query-devtools": "^5.74.4",
     "@types/lodash": "^4.17.16",
     "@types/navermaps": "^3.7.9",
     "@types/node": "^20",
