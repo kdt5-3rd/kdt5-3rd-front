@@ -60,7 +60,8 @@ const initialTask = {
   end_time: new Date(),
   address: '',
   place_name: '',
-  location: { lat: '', lng: '' },
+  latitude: '',
+  longitude: '',
   is_completed: false,
 };
 
@@ -140,11 +141,20 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
     switch (mode) {
       case 'add':
       case 'detail':
-        await postTask(newTask);
+        try {
+          await postTask(newTask);
+        } catch (error) {
+          console.error('일정 추가를 실패했습니다.', error);
+        }
         break;
 
       case 'edit':
-        await patchTask(newTask);
+        try {
+          await patchTask(newTask);
+        } catch (error) {
+          console.error('일정 수정을 실패했습니다.', error);
+        }
+
         break;
 
       default:
@@ -153,7 +163,12 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
   };
 
   const handleDeleteTask = async () => {
-    await deleteTask(value.task_id);
+    try {
+      await deleteTask(value.task_id);
+    } catch (error) {
+      console.error('일정 삭제를 실패했습니다.', error);
+    }
+
     setIsOpen(false);
   };
 
