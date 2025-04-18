@@ -35,6 +35,12 @@ function Navigation() {
     },
   ];
 
+  const handleNavClick = (href: string) => {
+    if (pathname === href) {
+      setIsOpen(false);
+    }
+  };
+
   return (
     <>
       <div className='text-secondary-500 bg-primary-0 border-primary-100 z-10 flex min-w-[400px] items-center justify-between border-b-1 px-[24px] py-[20px] sm:hidden'>
@@ -59,6 +65,7 @@ function Navigation() {
                   className={`flex cursor-pointer items-center px-[20px] py-[10px] hover:rounded-[10px] ${pathname === navItem.href ? 'text-secondary-500 rounded-[10px] bg-[#F5F5F7]' : 'hover:bg-[#F5F5F7]'}`}
                   href={navItem.href}
                   key={navItem.id}
+                  onClick={() => handleNavClick(navItem.href)}
                 >
                   <Image
                     src={`${pathname === navItem.href ? navItem.activeIcon : navItem.icon}`}
