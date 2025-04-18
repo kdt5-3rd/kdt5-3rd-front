@@ -18,7 +18,7 @@ import Progress from '../_components/Progress';
 import CalendarContainer from '../_components/CalendarContainer';
 import { TaskCalendar, TaskPayload } from '@/app/_types';
 import TaskModal from '@/app/_components/tasks/TaskModal';
-import { getWeeklyTask } from '@/app/_apis/getTasks';
+import { getWeeklyTask } from '@/app/_apis/tasks';
 
 export default function Weekly() {
   const [isOpen, setIsOpen] = useState(false);

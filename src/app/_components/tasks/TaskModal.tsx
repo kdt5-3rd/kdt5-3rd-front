@@ -21,11 +21,15 @@ import {
   validateIsBlank,
 } from '@/app/_utils/validateUtil';
 import isEqual from 'lodash/isEqual';
+import { formatDateISO8601 } from '@/app/_utils/dateTimeUtil';
+import useAddTaskMutation from '@/app/_hooks/useAddTaskMutation';
+import useEditTaskMutation from '@/app/_hooks/useEditTaskMutation';
+import useDeleteTaskMutation from '@/app/_hooks/useDeleteTaskMutation';
 
 export type ModalMode = 'add' | 'edit' | 'detail';
 
 interface TaskModalProps {
-  mode: ModalMode | null;
+  mode: ModalMode;
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   task: TaskPayload | TaskCalendar | null;
@@ -58,11 +62,12 @@ const initialTask = {
   end_time: new Date(),
   address: '',
   place_name: '',
-  location: { lat: '', lng: '' },
+  latitude: '',
+  longitude: '',
   is_completed: false,
 };
 
-const formattedTask = (task: TaskPayload | TaskCalendar): TaskCalendar => {
+const normalizeTaskDate = (task: TaskPayload | TaskCalendar): TaskCalendar => {
   if (task.start_time instanceof Date) return task as TaskCalendar;
 
   const start_time = new Date(task.start_time);
@@ -71,7 +76,7 @@ const formattedTask = (task: TaskPayload | TaskCalendar): TaskCalendar => {
   return { ...task, start_time, end_time };
 };
 
-const formattedDateText = (start: Date, end: Date) => {
+const renderDate = (start: Date, end: Date) => {
   const startDate = format(start, 'yyyy/MM/dd');
   const startTime = format(start, 'hh:mm a');
 
@@ -94,22 +99,22 @@ const formattedDateText = (start: Date, end: Date) => {
   );
 };
 
+type NestedModalType = null | 'dayPicker' | 'location';
+
 function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
-  const BASE_STYLE =
-    'flex gap-[20px] *:first:text-xl *:first:font-semibold *:last:flex-1';
-  const [openModal, setOpenModal] = useState<null | 'dayPicker' | 'location'>(
-    null,
-  );
-  const [value, setValue] = useState<TaskCalendar>(
-    task ? formattedTask(task) : initialTask,
-  );
+  const [openModal, setOpenModal] = useState<NestedModalType>(null);
   const [isInvalidDate, setIsInvalidDate] = useState(false);
   const [isInvalidTitle, setIsInvalidTitle] = useState(false);
   const [isInvalidValue, setIsInvalidValue] = useState(true);
+  const [value, setValue] = useState<TaskCalendar>(
+    task ? normalizeTaskDate(task) : initialTask,
+  );
+  const BASE_STYLE =
+    'flex gap-[20px] *:first:text-xl *:first:font-semibold *:last:flex-1';
 
-  const handleCloseButton = () => {
-    setIsOpen(false);
-  };
+  const { mutate: addTaskMutate } = useAddTaskMutation();
+  const { mutate: editTaskMutate } = useEditTaskMutation();
+  const { mutate: deleteTaskMutate } = useDeleteTaskMutation();
 
   const handleFieldChange = useCallback(
     (
@@ -132,17 +137,36 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
     }));
   };
 
-  const handleConfirm = () => {
-    setIsOpen(false);
+  const handleSaveTask = () => {
+    const newTask: TaskPayload = {
+      ...value,
+      start_time: formatDateISO8601(value.start_time),
+      end_time: formatDateISO8601(value.end_time),
+    };
+
+    switch (mode) {
+      case 'add':
+        addTaskMutate(newTask);
+        break;
+
+      case 'edit':
+      case 'detail':
+        editTaskMutate(newTask);
+        break;
+
+      default:
+        setIsOpen(false);
+    }
   };
 
-  const handleDelete = () => {
+  const handleDeleteTask = () => {
+    deleteTaskMutate(value.task_id);
     setIsOpen(false);
   };
 
   useEffect(() => {
     if (!task) return;
-    setValue(formattedTask(task));
+    setValue(normalizeTaskDate(task));
   }, [task]);
 
   useEffect(() => {
@@ -171,7 +195,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
           <div className='mb-[30px] flex justify-between'>
             <p className='text-3xl font-semibold'>{modalMode[mode].title}</p>
             <button
-              onClick={handleCloseButton}
+              onClick={() => setIsOpen(false)}
               className='bg-primary-400 flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-[10px]'
             >
               <Image
@@ -218,7 +242,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
                     width={24}
                     height={24}
                   />
-                  {formattedDateText(value.start_time, value.end_time)}
+                  {renderDate(value.start_time, value.end_time)}
                   {openModal === 'dayPicker' && (
                     <DayPickerModal
                       closeModal={() => setOpenModal(null)}
@@ -280,7 +304,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
           <div className='flex gap-[20px] *:flex-1'>
             <SubmitButton
               type='button'
-              onClick={handleConfirm}
+              onClick={handleSaveTask}
               disabled={isInvalidValue}
             >
               {modalMode[mode].buttonLabel}
@@ -288,7 +312,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
             {modalMode[mode].deleteButtonLabel && (
               <SubmitButton
                 type='button'
-                onClick={handleDelete}
+                onClick={handleDeleteTask}
                 className='bg-error-600!'
               >
                 {modalMode[mode].deleteButtonLabel}

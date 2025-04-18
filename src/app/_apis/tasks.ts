@@ -9,7 +9,7 @@ type TaskParams = {
   week?: number;
 };
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_SERVER_URL,
 });
 
@@ -54,4 +54,22 @@ export const getMonthlyTask = (date: Date): Promise<TaskPayload[]> => {
   const params = formatDateParams(date, 'month');
 
   return getTasks('/tasks/month', params);
+};
+
+export const postTask = async (task: TaskPayload) => {
+  const response = await api.post('/tasks', task);
+
+  return response;
+};
+
+export const patchTask = async (task: TaskPayload) => {
+  const response = await api.patch(`/tasks/${task.task_id}`, task);
+
+  return response;
+};
+
+export const deleteTask = async (task_id: number) => {
+  const response = await api.delete(`/tasks/${task_id}`);
+
+  return response;
 };

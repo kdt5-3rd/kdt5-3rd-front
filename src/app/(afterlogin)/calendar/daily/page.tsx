@@ -10,7 +10,7 @@ import CalendarType from '../_components/CalendarType';
 import Progress from '../_components/Progress';
 import MapDisplay from '../_components/MapDisplay';
 import TaskModal from '@/app/_components/tasks/TaskModal';
-import { getDailyTask } from '@/app/_apis/getTasks';
+import { getDailyTask } from '@/app/_apis/tasks';
 
 export default function Daily() {
   const [isOpen, setIsOpen] = useState(false);
@@ -70,7 +70,7 @@ export default function Daily() {
                 ></button>
               </div>
               {taskList.length === 0 ? (
-                <div className='w-full text-center mt-30'>일정이 없습니다</div>
+                <div className='mt-30 w-full text-center'>일정이 없습니다</div>
               ) : (
                 <ul className='flex flex-col gap-y-[10px]'>
                   {taskList.map((task, index) => {

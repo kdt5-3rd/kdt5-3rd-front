@@ -12,7 +12,7 @@ import CalendarType from '../_components/CalendarType';
 import Progress from '../_components/Progress';
 import CalendarContainer from '../_components/CalendarContainer';
 import TaskModal from '@/app/_components/tasks/TaskModal';
-import { getMonthlyTask } from '@/app/_apis/getTasks';
+import { getMonthlyTask } from '@/app/_apis/tasks';
 
 export default function Monthly() {
   const [isOpen, setIsOpen] = useState(false);
