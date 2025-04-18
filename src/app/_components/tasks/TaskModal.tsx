@@ -137,7 +137,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
     }));
   };
 
-  const handleSaveTask = async () => {
+  const handleSaveTask = () => {
     const newTask: TaskPayload = {
       ...value,
       start_time: formatDateISO8601(value.start_time),
@@ -146,11 +146,11 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
 
     switch (mode) {
       case 'add':
-      case 'detail':
         addTaskMutate(newTask);
         break;
 
       case 'edit':
+      case 'detail':
         editTaskMutate(newTask);
         break;
 
@@ -159,7 +159,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
     }
   };
 
-  const handleDeleteTask = async () => {
+  const handleDeleteTask = () => {
     deleteTaskMutate(value.task_id);
     setIsOpen(false);
   };

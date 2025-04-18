@@ -19,7 +19,7 @@ function TaskListItem({ task, index, handleCheckClick }: TaskProps) {
     setIsOpen(true);
   };
 
-  const handleDeleteTask = async () => {
+  const handleDeleteTask = () => {
     deleteTaskMutate(task.task_id);
     setIsOpen(false);
   };
