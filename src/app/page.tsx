@@ -5,46 +5,25 @@ import ProgressBar from '@/app/_components/tasks/ProgressBar';
 import TaskListItem from '@/app/_components/tasks/TaskListItem';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { getDailyTask } from './_apis/getTasks';
+import { TaskPayload } from './_types';
+import TaskModal from './_components/tasks/TaskModal';
 
 export default function Dashboard() {
+  const [isOpen, setIsOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState('');
   const [today, setToday] = useState('');
-  const [mockData, setMockData] = useState([
-    {
-      task_id: 1,
-      title: '일어나기',
-      memo: '',
-      start_time: '2025-03-11T13:00:00',
-      end_time: '',
-      address: '경기도 수원시 ...',
-      place_name: 'Cafe ABC',
-      location: { lat: '', lng: '' },
-      is_completed: true,
-    },
-    {
-      task_id: 2,
-      title: 'Team meeting',
-      memo: '주간 회의',
-      start_time: '2025-03-11T13:00:00',
-      end_time: '',
-      address: '경기도 수원시 ...',
-      place_name: 'Zep 4번 룸',
-      location: { lat: '127.1086228', lng: '37.4012191' },
-      is_completed: false,
-    },
-    {
-      task_id: 3,
-      title: '구현하기',
-      memo: '수요일까지 구현해요',
-      start_time: '2025-03-11T13:00:00',
-      end_time: '2025-03-11T14:00:00',
-      address: '경기도 수원시 ...',
-      place_name: 'Cafe ABC',
-      location: { lat: '127.1086228', lng: '37.4012191' },
-      is_completed: false,
-    },
-  ]);
+  const [taskList, setTaskList] = useState<TaskPayload[]>([]);
   const [finishedTaskCount, setFinishedTaskCount] = useState(0);
+
+  const fetchDailyTask = async (todayDate: Date) => {
+    try {
+      const result = await getDailyTask(todayDate);
+      setTaskList(result);
+    } catch (error) {
+      console.error('오늘의 일정을 불러오는 중 에러가 발생했습니다. ', error);
+    }
+  };
 
   const getCurrentTime = () => {
     const currentDate = new Date();
@@ -58,7 +37,7 @@ export default function Dashboard() {
   };
 
   const handleCheckClick = (taskId: number) => {
-    setMockData(prev =>
+    setTaskList(prev =>
       prev.map(task =>
         task.task_id === taskId
           ? { ...task, is_completed: !task.is_completed }
@@ -67,8 +46,9 @@ export default function Dashboard() {
     );
   };
 
+  const addTask = () => setIsOpen(true);
+
   useEffect(() => {
-    getCurrentTime();
     const interval = setInterval(() => {
       getCurrentTime();
     }, 1000);
@@ -88,14 +68,15 @@ export default function Dashboard() {
         ' ' +
         weekday,
     );
+    fetchDailyTask(todayDate);
   }, []);
 
   useEffect(() => {
-    setFinishedTaskCount(mockData.filter(task => task.is_completed).length);
-  }, [mockData]);
+    setFinishedTaskCount(taskList.filter(task => task.is_completed).length);
+  }, [taskList]);
 
   return (
-    <div className='flex h-full min-h-screen min-w-[1440px] bg-[#FAFAFA]'>
+    <div className='text-secondary-500 flex h-full min-h-screen min-w-[1440px] bg-[#FAFAFA]'>
       <Navigation />
       <div className='w-full min-w-[752px]'>
         <div className='p-[32px]'>
@@ -109,30 +90,37 @@ export default function Dashboard() {
               </span>
             </div>
             <div className='flex items-end'>
-              <button className='bg-primary-400 hover:bg-primary-500 h-[50px] w-[50px] cursor-pointer rounded-[10px] bg-[url(/assets/plus-big.png)] bg-center bg-no-repeat'></button>
+              <button
+                onClick={addTask}
+                className='bg-primary-400 hover:bg-primary-500 h-[50px] w-[50px] cursor-pointer rounded-[10px] bg-[url(/assets/plus-big.png)] bg-center bg-no-repeat'
+              ></button>
             </div>
           </div>
           <div className='text-secondary-500 mt-[35px] mb-[12px] flex justify-between text-[20px] font-semibold'>
             <span>Task Done</span>
-            <span>{`${finishedTaskCount} / ${mockData.length}`}</span>
+            <span>{`${finishedTaskCount} / ${taskList.length}`}</span>
           </div>
           <ProgressBar
             finishedTaskCount={finishedTaskCount}
-            totalTaskCount={mockData.length}
+            totalTaskCount={taskList.length}
           />
           <div className='text-secondary-500 mt-[14px]'>
-            <ul className='flex flex-col gap-y-[10px]'>
-              {mockData.map((task, index) => {
-                return (
-                  <TaskListItem
-                    task={task}
-                    index={index}
-                    key={task.task_id}
-                    handleCheckClick={handleCheckClick}
-                  />
-                );
-              })}
-            </ul>
+            {taskList.length === 0 ? (
+              <div className='mt-30 text-center'>일정이 없습니다</div>
+            ) : (
+              <ul className='flex flex-col gap-y-[10px]'>
+                {taskList.map((task, index) => {
+                  return (
+                    <TaskListItem
+                      task={task}
+                      index={index}
+                      key={task.task_id}
+                      handleCheckClick={handleCheckClick}
+                    />
+                  );
+                })}
+              </ul>
+            )}
           </div>
         </div>
       </div>
@@ -163,6 +151,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+      <TaskModal mode='add' isOpen={isOpen} setIsOpen={setIsOpen} task={null} />
     </div>
   );
 }
