@@ -5,7 +5,7 @@ import ProgressBar from '@/app/_components/tasks/ProgressBar';
 import TaskListItem from '@/app/_components/tasks/TaskListItem';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { getDailyTask } from './_apis/getTasks';
+import { getDailyTask } from './_apis/tasks';
 import { TaskPayload } from './_types';
 import TaskModal from './_components/tasks/TaskModal';
 
