@@ -37,7 +37,7 @@ function Navigation() {
 
   return (
     <>
-      <div className='text-secondary-500 bg-primary-0 border-primary-100 flex items-center justify-between border-b-1 px-[24px] py-[20px] sm:hidden min-w-[400px]'>
+      <div className='text-secondary-500 bg-primary-0 border-primary-100 z-10 flex min-w-[400px] items-center justify-between border-b-1 px-[24px] py-[20px] sm:hidden'>
         <span className='text-primary-900 text-[24px] font-bold'>똘개비</span>
         <button
           onClick={() => setIsOpen(prev => !prev)}
@@ -47,27 +47,33 @@ function Navigation() {
         </button>
       </div>
       {isOpen && (
-        <div className='bg-primary-0 absolute top-[86px] w-full px-[20px] py-[18px] shadow-md sm:hidden'>
-          <ul className='text-secondary-300 flex flex-col gap-y-[12px]'>
-            {navItems.map(navItem => (
-              <Link
-                className={`flex cursor-pointer items-center px-[20px] py-[10px] hover:rounded-[10px] ${pathname === navItem.href ? 'text-secondary-500 rounded-[10px] bg-[#F5F5F7]' : 'hover:bg-[#F5F5F7]'}`}
-                href={navItem.href}
-                key={navItem.id}
-              >
-                <Image
-                  src={`${pathname === navItem.href ? navItem.activeIcon : navItem.icon}`}
-                  width={24}
-                  height={24}
-                  alt='category icon'
-                />
-                <span className='ml-[12px] text-[14px] font-semibold'>
-                  {navItem.title}
-                </span>
-              </Link>
-            ))}
-          </ul>
-        </div>
+        <>
+          <div
+            className='bg-secondary-400 fixed inset-0 opacity-30 sm:hidden'
+            onClick={() => setIsOpen(false)}
+          />
+          <div className='bg-primary-0 absolute top-[86px] w-full px-[20px] py-[18px] shadow-md sm:hidden'>
+            <ul className='text-secondary-300 flex flex-col gap-y-[12px]'>
+              {navItems.map(navItem => (
+                <Link
+                  className={`flex cursor-pointer items-center px-[20px] py-[10px] hover:rounded-[10px] ${pathname === navItem.href ? 'text-secondary-500 rounded-[10px] bg-[#F5F5F7]' : 'hover:bg-[#F5F5F7]'}`}
+                  href={navItem.href}
+                  key={navItem.id}
+                >
+                  <Image
+                    src={`${pathname === navItem.href ? navItem.activeIcon : navItem.icon}`}
+                    width={24}
+                    height={24}
+                    alt='category icon'
+                  />
+                  <span className='ml-[12px] text-[14px] font-semibold'>
+                    {navItem.title}
+                  </span>
+                </Link>
+              ))}
+            </ul>
+          </div>
+        </>
       )}
       <div className='bg-primary-0 relative hidden w-[252px] shrink-0 px-[32px] sm:block'>
         <div className='text-primary-900 mt-[44px] text-center text-[24px] font-bold'>
