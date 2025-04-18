@@ -22,7 +22,9 @@ import {
 } from '@/app/_utils/validateUtil';
 import isEqual from 'lodash/isEqual';
 import { formatDateISO8601 } from '@/app/_utils/dateTimeUtil';
-import { deleteTask, patchTask, postTask } from '@/app/_apis/task';
+import useAddTaskMutation from '@/app/_hooks/useAddTaskMutation';
+import useEditTaskMutation from '@/app/_hooks/useEditTaskMutation';
+import useDeleteTaskMutation from '@/app/_hooks/useDeleteTaskMutation';
 
 export type ModalMode = 'add' | 'edit' | 'detail';
 
@@ -110,6 +112,10 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
   const BASE_STYLE =
     'flex gap-[20px] *:first:text-xl *:first:font-semibold *:last:flex-1';
 
+  const { mutate: addTaskMutate } = useAddTaskMutation();
+  const { mutate: editTaskMutate } = useEditTaskMutation();
+  const { mutate: deleteTaskMutate } = useDeleteTaskMutation();
+
   const handleFieldChange = useCallback(
     (
       field: keyof TaskCalendar,
@@ -141,20 +147,11 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
     switch (mode) {
       case 'add':
       case 'detail':
-        try {
-          await postTask(newTask);
-        } catch (error) {
-          console.error('일정 추가를 실패했습니다.', error);
-        }
+        addTaskMutate(newTask);
         break;
 
       case 'edit':
-        try {
-          await patchTask(newTask);
-        } catch (error) {
-          console.error('일정 수정을 실패했습니다.', error);
-        }
-
+        editTaskMutate(newTask);
         break;
 
       default:
@@ -163,12 +160,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
   };
 
   const handleDeleteTask = async () => {
-    try {
-      await deleteTask(value.task_id);
-    } catch (error) {
-      console.error('일정 삭제를 실패했습니다.', error);
-    }
-
+    deleteTaskMutate(value.task_id);
     setIsOpen(false);
   };
 

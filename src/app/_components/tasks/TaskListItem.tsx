@@ -3,6 +3,7 @@ import Image from 'next/image';
 import TaskModal from './TaskModal';
 import { useState } from 'react';
 import { TaskPayload } from '@/app/_types';
+import useDeleteTaskMutation from '@/app/_hooks/useDeleteTaskMutation';
 
 interface TaskProps {
   task: TaskPayload;
@@ -12,9 +13,15 @@ interface TaskProps {
 
 function TaskListItem({ task, index, handleCheckClick }: TaskProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { mutate: deleteTaskMutate } = useDeleteTaskMutation();
 
   const editTask = () => {
     setIsOpen(true);
+  };
+
+  const handleDeleteTask = async () => {
+    deleteTaskMutate(task.task_id);
+    setIsOpen(false);
   };
 
   return (
@@ -39,7 +46,7 @@ function TaskListItem({ task, index, handleCheckClick }: TaskProps) {
                 className={`ml-[19px] text-[20px] font-semibold ${task.is_completed && 'line-through'}`}
               >
                 <span>{task.title}</span>
-                {task.location && (
+                {task.place_name && (
                   <div className='mt-[10px] mb-[10px] flex text-[16px] font-medium'>
                     <div className='mr-[5px] h-[20px] w-[20px]'>
                       <Image
@@ -82,7 +89,10 @@ function TaskListItem({ task, index, handleCheckClick }: TaskProps) {
                 수정
               </span>
             </button>
-            <button className='bg-error-600 hover:bg-error-700 h-full w-0 cursor-pointer overflow-hidden whitespace-nowrap transition-all duration-300 group-hover:w-[75px]'>
+            <button
+              onClick={handleDeleteTask}
+              className='bg-error-600 hover:bg-error-700 h-full w-0 cursor-pointer overflow-hidden whitespace-nowrap transition-all duration-300 group-hover:w-[75px]'
+            >
               <span className='transform opacity-0 transition-all duration-300 group-hover:opacity-100'>
                 삭제
               </span>
