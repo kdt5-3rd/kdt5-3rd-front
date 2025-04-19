@@ -277,7 +277,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
               <div className='flex flex-grow justify-between'>
                 <NormalInput
                   placeholder='위치'
-                  value={value.place_name}
+                  value={value.place_name || ''}
                   className='mr-[10px] flex-grow'
                   onChange={e => handleFieldChange('place_name', e)}
                 >
