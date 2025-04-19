@@ -113,7 +113,10 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
     'flex gap-[20px] *:first:text-xl *:first:font-semibold *:last:flex-1';
 
   const { mutate: addTaskMutate } = useAddTaskMutation();
-  const { mutate: editTaskMutate } = useEditTaskMutation();
+  const { mutate: editTaskMutate } = useEditTaskMutation(
+    'day',
+    format(new Date(), 'yyyy-MM-dd'),
+  );
   const { mutate: deleteTaskMutate } = useDeleteTaskMutation();
 
   const handleFieldChange = useCallback(

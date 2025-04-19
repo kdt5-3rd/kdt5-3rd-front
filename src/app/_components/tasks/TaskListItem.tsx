@@ -4,19 +4,31 @@ import TaskModal from './TaskModal';
 import { useState } from 'react';
 import { TaskPayload } from '@/app/_types';
 import useDeleteTaskMutation from '@/app/_hooks/useDeleteTaskMutation';
+import useEditTaskMutation from '@/app/_hooks/useEditTaskMutation';
+import { format } from 'date-fns';
 
 interface TaskProps {
   task: TaskPayload;
-  index: number;
-  handleCheckClick: (taskId: number) => void;
 }
 
-function TaskListItem({ task, index, handleCheckClick }: TaskProps) {
+function TaskListItem({ task }: TaskProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { mutate: editTaskMutate } = useEditTaskMutation(
+    'day',
+    format(new Date(), 'yyyy-MM-dd'),
+  );
   const { mutate: deleteTaskMutate } = useDeleteTaskMutation();
 
   const editTask = () => {
     setIsOpen(true);
+  };
+
+  const editCheck = () => {
+    const updatedTask = {
+      ...task,
+      is_completed: !task.is_completed,
+    };
+    editTaskMutate(updatedTask);
   };
 
   const handleDeleteTask = () => {
@@ -26,7 +38,7 @@ function TaskListItem({ task, index, handleCheckClick }: TaskProps) {
 
   return (
     <>
-      <li className='flex' key={index}>
+      <li className='flex' key={task.task_id}>
         <div
           className={`bg-primary-0 flex min-h-[76px] w-full items-center rounded-l-[10px] border-1 px-[23px] py-[18px] ${task.is_completed ? 'bg-primary-400 border-primary-300' : 'bg-primary-0 border-primary-100'}`}
         >
@@ -34,7 +46,7 @@ function TaskListItem({ task, index, handleCheckClick }: TaskProps) {
             <input
               type='checkbox'
               checked={task.is_completed}
-              onChange={() => handleCheckClick(task.task_id)}
+              onChange={() => editCheck()}
               className={
                 'bg-primary-200 checked:bg-primary-0 h-[30px] w-[30px] cursor-pointer appearance-none rounded-[10px] bg-[auto_26px] checked:bg-[url(/assets/check.png)] checked:bg-center checked:bg-no-repeat'
               }
