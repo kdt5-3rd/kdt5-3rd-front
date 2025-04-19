@@ -76,9 +76,9 @@ export default function Dashboard() {
   }, [taskList]);
 
   return (
-    <div className='text-secondary-500 flex h-full min-h-screen min-w-[1440px] bg-[#FAFAFA]'>
+    <div className='text-secondary-500 flex h-full min-h-screen flex-col bg-[#F5F5F7] sm:min-w-[1440px] sm:flex-row'>
       <Navigation />
-      <div className='w-full min-w-[752px]'>
+      <div className='w-full min-w-[400px] bg-[#FAFAFA] sm:min-w-[752px]'>
         <div className='p-[32px]'>
           <div className='flex justify-between'>
             <div>
@@ -124,8 +124,8 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-      <div className='w-[436px] shrink-0 bg-[#F5F5F7]'>
-        <div className='px-[32px] pt-[49px]'>
+      <div className='min-w-[400px] shrink-0 sm:w-[436px]'>
+        <div className='px-[32px] py-[49px]'>
           <div className='text-secondary-500 text-[40px] font-medium'>
             {currentTime}
           </div>
