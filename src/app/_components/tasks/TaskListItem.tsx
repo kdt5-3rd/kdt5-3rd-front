@@ -17,7 +17,10 @@ function TaskListItem({ task }: TaskProps) {
     'day',
     format(new Date(), 'yyyy-MM-dd'),
   );
-  const { mutate: deleteTaskMutate } = useDeleteTaskMutation();
+  const { mutate: deleteTaskMutate } = useDeleteTaskMutation(
+    'day',
+    format(new Date(), 'yyyy-MM-dd'),
+  );
 
   const editTask = () => {
     setIsOpen(true);
