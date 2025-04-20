@@ -98,7 +98,6 @@ export default function Dashboard() {
                     <TaskListItem
                       task={task}
                       key={task.task_id}
-                      // handleCheckClick={handleCheckClick}
                     />
                   );
                 })}
