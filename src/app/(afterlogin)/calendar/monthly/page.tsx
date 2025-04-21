@@ -61,7 +61,7 @@ export default function Monthly() {
               totalTaskCount={taskList.length}
             />
           </BoardTitle>
-          <CalendarContainer>
+          <CalendarContainer type='month'>
             <div className='h-[937px]'>
               <Calendar
                 localizer={localizer}

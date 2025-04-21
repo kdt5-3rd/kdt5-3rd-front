@@ -86,7 +86,7 @@ export default function Weekly() {
               totalTaskCount={taskList.length}
             />
           </BoardTitle>
-          <CalendarContainer>
+          <CalendarContainer type='week'>
             <Calendar
               localizer={localizer}
               events={events}
