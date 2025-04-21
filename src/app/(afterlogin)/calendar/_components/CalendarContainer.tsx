@@ -3,9 +3,10 @@ import { ReactNode, useState } from 'react';
 
 interface CalendarContainerProps {
   children: ReactNode;
+  type: 'week' | 'month';
 }
 
-function CalendarContainer({ children }: CalendarContainerProps) {
+function CalendarContainer({ children, type }: CalendarContainerProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const addTask = () => setIsOpen(true);
@@ -22,7 +23,7 @@ function CalendarContainer({ children }: CalendarContainerProps) {
         </div>
         {children}
       </div>
-      <TaskModal mode='add' isOpen={isOpen} setIsOpen={setIsOpen} task={null} />
+      <TaskModal mode='add' isOpen={isOpen} setIsOpen={setIsOpen} task={null} type={type} />
     </>
   );
 }
