@@ -23,7 +23,6 @@ import useGetTaskQuery from '@/app/_hooks/useGetTaskQuery';
 export default function Weekly() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectEvent, setSelectEvent] = useState<TaskCalendar | null>(null);
-  // const [taskList, setTaskList] = useState<TaskPayload[]>([]);
 
   const { data: taskList = [] } = useGetTaskQuery('week');
 
