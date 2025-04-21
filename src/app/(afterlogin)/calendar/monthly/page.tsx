@@ -7,19 +7,23 @@ import { format, getDay, parse, startOfWeek } from 'date-fns';
 import { useCallback, useEffect, useState } from 'react';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import './monthlyCalendar.css';
-import { TaskCalendar, TaskPayload } from '@/app/_types';
+import { TaskCalendar } from '@/app/_types';
 import CalendarType from '../_components/CalendarType';
 import Progress from '../_components/Progress';
 import CalendarContainer from '../_components/CalendarContainer';
 import TaskModal from '@/app/_components/tasks/TaskModal';
-import { getMonthlyTask } from '@/app/_apis/tasks';
+import useGetTaskQuery from '@/app/_hooks/useGetTaskQuery';
 
 export default function Monthly() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectEvent, setSelectEvent] = useState<TaskCalendar | null>(null);
-  const [taskList, setTaskList] = useState<TaskPayload[]>([]);
   const [finishedTaskCount, setFinishedTaskCount] = useState(0);
   const [calendarMockData, setCalendarMockData] = useState<TaskCalendar[]>([]);
+
+  const { data: taskList = [] } = useGetTaskQuery(
+    'month',
+    format(new Date(), 'yyyy-MM-dd'),
+  );
 
   const localizer = dateFnsLocalizer({
     format,
@@ -32,19 +36,6 @@ export default function Monthly() {
   const onSelectEvent = useCallback((event: TaskCalendar) => {
     setIsOpen(true);
     setSelectEvent(event);
-  }, []);
-
-  const fetchMonthlyTask = async (todayDate: Date) => {
-    try {
-      const result = await getMonthlyTask(todayDate);
-      setTaskList(result);
-    } catch (error) {
-      console.error('오늘의 일정을 불러오는 중 에러가 발생했습니다. ', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchMonthlyTask(new Date());
   }, []);
 
   useEffect(() => {
@@ -94,6 +85,7 @@ export default function Monthly() {
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         task={selectEvent}
+        type='month'
       />
     </div>
   );

@@ -8,7 +8,7 @@ import { getDay } from 'date-fns/getDay';
 import { ko } from 'date-fns/locale';
 import './weeklyCalendar.css';
 import { Calendar, dateFnsLocalizer, DateLocalizer } from 'react-big-calendar';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import BoardTitle from '@/app/_components/common/BoardTitle';
 import { isEqual } from 'date-fns';
 import CustomWeekEvent from './CustomWeekEvent';
@@ -16,14 +16,19 @@ import { Formats } from 'react-big-calendar';
 import CalendarType from '../_components/CalendarType';
 import Progress from '../_components/Progress';
 import CalendarContainer from '../_components/CalendarContainer';
-import { TaskCalendar, TaskPayload } from '@/app/_types';
+import { TaskCalendar } from '@/app/_types';
 import TaskModal from '@/app/_components/tasks/TaskModal';
-import { getWeeklyTask } from '@/app/_apis/tasks';
+import useGetTaskQuery from '@/app/_hooks/useGetTaskQuery';
 
 export default function Weekly() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectEvent, setSelectEvent] = useState<TaskCalendar | null>(null);
-  const [taskList, setTaskList] = useState<TaskPayload[]>([]);
+  // const [taskList, setTaskList] = useState<TaskPayload[]>([]);
+
+  const { data: taskList = [] } = useGetTaskQuery(
+    'week',
+    format(new Date(), 'yyyy-MM-dd'),
+  );
 
   const finishedTaskCount = taskList
     ? taskList.filter(task => task.is_completed).length
@@ -67,22 +72,9 @@ export default function Weekly() {
     [taskList],
   );
 
-  const fetchWeeklyTask = async (todayDate: Date) => {
-    try {
-      const result = await getWeeklyTask(todayDate);
-      setTaskList(result);
-    } catch (error) {
-      console.error('오늘의 일정을 불러오는 중 에러가 발생했습니다. ', error);
-    }
-  };
-
   const onSelectEvent = useCallback((event: TaskCalendar) => {
     setIsOpen(true);
     setSelectEvent(event);
-  }, []);
-
-  useEffect(() => {
-    fetchWeeklyTask(new Date());
   }, []);
 
   return (
@@ -118,6 +110,7 @@ export default function Weekly() {
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         task={selectEvent}
+        type='week'
       />
     </div>
   );

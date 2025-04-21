@@ -133,7 +133,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-      <TaskModal mode='add' isOpen={isOpen} setIsOpen={setIsOpen} task={null} />
+      <TaskModal mode='add' isOpen={isOpen} setIsOpen={setIsOpen} task={null} type='day' />
     </div>
   );
 }

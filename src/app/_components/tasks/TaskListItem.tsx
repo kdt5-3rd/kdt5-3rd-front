@@ -120,6 +120,7 @@ function TaskListItem({ task }: TaskProps) {
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         task={task}
+        type='day'
       />
     </>
   );

@@ -10,38 +10,20 @@ import CalendarType from '../_components/CalendarType';
 import Progress from '../_components/Progress';
 import MapDisplay from '../_components/MapDisplay';
 import TaskModal from '@/app/_components/tasks/TaskModal';
-import { getDailyTask } from '@/app/_apis/tasks';
+import useGetTaskQuery from '@/app/_hooks/useGetTaskQuery';
+import { format } from 'date-fns';
 
 export default function Daily() {
   const [isOpen, setIsOpen] = useState(false);
-  const [taskList, setTaskList] = useState<TaskPayload[]>([]);
   const [pendingTask, setPendingTask] = useState<TaskPayload[]>([]);
   const [finishedTaskCount, setFinishedTaskCount] = useState(0);
 
-  const fetchDailyTask = async (todayDate: Date) => {
-    try {
-      const result = await getDailyTask(todayDate);
-      setTaskList(result);
-    } catch (error) {
-      console.error('오늘의 일정을 불러오는 중 에러가 발생했습니다. ', error);
-    }
-  };
-
-  const handleCheckClick = (taskId: number) => {
-    setTaskList(prev =>
-      prev.map(task =>
-        task.task_id === taskId
-          ? { ...task, is_completed: !task.is_completed }
-          : task,
-      ),
-    );
-  };
+  const { data: taskList = [] } = useGetTaskQuery(
+    'day',
+    format(new Date(), 'yyyy-MM-dd'),
+  );
 
   const addTask = () => setIsOpen(true);
-
-  useEffect(() => {
-    fetchDailyTask(new Date());
-  }, []);
 
   useEffect(() => {
     setFinishedTaskCount(taskList.filter(task => task.is_completed).length);
@@ -73,15 +55,8 @@ export default function Daily() {
                 <div className='mt-30 w-full text-center'>일정이 없습니다</div>
               ) : (
                 <ul className='flex flex-col gap-y-[10px]'>
-                  {taskList.map((task, index) => {
-                    return (
-                      <TaskListItem
-                        task={task}
-                        index={index}
-                        key={task.task_id}
-                        handleCheckClick={handleCheckClick}
-                      />
-                    );
+                  {taskList.map(task => {
+                    return <TaskListItem task={task} key={task.task_id} />;
                   })}
                 </ul>
               )}
@@ -137,7 +112,13 @@ export default function Daily() {
           </div>
         </div>
       </div>
-      <TaskModal mode='add' isOpen={isOpen} setIsOpen={setIsOpen} task={null} />
+      <TaskModal
+        mode='add'
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        task={null}
+        type='day'
+      />
     </div>
   );
 }

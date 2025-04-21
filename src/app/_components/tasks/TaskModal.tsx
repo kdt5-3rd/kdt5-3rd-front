@@ -34,6 +34,7 @@ interface TaskModalProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   task: TaskPayload | TaskCalendar | null;
+  type: 'day' | 'week' | 'month';
 }
 
 const modalMode: Record<
@@ -104,7 +105,7 @@ const renderDate = (start: Date, end: Date) => {
 
 type NestedModalType = null | 'dayPicker' | 'location';
 
-function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
+function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
   const [openModal, setOpenModal] = useState<NestedModalType>(null);
   const [isInvalidDate, setIsInvalidDate] = useState(false);
   const [isInvalidTitle, setIsInvalidTitle] = useState(false);
@@ -120,11 +121,11 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
     format(new Date(), 'yyyy-MM-dd'),
   );
   const { mutate: editTaskMutate } = useEditTaskMutation(
-    'day',
+    type,
     format(new Date(), 'yyyy-MM-dd'),
   );
   const { mutate: deleteTaskMutate } = useDeleteTaskMutation(
-    'day',
+    type,
     format(new Date(), 'yyyy-MM-dd'),
   );
 
