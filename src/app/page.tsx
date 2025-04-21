@@ -5,25 +5,16 @@ import ProgressBar from '@/app/_components/tasks/ProgressBar';
 import TaskListItem from '@/app/_components/tasks/TaskListItem';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { getDailyTask } from './_apis/tasks';
-import { TaskPayload } from './_types';
 import TaskModal from './_components/tasks/TaskModal';
+import useGetTaskQuery from './_hooks/useGetTaskQuery';
 
 export default function Dashboard() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState('');
   const [today, setToday] = useState('');
-  const [taskList, setTaskList] = useState<TaskPayload[]>([]);
   const [finishedTaskCount, setFinishedTaskCount] = useState(0);
 
-  const fetchDailyTask = async (todayDate: Date) => {
-    try {
-      const result = await getDailyTask(todayDate);
-      setTaskList(result);
-    } catch (error) {
-      console.error('오늘의 일정을 불러오는 중 에러가 발생했습니다. ', error);
-    }
-  };
+  const { data: taskList = [] } = useGetTaskQuery('day');
 
   const getCurrentTime = () => {
     const currentDate = new Date();
@@ -34,16 +25,6 @@ export default function Dashboard() {
     }).format(currentDate);
 
     setCurrentTime(timeString);
-  };
-
-  const handleCheckClick = (taskId: number) => {
-    setTaskList(prev =>
-      prev.map(task =>
-        task.task_id === taskId
-          ? { ...task, is_completed: !task.is_completed }
-          : task,
-      ),
-    );
   };
 
   const addTask = () => setIsOpen(true);
@@ -68,7 +49,6 @@ export default function Dashboard() {
         ' ' +
         weekday,
     );
-    fetchDailyTask(todayDate);
   }, []);
 
   useEffect(() => {
@@ -109,15 +89,8 @@ export default function Dashboard() {
               <div className='mt-30 text-center'>일정이 없습니다</div>
             ) : (
               <ul className='flex flex-col gap-y-[10px]'>
-                {taskList.map((task, index) => {
-                  return (
-                    <TaskListItem
-                      task={task}
-                      index={index}
-                      key={task.task_id}
-                      handleCheckClick={handleCheckClick}
-                    />
-                  );
+                {taskList.map(task => {
+                  return <TaskListItem task={task} key={task.task_id} />;
                 })}
               </ul>
             )}
@@ -151,7 +124,13 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-      <TaskModal mode='add' isOpen={isOpen} setIsOpen={setIsOpen} task={null} />
+      <TaskModal
+        mode='add'
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        task={null}
+        type='day'
+      />
     </div>
   );
 }

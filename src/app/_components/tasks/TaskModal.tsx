@@ -25,6 +25,7 @@ import { formatDateISO8601 } from '@/app/_utils/dateTimeUtil';
 import useAddTaskMutation from '@/app/_hooks/useAddTaskMutation';
 import useEditTaskMutation from '@/app/_hooks/useEditTaskMutation';
 import useDeleteTaskMutation from '@/app/_hooks/useDeleteTaskMutation';
+import { toZonedTime } from 'date-fns-tz';
 
 export type ModalMode = 'add' | 'edit' | 'detail';
 
@@ -33,6 +34,7 @@ interface TaskModalProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   task: TaskPayload | TaskCalendar | null;
+  type: 'day' | 'week' | 'month';
 }
 
 const modalMode: Record<
@@ -70,8 +72,10 @@ const initialTask = {
 const normalizeTaskDate = (task: TaskPayload | TaskCalendar): TaskCalendar => {
   if (task.start_time instanceof Date) return task as TaskCalendar;
 
-  const start_time = new Date(task.start_time);
-  const end_time = task.end_time ? new Date(task.end_time) : start_time;
+  const start_time = new Date(toZonedTime(task.start_time, 'UTC'));
+  const end_time = task.end_time
+    ? new Date(toZonedTime(task.end_time, 'UTC'))
+    : start_time;
 
   return { ...task, start_time, end_time };
 };
@@ -101,7 +105,7 @@ const renderDate = (start: Date, end: Date) => {
 
 type NestedModalType = null | 'dayPicker' | 'location';
 
-function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
+function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
   const [openModal, setOpenModal] = useState<NestedModalType>(null);
   const [isInvalidDate, setIsInvalidDate] = useState(false);
   const [isInvalidTitle, setIsInvalidTitle] = useState(false);
@@ -112,9 +116,9 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
   const BASE_STYLE =
     'flex gap-[20px] *:first:text-xl *:first:font-semibold *:last:flex-1';
 
-  const { mutate: addTaskMutate } = useAddTaskMutation();
-  const { mutate: editTaskMutate } = useEditTaskMutation();
-  const { mutate: deleteTaskMutate } = useDeleteTaskMutation();
+  const { mutate: addTaskMutate } = useAddTaskMutation(type);
+  const { mutate: editTaskMutate } = useEditTaskMutation(type);
+  const { mutate: deleteTaskMutate } = useDeleteTaskMutation(type);
 
   const handleFieldChange = useCallback(
     (
@@ -147,11 +151,13 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
     switch (mode) {
       case 'add':
         addTaskMutate(newTask);
+        setIsOpen(false);
         break;
 
       case 'edit':
       case 'detail':
         editTaskMutate(newTask);
+        setIsOpen(false);
         break;
 
       default:
@@ -266,7 +272,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task }: TaskModalProps) {
               <div className='flex flex-grow justify-between'>
                 <NormalInput
                   placeholder='위치'
-                  value={value.place_name}
+                  value={value.place_name || ''}
                   className='mr-[10px] flex-grow'
                   onChange={e => handleFieldChange('place_name', e)}
                 >
