@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { TaskPayload } from '@/app/_types';
 import useDeleteTaskMutation from '@/app/_hooks/useDeleteTaskMutation';
 import useEditTaskMutation from '@/app/_hooks/useEditTaskMutation';
-import { format } from 'date-fns';
 
 interface TaskProps {
   task: TaskPayload;
@@ -13,14 +12,8 @@ interface TaskProps {
 
 function TaskListItem({ task }: TaskProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { mutate: editTaskMutate } = useEditTaskMutation(
-    'day',
-    format(new Date(), 'yyyy-MM-dd'),
-  );
-  const { mutate: deleteTaskMutate } = useDeleteTaskMutation(
-    'day',
-    format(new Date(), 'yyyy-MM-dd'),
-  );
+  const { mutate: editTaskMutate } = useEditTaskMutation('day');
+  const { mutate: deleteTaskMutate } = useDeleteTaskMutation('day');
 
   const editTask = () => {
     setIsOpen(true);

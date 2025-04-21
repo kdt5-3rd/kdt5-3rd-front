@@ -25,10 +25,7 @@ export default function Weekly() {
   const [selectEvent, setSelectEvent] = useState<TaskCalendar | null>(null);
   // const [taskList, setTaskList] = useState<TaskPayload[]>([]);
 
-  const { data: taskList = [] } = useGetTaskQuery(
-    'week',
-    format(new Date(), 'yyyy-MM-dd'),
-  );
+  const { data: taskList = [] } = useGetTaskQuery('week');
 
   const finishedTaskCount = taskList
     ? taskList.filter(task => task.is_completed).length

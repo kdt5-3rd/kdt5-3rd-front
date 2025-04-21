@@ -20,10 +20,7 @@ export default function Monthly() {
   const [finishedTaskCount, setFinishedTaskCount] = useState(0);
   const [calendarMockData, setCalendarMockData] = useState<TaskCalendar[]>([]);
 
-  const { data: taskList = [] } = useGetTaskQuery(
-    'month',
-    format(new Date(), 'yyyy-MM-dd'),
-  );
+  const { data: taskList = [] } = useGetTaskQuery('month');
 
   const localizer = dateFnsLocalizer({
     format,

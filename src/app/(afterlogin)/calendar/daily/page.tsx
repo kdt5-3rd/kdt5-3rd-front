@@ -11,17 +11,13 @@ import Progress from '../_components/Progress';
 import MapDisplay from '../_components/MapDisplay';
 import TaskModal from '@/app/_components/tasks/TaskModal';
 import useGetTaskQuery from '@/app/_hooks/useGetTaskQuery';
-import { format } from 'date-fns';
 
 export default function Daily() {
   const [isOpen, setIsOpen] = useState(false);
   const [pendingTask, setPendingTask] = useState<TaskPayload[]>([]);
   const [finishedTaskCount, setFinishedTaskCount] = useState(0);
 
-  const { data: taskList = [] } = useGetTaskQuery(
-    'day',
-    format(new Date(), 'yyyy-MM-dd'),
-  );
+  const { data: taskList = [] } = useGetTaskQuery('day');
 
   const addTask = () => setIsOpen(true);
 

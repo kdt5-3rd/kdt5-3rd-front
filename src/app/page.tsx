@@ -7,7 +7,6 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import TaskModal from './_components/tasks/TaskModal';
 import useGetTaskQuery from './_hooks/useGetTaskQuery';
-import { format } from 'date-fns';
 
 export default function Dashboard() {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,10 +14,7 @@ export default function Dashboard() {
   const [today, setToday] = useState('');
   const [finishedTaskCount, setFinishedTaskCount] = useState(0);
 
-  const { data: taskList = [] } = useGetTaskQuery(
-    'day',
-    format(new Date(), 'yyyy-MM-dd'),
-  );
+  const { data: taskList = [] } = useGetTaskQuery('day');
 
   const getCurrentTime = () => {
     const currentDate = new Date();
@@ -94,12 +90,7 @@ export default function Dashboard() {
             ) : (
               <ul className='flex flex-col gap-y-[10px]'>
                 {taskList.map(task => {
-                  return (
-                    <TaskListItem
-                      task={task}
-                      key={task.task_id}
-                    />
-                  );
+                  return <TaskListItem task={task} key={task.task_id} />;
                 })}
               </ul>
             )}
@@ -133,7 +124,13 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-      <TaskModal mode='add' isOpen={isOpen} setIsOpen={setIsOpen} task={null} type='day' />
+      <TaskModal
+        mode='add'
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        task={null}
+        type='day'
+      />
     </div>
   );
 }
