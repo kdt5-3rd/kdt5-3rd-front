@@ -6,29 +6,18 @@ import NormalInput from '../common/NormalInput';
 import SubmitButton from '../common/SubmitButton';
 import { searchLocation } from '@/app/_apis/searchLocation';
 import useOutsideClick from '@/app/_hooks/useOutSideClick';
+import { GeoSearchResult, RawSearchResult } from '@/app/_types/location';
 
 interface LocationModalProps {
   closeModal: () => void;
-  setPlaceName: (name: string) => void;
+  setPlace: (place: GeoSearchResult) => void;
 }
 
-interface SearchResult {
-  title: string;
-  address: string;
-  category: string;
-  description: string;
-  link: string;
-  mapx: string;
-  mapy: string;
-  roadAddress: string;
-  telephone: string;
-}
-
-function LocationModal({ closeModal, setPlaceName }: LocationModalProps) {
+function LocationModal({ closeModal, setPlace }: LocationModalProps) {
   const locationRef = useOutsideClick(closeModal);
   const inputRef = useRef<HTMLInputElement>(null);
   const [searchPlace, setSearchPlace] = useState('');
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [searchResults, setSearchResults] = useState<GeoSearchResult[]>([]);
 
   const handleCloseButton = () => {
     closeModal();
@@ -48,7 +37,16 @@ function LocationModal({ closeModal, setPlaceName }: LocationModalProps) {
         return console.error('API 호출에 실패했습니다.');
       }
 
-      setSearchResults(results.data);
+      const parsedResults: GeoSearchResult[] = results.data.map(
+        (result: RawSearchResult) => ({
+          ...result,
+          title: result.title.replace(/<[^>]*>/g, ''),
+          mapx: parseInt(result.mapx) / 10000000,
+          mapy: parseInt(result.mapy) / 10000000,
+        }),
+      );
+
+      setSearchResults(parsedResults);
     } catch (error) {
       console.error('API 호출 중 에러가 발생했습니다:', error);
     }
@@ -56,8 +54,8 @@ function LocationModal({ closeModal, setPlaceName }: LocationModalProps) {
     setSearchPlace('');
   };
 
-  const handleSelectPlace = (selectedTitle: string) => {
-    setPlaceName(selectedTitle);
+  const handleSelectPlace = (selectedPlace: GeoSearchResult) => {
+    setPlace(selectedPlace);
     closeModal();
   };
 
@@ -113,17 +111,17 @@ function LocationModal({ closeModal, setPlaceName }: LocationModalProps) {
           ) : (
             <>
               {searchResults.map(result => {
-                const cleanTitle = result.title.replace(/<[^>]*>/g, '');
-
                 return (
                   <div
                     key={`${result.mapx}-${result.mapy}`}
                     className='border-primary-200 hover:bg-primary-100 cursor-pointer rounded-[10px] border-1 p-[16px]'
                     onClick={() => {
-                      handleSelectPlace(cleanTitle);
+                      handleSelectPlace(result);
                     }}
                   >
-                    <div className='font-regular text-[16px]'>{cleanTitle}</div>
+                    <div className='font-regular text-[16px]'>
+                      {result.title}
+                    </div>
                     <div className='font-regular text-[12px]'>
                       {result.address}
                     </div>

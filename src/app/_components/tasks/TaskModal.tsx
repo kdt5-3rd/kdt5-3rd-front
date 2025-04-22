@@ -26,6 +26,7 @@ import useAddTaskMutation from '@/app/_hooks/useAddTaskMutation';
 import useEditTaskMutation from '@/app/_hooks/useEditTaskMutation';
 import useDeleteTaskMutation from '@/app/_hooks/useDeleteTaskMutation';
 import { toZonedTime } from 'date-fns-tz';
+import { GeoSearchResult } from '@/app/_types/location';
 
 export type ModalMode = 'add' | 'edit' | 'detail';
 
@@ -64,8 +65,8 @@ const initialTask = {
   end_time: new Date(),
   address: '',
   place_name: '',
-  latitude: '',
-  longitude: '',
+  latitude: 0,
+  longitude: 0,
   is_completed: false,
 };
 
@@ -134,10 +135,13 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
     [],
   );
 
-  const handlePlaceNameChange = (name: string) => {
+  const handlePlaceChange = (place: GeoSearchResult) => {
     setValue(prev => ({
       ...prev,
-      place_name: name,
+      longitude: place.mapx,
+      latitude: place.mapy,
+      place_name: place.title,
+      address: place.address,
     }));
   };
 
@@ -294,7 +298,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
               {openModal === 'location' && (
                 <LocationModal
                   closeModal={() => setOpenModal(null)}
-                  setPlaceName={name => handlePlaceNameChange(name)}
+                  setPlace={place => handlePlaceChange(place)}
                 />
               )}
             </fieldset>
