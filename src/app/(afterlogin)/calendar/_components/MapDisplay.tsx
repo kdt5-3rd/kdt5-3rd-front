@@ -4,8 +4,8 @@ import { useEffect, useMemo, useRef } from 'react';
 interface mapProps {
   taskId: number;
   location: {
-    lat: string;
-    lng: string;
+    lat: number;
+    lng: number;
   };
 }
 
@@ -16,8 +16,8 @@ function MapDisplay({ taskId, location }: mapProps) {
     if (!location || !location.lat || !location.lng) return null;
 
     return new naver.maps.LatLng(
-      parseFloat(location.lat),
-      parseFloat(location.lng),
+      location.lat,
+      location.lng,
     );
   }, [location]);
 
