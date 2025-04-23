@@ -294,33 +294,6 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
               <div className='flex flex-grow justify-between'>
                 <NormalInput
                   placeholder='출발 위치'
-                  value={value.place_name || ''}
-                  className='mr-[10px] flex-grow'
-                  onChange={e => handleFieldChange('place_name', e)}
-                >
-                  <Image
-                    src='/assets/location-line.png'
-                    alt='calendar icon'
-                    width={24}
-                    height={24}
-                  />
-                </NormalInput>
-                <SubmitButton
-                  type='button'
-                  className='pr-[14px] pl-[14px] font-semibold'
-                  onClick={() =>
-                    setOpenModal({ type: 'location', target: 'place_name' })
-                  }
-                >
-                  검색하기
-                </SubmitButton>
-              </div>
-            </fieldset>
-            <fieldset className={`relative items-center ${BASE_STYLE}`}>
-              <label htmlFor='location'>도착</label>
-              <div className='flex flex-grow justify-between'>
-                <NormalInput
-                  placeholder='도착 위치'
                   value={value.from_place_name || ''}
                   className='mr-[10px] flex-grow'
                   onChange={e => handleFieldChange('from_place_name', e)}
@@ -339,6 +312,36 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
                     setOpenModal({
                       type: 'location',
                       target: 'from_place_name',
+                    })
+                  }
+                >
+                  검색하기
+                </SubmitButton>
+              </div>
+            </fieldset>
+            <fieldset className={`relative items-center ${BASE_STYLE}`}>
+              <label htmlFor='location'>도착</label>
+              <div className='flex flex-grow justify-between'>
+                <NormalInput
+                  placeholder='도착 위치'
+                  value={value.place_name || ''}
+                  className='mr-[10px] flex-grow'
+                  onChange={e => handleFieldChange('place_name', e)}
+                >
+                  <Image
+                    src='/assets/location-line.png'
+                    alt='calendar icon'
+                    width={24}
+                    height={24}
+                  />
+                </NormalInput>
+                <SubmitButton
+                  type='button'
+                  className='pr-[14px] pl-[14px] font-semibold'
+                  onClick={() =>
+                    setOpenModal({
+                      type: 'location',
+                      target: 'place_name',
                     })
                   }
                 >
