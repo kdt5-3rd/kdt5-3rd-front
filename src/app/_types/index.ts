@@ -6,6 +6,11 @@ export interface Task {
   place_name: string;
   latitude: number;
   longitude: number;
+  from_lat: number;
+  from_lng: number;
+  from_address: string;
+  from_place_name: string;
+  route_option: string;
   is_completed: boolean;
 }
 
