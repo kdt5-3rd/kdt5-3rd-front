@@ -27,7 +27,7 @@ export default function Daily() {
   }, [taskList]);
 
   return (
-    <div className='text-secondary-500 inline-flex h-full min-h-screen w-full bg-[#FAFAFA]'>
+    <div className='text-secondary-500 inline-flex h-full min-h-screen min-w-[1500px] w-full bg-[#FAFAFA]'>
       <Navigation />
       <div className='bg-primary-0 h-full w-full min-w-[752px]'>
         <div className='flex flex-col'>
@@ -39,7 +39,7 @@ export default function Daily() {
             />
           </BoardTitle>
           <div className='flex h-full justify-between bg-[#FAFAFA] px-[32px] py-[24px]'>
-            <div className='mr-[34px] min-w-[752px]'>
+            <div className='mr-[34px] min-w-[752px] w-full'>
               <div className='mb-[18px] flex justify-between'>
                 <span className='text-[24px] font-semibold'>Todos</span>
                 <button
