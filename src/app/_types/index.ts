@@ -19,6 +19,15 @@ export interface TaskPayload extends Task {
   end_time: string;
 }
 
+export interface TaskWithDuration extends Task {
+  start_time: string;
+  end_time: string;
+  route_option: string;
+  recommended_departure_time: string;
+  travel_distance: string;
+  travel_duration: string;
+}
+
 export interface TaskCalendar extends Task {
   start_time: Date;
   end_time: Date;
