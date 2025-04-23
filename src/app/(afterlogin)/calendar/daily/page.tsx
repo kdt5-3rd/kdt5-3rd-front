@@ -131,6 +131,10 @@ export default function Daily() {
                               lat: task.latitude,
                               lng: task.longitude,
                             }}
+                            enabled={
+                              task.from_place_name !== '' &&
+                              task.place_name !== ''
+                            }
                           />
                         </div>
                       </div>

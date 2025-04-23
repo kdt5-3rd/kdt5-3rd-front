@@ -56,6 +56,12 @@ export const getMonthlyTask = (date: Date): Promise<TaskWithDuration[]> => {
   return getTasks('/tasks/month', params);
 };
 
+export const getTaskPath = async (taskId: number): Promise<[number, number][]> => {
+  const response = await api.get(`/tasks/${taskId}/path`);
+
+  return response.data.data.path;
+};
+
 export const postTask = async (task: TaskPayload) => {
   const response = await api.post('/tasks', task);
 
