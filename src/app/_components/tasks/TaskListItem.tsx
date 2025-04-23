@@ -90,7 +90,7 @@ function TaskListItem({ task }: TaskProps) {
               </div>
               <div className='text-right text-[20px] font-medium'>
                 {task.start_time && <span>{formatTime(task.start_time)}</span>}
-                {task.end_time && (
+                {task.end_time !== '' && task.end_time !== task.start_time && (
                   <>
                     <span className='block'>~</span>
                     <span>{formatTime(task.end_time)}</span>
