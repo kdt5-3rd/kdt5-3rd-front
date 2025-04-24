@@ -12,7 +12,7 @@ interface TaskProps {
 
 function TaskListItem({ task }: TaskProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { mutate: editTaskMutate } = useEditTaskMutation('day');
+  const { mutate: editTaskMutate } = useEditTaskMutation('day', task.task_id);
   const { mutate: deleteTaskMutate } = useDeleteTaskMutation('day');
 
   const editTask = () => {
@@ -54,6 +54,20 @@ function TaskListItem({ task }: TaskProps) {
                 className={`ml-[19px] text-[20px] font-semibold ${task.is_completed && 'line-through'}`}
               >
                 <span>{task.title}</span>
+                {task.from_place_name && (
+                  <div className='mt-[10px] mb-[10px] flex text-[16px] font-medium'>
+                    <div className='mr-[5px] h-[20px] w-[20px]'>
+                      <Image
+                        src={`${task.is_completed ? '/assets/location-light.png' : '/assets/location.png'}`}
+                        width={20}
+                        height={20}
+                        alt='location icon'
+                      />
+                    </div>
+                    <span className='mr-[6px]'>출발 : </span>
+                    {task.from_place_name}
+                  </div>
+                )}
                 {task.place_name && (
                   <div className='mt-[10px] mb-[10px] flex text-[16px] font-medium'>
                     <div className='mr-[5px] h-[20px] w-[20px]'>
@@ -64,6 +78,7 @@ function TaskListItem({ task }: TaskProps) {
                         alt='location icon'
                       />
                     </div>
+                    <span className='mr-[6px]'>도착 : </span>
                     {task.place_name}
                   </div>
                 )}
@@ -75,7 +90,7 @@ function TaskListItem({ task }: TaskProps) {
               </div>
               <div className='text-right text-[20px] font-medium'>
                 {task.start_time && <span>{formatTime(task.start_time)}</span>}
-                {task.end_time && (
+                {task.end_time !== '' && task.end_time !== task.start_time && (
                   <>
                     <span className='block'>~</span>
                     <span>{formatTime(task.end_time)}</span>

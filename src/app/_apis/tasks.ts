@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { TaskPayload } from '../_types';
+import { TaskPayload, TaskWithDuration } from '../_types';
 import { getWeekOfMonth } from 'date-fns';
 
 type TaskParams = {
@@ -32,28 +32,34 @@ const formatDateParams = (date: Date, type: 'day' | 'week' | 'month') => {
 const getTasks = async (
   endpoint: string,
   params: TaskParams,
-): Promise<TaskPayload[]> => {
+): Promise<TaskWithDuration[]> => {
   const response = await api.get(endpoint, { params });
 
   return response.data.data;
 };
 
-export const getDailyTask = (date: Date): Promise<TaskPayload[]> => {
+export const getDailyTask = (date: Date): Promise<TaskWithDuration[]> => {
   const params = formatDateParams(date, 'day');
 
   return getTasks('/tasks/day', params);
 };
 
-export const getWeeklyTask = (date: Date): Promise<TaskPayload[]> => {
+export const getWeeklyTask = (date: Date): Promise<TaskWithDuration[]> => {
   const params = formatDateParams(date, 'week');
 
   return getTasks('/tasks/week', params);
 };
 
-export const getMonthlyTask = (date: Date): Promise<TaskPayload[]> => {
+export const getMonthlyTask = (date: Date): Promise<TaskWithDuration[]> => {
   const params = formatDateParams(date, 'month');
 
   return getTasks('/tasks/month', params);
+};
+
+export const getTaskPath = async (taskId: number): Promise<[number, number][]> => {
+  const response = await api.get(`/tasks/${taskId}/path`);
+
+  return response.data.data.path;
 };
 
 export const postTask = async (task: TaskPayload) => {

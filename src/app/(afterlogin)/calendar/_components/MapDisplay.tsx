@@ -1,3 +1,4 @@
+import useGetPathQuery from '@/app/_hooks/useGetPathQuery';
 import Image from 'next/image';
 import { useEffect, useMemo, useRef } from 'react';
 
@@ -7,18 +8,17 @@ interface mapProps {
     lat: number;
     lng: number;
   };
+  enabled: boolean;
 }
 
-function MapDisplay({ taskId, location }: mapProps) {
+function MapDisplay({ taskId, location, enabled }: mapProps) {
   const mapRef = useRef<naver.maps.Map | null>(null);
+  const { data: pathData = [] } = useGetPathQuery(taskId, enabled);
 
   const center = useMemo(() => {
     if (!location || !location.lat || !location.lng) return null;
 
-    return new naver.maps.LatLng(
-      location.lat,
-      location.lng,
-    );
+    return new naver.maps.LatLng(location.lat, location.lng);
   }, [location]);
 
   useEffect(() => {
@@ -33,6 +33,25 @@ function MapDisplay({ taskId, location }: mapProps) {
           zoom: 16,
         });
       }
+
+      if (pathData && mapRef.current) {
+        const path = pathData.map(
+          (pathArray: [number, number]) =>
+            new naver.maps.LatLng(pathArray[1], pathArray[0]),
+        );
+
+        new naver.maps.Polyline({
+          map: mapRef.current,
+          path,
+          strokeColor: 'oklch(0.6 0.214963 270.5418)',
+          strokeWeight: 4,
+        });
+      }
+
+      new naver.maps.Marker({
+        position: center,
+        map: mapRef.current,
+      });
     };
 
     if (window.naver && window.naver.maps) {
@@ -43,7 +62,7 @@ function MapDisplay({ taskId, location }: mapProps) {
       script.onload = initMap;
       document.head.appendChild(script);
     }
-  }, [taskId, center]);
+  }, [taskId, center, pathData]);
 
   if (!location.lat || !location.lng) {
     return (
