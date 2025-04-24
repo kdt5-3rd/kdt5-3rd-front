@@ -26,7 +26,7 @@
   --error-600: oklch(0.58 0.215 29.73);
   --error-700: oklch(0.5 0.1947 28.16);
   --error-900: oklch(0.37 0.1441 21.96);
-  --success-100:oklch(0.98 0.055 115.11);
+  --success-100: oklch(0.98 0.055 115.11);
   --success-900: oklch(0.46 0.1247 132.4);
 }
 
@@ -145,5 +145,15 @@ body {
 
   .scroll-none::-webkit-scrollbar {
     display: none;
+  }
+
+  .text-overflow-3-line {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-word;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
   }
 }
