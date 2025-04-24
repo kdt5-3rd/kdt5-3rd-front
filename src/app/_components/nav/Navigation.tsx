@@ -33,6 +33,13 @@ function Navigation() {
       activeIcon: '/assets/book-dark.png',
       href: '/calendar/daily',
     },
+    {
+      id: 3,
+      title: '뉴스',
+      icon: '/assets/book.png',
+      activeIcon: '/assets/book-dark.png',
+      href: '/news',
+    },
   ];
 
   const handleNavClick = (href: string) => {
