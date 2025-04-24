@@ -3,7 +3,7 @@ import { getTaskPath } from '../_apis/tasks';
 
 const useGetPathQuery = (taskId: number, enabled: boolean) => {
   return useQuery({
-    queryKey: [taskId],
+    queryKey: ['getPath', taskId],
     queryFn: () => {
       return getTaskPath(taskId);
     },

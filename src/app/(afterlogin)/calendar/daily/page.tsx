@@ -4,13 +4,13 @@ import BoardTitle from '@/app/_components/common/BoardTitle';
 import Navigation from '@/app/_components/nav/Navigation';
 import TaskListItem from '@/app/_components/tasks/TaskListItem';
 import { TaskWithDuration } from '@/app/_types';
-import { formatTime } from '@/app/_utils/dateTimeUtil';
 import { useEffect, useState } from 'react';
 import CalendarType from '../_components/CalendarType';
 import Progress from '../_components/Progress';
 import MapDisplay from '../_components/MapDisplay';
 import TaskModal from '@/app/_components/tasks/TaskModal';
 import useGetTaskQuery from '@/app/_hooks/useGetTaskQuery';
+import RouteInfo from '../_components/RouteInfo';
 
 export default function Daily() {
   const [isOpen, setIsOpen] = useState(false);
@@ -71,34 +71,10 @@ export default function Daily() {
                         className='bg-primary-0 border-primary-200 w-full rounded-[10px] border-1 px-[64px] py-[23px]'
                       >
                         {task.from_place_name && (
-                          <div className='mb-[10px] flex items-center justify-between'>
-                            <div className='truncate overflow-hidden text-ellipsis'>
-                              <span className='mr-[10px] text-[20px] font-bold'>
-                                출발
-                              </span>
-                              <span className='text-[20px] font-semibold'>
-                                {task.from_place_name}
-                              </span>
-                            </div>
-                            <span className='font-medium whitespace-nowrap'>
-                              {formatTime(task.start_time)}
-                            </span>
-                          </div>
+                          <RouteInfo label='출발' task={task} />
                         )}
                         {task.place_name && (
-                          <div className='mb-[10px] flex items-center justify-between'>
-                            <div className='truncate overflow-hidden text-ellipsis'>
-                              <span className='mr-[10px] text-[20px] font-bold'>
-                                도착
-                              </span>
-                              <span className='text-[20px] font-semibold'>
-                                {task.place_name}
-                              </span>
-                            </div>
-                            <span className='font-medium whitespace-nowrap'>
-                              {formatTime(task.end_time)}
-                            </span>
-                          </div>
+                          <RouteInfo label='도착' task={task} />
                         )}
                         {task.travel_duration && (
                           <div className='mb-[10px] flex items-center justify-between'>
