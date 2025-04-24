@@ -126,7 +126,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
     'flex gap-[20px] *:first:text-xl *:first:font-semibold *:last:flex-1';
 
   const { mutate: addTaskMutate } = useAddTaskMutation(type);
-  const { mutate: editTaskMutate } = useEditTaskMutation(type);
+  const { mutate: editTaskMutate } = useEditTaskMutation(type, task?.task_id);
   const { mutate: deleteTaskMutate } = useDeleteTaskMutation(type);
 
   const handleFieldChange = useCallback(

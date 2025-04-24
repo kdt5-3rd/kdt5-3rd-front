@@ -12,7 +12,7 @@ interface TaskProps {
 
 function TaskListItem({ task }: TaskProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { mutate: editTaskMutate } = useEditTaskMutation('day');
+  const { mutate: editTaskMutate } = useEditTaskMutation('day', task.task_id);
   const { mutate: deleteTaskMutate } = useDeleteTaskMutation('day');
 
   const editTask = () => {
