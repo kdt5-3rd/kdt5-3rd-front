@@ -82,6 +82,42 @@ export default function Weather() {
                 rainfall='10%'
                 weatherInfo={getWeatherInfo(95)}
               />
+              <HourlyWeather
+                time='6PM'
+                temperature='17°'
+                rainfall='10%'
+                weatherInfo={getWeatherInfo(95)}
+              />
+              <HourlyWeather
+                time='7PM'
+                temperature='17°'
+                rainfall='10%'
+                weatherInfo={getWeatherInfo(95)}
+              />
+              <HourlyWeather
+                time='8PM'
+                temperature='17°'
+                rainfall='10%'
+                weatherInfo={getWeatherInfo(95)}
+              />
+              <HourlyWeather
+                time='9PM'
+                temperature='17°'
+                rainfall='10%'
+                weatherInfo={getWeatherInfo(95)}
+              />
+              <HourlyWeather
+                time='10PM'
+                temperature='17°'
+                rainfall='10%'
+                weatherInfo={getWeatherInfo(95)}
+              />
+              <HourlyWeather
+                time='11PM'
+                temperature='17°'
+                rainfall='10%'
+                weatherInfo={getWeatherInfo(95)}
+              />
             </HourlyContainer>
           </section>
           <section className='col-span-2 flex h-full flex-col gap-[15px]'>
