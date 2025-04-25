@@ -4,7 +4,7 @@ import BoardTitle from '@/app/_components/common/BoardTitle';
 import Navigation from '@/app/_components/nav/Navigation';
 import Article from './Article';
 import NewsCategory from './NewsCategory';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 
 const dummy = [
   {
@@ -76,10 +76,12 @@ export default function News() {
         </div>
         <div className='flex w-full flex-col gap-[20px] px-[32px] py-[20px]'>
           <section className='scrollbar-hidden flex gap-[10px] overflow-x-scroll sm:justify-between'>
-            <NewsCategory
-              selectedCategory={category}
-              onSelectedCategory={handleCategory}
-            />
+            <Suspense fallback={<div>loading...</div>}>
+              <NewsCategory
+                selectedCategory={category}
+                onSelectedCategory={handleCategory}
+              />
+            </Suspense>
           </section>
           <section className='bg-primary-0 border-secondary-200 flex flex-col gap-[10px] rounded-[10px] border p-[32px] *:last:border-b-0'>
             {dummy.map(article => (
