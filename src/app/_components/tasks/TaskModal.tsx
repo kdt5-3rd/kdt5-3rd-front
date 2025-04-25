@@ -219,9 +219,11 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
   return (
     isOpen && (
       <div className='fixed inset-0 z-50 flex h-dvh w-dvw items-center justify-center bg-[rgba(84,87,122,0.3)]'>
-        <div className='bg-primary-0 w-[80%] min-w-[430px] rounded-[10px] px-[40px] py-[30px] shadow-[0_0_30px_0_rgba(84,87,122,0.7)] *:w-full sm:w-[708px]'>
+        <div className='bg-primary-0 w-[80%] min-w-[335px] rounded-[10px] px-[30px] py-[20px] shadow-[0_0_30px_0_rgba(84,87,122,0.7)] *:w-full sm:w-[708px] sm:px-[40px] sm:py-[30px]'>
           <div className='mb-[30px] flex justify-between'>
-            <p className='text-3xl font-semibold'>{modalMode[mode].title}</p>
+            <p className='text-[24px] font-semibold sm:text-3xl'>
+              {modalMode[mode].title}
+            </p>
             <button
               onClick={() => setIsOpen(false)}
               className='bg-primary-400 flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-[10px]'
@@ -264,7 +266,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
               <div className='flex flex-col gap-[5px]'>
                 <NormalInput
                   readOnly
-                  className='text-[14px] *:last:hidden sm:text-[16px]'
+                  className='text-[12px] *:last:hidden sm:text-[16px]'
                   isError={isInvalidDate}
                 >
                   <Image
@@ -366,7 +368,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
             <fieldset className={`*:first:mt-2 ${BASE_STYLE}`}>
               <label htmlFor='memo'>메모</label>
               <NormalTextarea
-                className='text-[14px] sm:text-[16px]'
+                className='text-[12px] sm:text-[16px]'
                 placeholder='메모'
                 value={value.memo || ''}
                 onChange={e => handleFieldChange('memo', e)}
