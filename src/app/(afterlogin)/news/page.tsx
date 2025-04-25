@@ -3,7 +3,8 @@
 import BoardTitle from '@/app/_components/common/BoardTitle';
 import Navigation from '@/app/_components/nav/Navigation';
 import Article from './Article';
-import CategoryButton from './CategoryButton';
+import NewsCategory from './NewsCategory';
+import { useState } from 'react';
 
 const dummy = [
   {
@@ -60,6 +61,12 @@ const dummy = [
 ];
 
 export default function News() {
+  const [category, setCategory] = useState<string | null>(null);
+
+  const handleCategory = (category: string | null) => {
+    setCategory(category);
+  };
+
   return (
     <div className='text-secondary-500 inline-flex min-h-screen w-full bg-[#FAFAFA]'>
       <Navigation />
@@ -69,17 +76,10 @@ export default function News() {
         </div>
         <div className='flex w-full flex-col gap-[20px] px-[32px] py-[20px]'>
           <section className='flex justify-between'>
-            <CategoryButton>Top</CategoryButton>
-            <CategoryButton>스포츠</CategoryButton>
-            <CategoryButton>기술</CategoryButton>
-            <CategoryButton>경제</CategoryButton>
-            <CategoryButton>과학</CategoryButton>
-            <CategoryButton>연예</CategoryButton>
-            <CategoryButton>건강</CategoryButton>
-            <CategoryButton>세계</CategoryButton>
-            <CategoryButton>정치</CategoryButton>
-            <CategoryButton>환경</CategoryButton>
-            <CategoryButton>음식</CategoryButton>
+            <NewsCategory
+              selectedCategory={category}
+              onSelectedCategory={handleCategory}
+            />
           </section>
           <section className='bg-primary-0 border-secondary-200 flex flex-col gap-[10px] rounded-[10px] border p-[32px] *:last:border-b-0'>
             {dummy.map(article => (
