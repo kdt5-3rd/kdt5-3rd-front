@@ -368,7 +368,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
               <NormalTextarea
                 className='text-[14px] sm:text-[16px]'
                 placeholder='메모'
-                value={value.memo}
+                value={value.memo || ''}
                 onChange={e => handleFieldChange('memo', e)}
               />
             </fieldset>
