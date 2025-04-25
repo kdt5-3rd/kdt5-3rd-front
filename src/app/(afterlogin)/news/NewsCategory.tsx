@@ -62,14 +62,14 @@ const categories = [
 ];
 
 interface NewsCategoryProps {
-  selectedCategory: string | null;
-  onSelectedCategory: (category: string | null) => void;
+  selectedCategory: string;
+  onSelectedCategory: (category: string) => void;
 }
 
 function NewsCategory({ onSelectedCategory }: NewsCategoryProps) {
   const searchParam = useSearchParams();
   const router = useRouter();
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>('top');
 
   const handleClick = (category: string) => {
     const newParams = new URLSearchParams(searchParam?.toString());
@@ -82,9 +82,18 @@ function NewsCategory({ onSelectedCategory }: NewsCategoryProps) {
   useEffect(() => {
     if (searchParam) {
       const param = searchParam.get('category');
+
+      if (!param) {
+        const newParams = new URLSearchParams(searchParam?.toString());
+        newParams.set('category', 'top');
+        router.push(`?${newParams.toString()}`);
+
+        return;
+      }
+
       setSelectedCategory(param);
     }
-  }, [searchParam]);
+  }, [searchParam, router]);
 
   useEffect(() => {
     onSelectedCategory(selectedCategory);

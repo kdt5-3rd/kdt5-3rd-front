@@ -61,9 +61,9 @@ const dummy = [
 ];
 
 export default function News() {
-  const [category, setCategory] = useState<string | null>(null);
+  const [category, setCategory] = useState<string>('top');
 
-  const handleCategory = (category: string | null) => {
+  const handleCategory = (category: string) => {
     setCategory(category);
   };
 
