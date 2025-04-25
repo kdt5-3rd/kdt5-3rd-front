@@ -32,7 +32,7 @@ function HourlyWeather({
   };
 
   return (
-    <div className='gap-[5 px] flex min-w-[55px] flex-col items-center'>
+    <div className='flex min-w-[55px] flex-col items-center gap-[5px]'>
       <div className='text-secondary-400 flex flex-col gap-[20px]'>
         {parseTime(time)}
         <Image
