@@ -19,7 +19,7 @@ function CalendarType() {
         <Link
           href={type.href}
           key={type.id}
-          className={`border-primary-200 cursor-pointer rounded-[10px] border-1 px-[44px] py-[8px] text-[20px] font-semibold ${pathname === type.href && 'bg-primary-400 text-primary-0'}`}
+          className={`border-primary-200 cursor-pointer rounded-[10px] border-1 px-[44px] py-[8px] text-[16px] sm:text-[20px] font-semibold ${pathname === type.href && 'bg-primary-400 text-primary-0'}`}
         >
           {type.title}
         </Link>

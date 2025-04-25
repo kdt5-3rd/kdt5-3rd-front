@@ -62,10 +62,10 @@ export default function Dashboard() {
         <div className='p-[32px]'>
           <div className='flex justify-between'>
             <div>
-              <p className='text-secondary-500 text-[34px] font-semibold'>
+              <p className='text-secondary-500 text-[30px] font-semibold sm:text-[34px]'>
                 오늘의 일정
               </p>
-              <span className='text-primary-500 text-[30px] font-semibold'>
+              <span className='text-primary-500 text-[22px] font-semibold sm:text-[30px]'>
                 {today}
               </span>
             </div>
@@ -99,11 +99,11 @@ export default function Dashboard() {
       </div>
       <div className='min-w-[400px] shrink-0 sm:w-[436px]'>
         <div className='px-[32px] py-[49px]'>
-          <div className='text-secondary-500 text-[40px] font-medium'>
+          <div className='text-secondary-500 text-[24px] font-medium sm:text-[40px]'>
             {currentTime}
           </div>
           <div className='text-secondary-500 bg-primary-0 border-primary-100 mt-[26px] w-full rounded-[10px] border-1 px-[22px] py-[17px]'>
-            <div className='flex items-center text-[24px] font-medium'>
+            <div className='flex items-center text-[20px] font-medium sm:text-[24px]'>
               <div className='mr-[5px]'>
                 <Image
                   src='/assets/location-big.png'
@@ -117,8 +117,12 @@ export default function Dashboard() {
             <div className='flex py-[14px]'>
               <div className='bg-primary-100 h-[100px] w-[100px] rounded-[10px]'></div>
               <div className='ml-[30px]'>
-                <span className='block text-[36px] font-medium'>10°C</span>
-                <span className='block text-[24px] font-medium'>맑음</span>
+                <span className='block text-[32px] font-medium sm:text-[36px]'>
+                  10°C
+                </span>
+                <span className='block text-[20px] font-medium sm:text-[24px]'>
+                  맑음
+                </span>
               </div>
             </div>
           </div>

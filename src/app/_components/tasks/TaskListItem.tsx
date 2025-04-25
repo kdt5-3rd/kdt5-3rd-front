@@ -44,18 +44,18 @@ function TaskListItem({ task }: TaskProps) {
               checked={task.is_completed}
               onChange={() => editCheck()}
               className={
-                'bg-primary-200 checked:bg-primary-0 h-[30px] w-[30px] cursor-pointer appearance-none rounded-[10px] bg-[auto_26px] checked:bg-[url(/assets/check.png)] checked:bg-center checked:bg-no-repeat'
+                'bg-primary-200 checked:bg-primary-0 h-[26px] w-[26px] cursor-pointer appearance-none rounded-[10px] bg-[auto_26px] checked:bg-[url(/assets/check.png)] checked:bg-center checked:bg-no-repeat sm:h-[30px] sm:w-[30px]'
               }
             />
             <div
               className={`flex w-full justify-between ${task.is_completed ? 'text-primary-100' : 'text-secondary-500'}`}
             >
               <div
-                className={`ml-[19px] text-[20px] font-semibold ${task.is_completed && 'line-through'}`}
+                className={`ml-[19px] text-[16px] font-semibold sm:text-[20px] ${task.is_completed && 'line-through'}`}
               >
                 <span>{task.title}</span>
                 {task.from_place_name && (
-                  <div className='mt-[10px] mb-[10px] flex text-[16px] font-medium'>
+                  <div className='mt-[10px] mb-[10px] flex text-[14px] font-medium sm:text-[16px]'>
                     <div className='mr-[5px] h-[20px] w-[20px]'>
                       <Image
                         src={`${task.is_completed ? '/assets/location-light.png' : '/assets/location.png'}`}
@@ -69,7 +69,7 @@ function TaskListItem({ task }: TaskProps) {
                   </div>
                 )}
                 {task.place_name && (
-                  <div className='mt-[10px] mb-[10px] flex text-[16px] font-medium'>
+                  <div className='mt-[10px] mb-[10px] flex text-[14px] font-medium sm:text-[16px]'>
                     <div className='mr-[5px] h-[20px] w-[20px]'>
                       <Image
                         src={`${task.is_completed ? '/assets/location-light.png' : '/assets/location.png'}`}
@@ -83,12 +83,12 @@ function TaskListItem({ task }: TaskProps) {
                   </div>
                 )}
                 {task.memo && (
-                  <ul className='flex list-disc flex-col gap-y-[6px] text-[16px] font-medium'>
+                  <ul className='flex list-disc flex-col gap-y-[6px] text-[14px] font-medium sm:text-[16px]'>
                     <li className='ml-[20px]'>{task.memo}</li>
                   </ul>
                 )}
               </div>
-              <div className='text-right text-[20px] font-medium'>
+              <div className='text-right text-[16px] font-medium sm:text-[20px]'>
                 {task.start_time && <span>{formatTime(task.start_time)}</span>}
                 {task.end_time !== '' && task.end_time !== task.start_time && (
                   <>
