@@ -8,9 +8,11 @@ interface CustomWeekEventProps {
 function CustomWeekEvent({ event }: CustomWeekEventProps) {
   return (
     <div className='flex flex-col gap-[2px] p-[4px]'>
-      <div className='text-[12px] font-semibold'>{event.title}</div>
+      <div className='text-[8px] font-semibold text-nowrap sm:text-[12px]'>
+        {event.title}
+      </div>
       {!event.allDay && (
-        <div className='text-[8px] font-normal'>{`${format(event.start_time, 'h:mma')} - ${format(event.end_time, 'h:mma')}`}</div>
+        <div className='text-[6px] font-normal sm:text-[8px]'>{`${format(event.start_time, 'h:mma')} - ${format(event.end_time, 'h:mma')}`}</div>
       )}
     </div>
   );
