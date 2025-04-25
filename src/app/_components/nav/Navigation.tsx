@@ -65,7 +65,7 @@ function Navigation() {
             className='bg-secondary-400 fixed inset-0 opacity-30 sm:hidden'
             onClick={() => setIsOpen(false)}
           />
-          <div className='bg-primary-0 absolute top-[86px] w-full px-[20px] py-[18px] shadow-md sm:hidden'>
+          <div className='bg-primary-0 absolute top-[86px] w-full px-[20px] py-[18px] z-10 shadow-md sm:hidden'>
             <ul className='text-secondary-300 flex flex-col gap-y-[12px]'>
               {navItems.map(navItem => (
                 <Link

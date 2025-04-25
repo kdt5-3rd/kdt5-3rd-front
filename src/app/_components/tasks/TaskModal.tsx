@@ -102,7 +102,7 @@ const renderDate = (start: Date, end: Date) => {
   const endTime = format(end, 'hh:mm a');
 
   return (
-    <span className='whitespace-nowrap'>
+    <span>
       <strong>{startDate}</strong> {startTime} ~ <strong>{endDate}</strong>{' '}
       {endTime}
     </span>
@@ -123,7 +123,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
     task ? normalizeTaskDate(task) : initialTask,
   );
   const BASE_STYLE =
-    'flex gap-[20px] *:first:text-xl *:first:font-semibold *:last:flex-1';
+    'flex gap-[20px] *:first:text-[16px] sm\*:first:text-xl *:first:font-semibold *:last:flex-1';
 
   const { mutate: addTaskMutate } = useAddTaskMutation(type);
   const { mutate: editTaskMutate } = useEditTaskMutation(type, task?.task_id);
@@ -219,7 +219,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
   return (
     isOpen && (
       <div className='fixed inset-0 z-50 flex h-dvh w-dvw items-center justify-center bg-[rgba(84,87,122,0.3)]'>
-        <div className='bg-primary-0 w-[708px] rounded-[10px] px-[40px] py-[30px] shadow-[0_0_30px_0_rgba(84,87,122,0.7)] *:w-full'>
+        <div className='bg-primary-0 w-[80%] min-w-[430px] rounded-[10px] px-[40px] py-[30px] shadow-[0_0_30px_0_rgba(84,87,122,0.7)] *:w-full sm:w-[708px]'>
           <div className='mb-[30px] flex justify-between'>
             <p className='text-3xl font-semibold'>{modalMode[mode].title}</p>
             <button
@@ -241,6 +241,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
               <div className='flex flex-col gap-[5px]'>
                 <NormalInput
                   placeholder='제목'
+                  className='text-[14px] sm:text-[16px]'
                   isError={isInvalidTitle}
                   value={value.title}
                   onChange={e => handleFieldChange('title', e)}
@@ -257,16 +258,19 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
               className={`items-center ${BASE_STYLE}`}
               onClick={() => setOpenModal({ type: 'dayPicker' })}
             >
-              <label htmlFor='date'>날짜</label>
+              <label htmlFor='date' className='whitespace-nowrap'>
+                날짜
+              </label>
               <div className='flex flex-col gap-[5px]'>
                 <NormalInput
                   readOnly
-                  className='*:last:hidden'
+                  className='text-[14px] *:last:hidden sm:text-[16px]'
                   isError={isInvalidDate}
                 >
                   <Image
                     src='/assets/calendar-light.png'
                     alt='calendar icon'
+                    className='shrink-0 object-contain'
                     width={24}
                     height={24}
                   />
@@ -290,12 +294,14 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
               </div>
             </fieldset>
             <fieldset className={`relative items-center ${BASE_STYLE}`}>
-              <label htmlFor='location'>출발</label>
+              <label htmlFor='location' className='whitespace-nowrap'>
+                출발
+              </label>
               <div className='flex flex-grow justify-between'>
                 <NormalInput
                   placeholder='출발 위치'
                   value={value.from_place_name || ''}
-                  className='mr-[10px] flex-grow'
+                  className='mr-[10px] flex-grow text-[14px] sm:text-[16px]'
                   onChange={e => handleFieldChange('from_place_name', e)}
                 >
                   <Image
@@ -307,7 +313,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
                 </NormalInput>
                 <SubmitButton
                   type='button'
-                  className='pr-[14px] pl-[14px] font-semibold'
+                  className='pr-[14px] pl-[14px] font-semibold whitespace-nowrap'
                   onClick={() =>
                     setOpenModal({
                       type: 'location',
@@ -320,12 +326,14 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
               </div>
             </fieldset>
             <fieldset className={`relative items-center ${BASE_STYLE}`}>
-              <label htmlFor='location'>도착</label>
+              <label htmlFor='location' className='whitespace-nowrap'>
+                도착
+              </label>
               <div className='flex flex-grow justify-between'>
                 <NormalInput
                   placeholder='도착 위치'
                   value={value.place_name || ''}
-                  className='mr-[10px] flex-grow'
+                  className='mr-[10px] flex-grow text-[14px] sm:text-[16px]'
                   onChange={e => handleFieldChange('place_name', e)}
                 >
                   <Image
@@ -337,7 +345,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
                 </NormalInput>
                 <SubmitButton
                   type='button'
-                  className='pr-[14px] pl-[14px] font-semibold'
+                  className='pr-[14px] pl-[14px] font-semibold whitespace-nowrap'
                   onClick={() =>
                     setOpenModal({
                       type: 'location',
@@ -358,8 +366,9 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
             <fieldset className={`*:first:mt-2 ${BASE_STYLE}`}>
               <label htmlFor='memo'>메모</label>
               <NormalTextarea
+                className='text-[14px] sm:text-[16px]'
                 placeholder='메모'
-                value={value.memo}
+                value={value.memo || ''}
                 onChange={e => handleFieldChange('memo', e)}
               />
             </fieldset>

@@ -50,9 +50,9 @@ export default function Monthly() {
   }, [taskList]);
 
   return (
-    <div className='text-secondary-500 inline-flex h-full min-h-screen w-full bg-[#FAFAFA]'>
+    <div className='text-secondary-500 flex flex-col sm:inline-flex sm:flex-row h-full min-h-screen w-full bg-[#FAFAFA]'>
       <Navigation />
-      <div className='bg-primary-0 h-full w-full min-w-[752px]'>
+      <div className='bg-primary-0 h-full w-full sm:min-w-[752px]'>
         <div className='flex flex-col'>
           <BoardTitle title='일정 관리'>
             <CalendarType />
@@ -62,7 +62,7 @@ export default function Monthly() {
             />
           </BoardTitle>
           <CalendarContainer type='month'>
-            <div className='h-[937px]'>
+            <div className='h-[937px] min-w-[400px]'>
               <Calendar
                 localizer={localizer}
                 defaultDate={new Date()}

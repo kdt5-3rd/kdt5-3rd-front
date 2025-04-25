@@ -19,7 +19,7 @@ function NormalInput({
       {children}
       <input
         {...rest}
-        className='flex-1 text-[14px] outline-none read-only:cursor-default'
+        className='w-full text-[14px] flex-1 outline-none read-only:cursor-default'
       />
     </div>
   );
