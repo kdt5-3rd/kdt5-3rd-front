@@ -33,6 +33,13 @@ function Navigation() {
       activeIcon: '/assets/book-dark.png',
       href: '/calendar/daily',
     },
+    {
+      id: 2,
+      title: '날씨',
+      icon: '/assets/sun.png',
+      activeIcon: '/assets/sun.png',
+      href: '/weather',
+    },
   ];
 
   const handleNavClick = (href: string) => {
