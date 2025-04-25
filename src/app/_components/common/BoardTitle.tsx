@@ -7,8 +7,8 @@ interface BoardTitleProps {
 
 function BoardTitle(props: BoardTitleProps) {
   return (
-    <div className='flex flex-col gap-[24px] p-[32px]'>
-      <p className='text-[30px] sm:text-[34px] font-semibold'>{props.title}</p>
+    <div className='flex flex-col gap-[24px] px-[23.5px] py-[20px] sm:p-[32px]'>
+      <p className='text-[30px] font-semibold sm:text-[34px]'>{props.title}</p>
       {props.children}
     </div>
   );

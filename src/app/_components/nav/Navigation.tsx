@@ -40,6 +40,13 @@ function Navigation() {
       activeIcon: '/assets/sun-dark.png',
       href: '/weather',
     },
+    {
+      id: 3,
+      title: '뉴스',
+      icon: '/assets/news.png',
+      activeIcon: '/assets/news-dark.png',
+      href: '/news',
+    },
   ];
 
   const handleNavClick = (href: string) => {
