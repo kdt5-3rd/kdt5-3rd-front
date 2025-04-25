@@ -27,9 +27,9 @@ export default function Daily() {
   }, [taskList]);
 
   return (
-    <div className='text-secondary-500 inline-flex h-full min-h-screen w-full min-w-[1500px] bg-[#FAFAFA]'>
+    <div className='text-secondary-500 flex h-full min-h-screen w-full flex-col bg-[#FAFAFA] sm:inline-flex sm:min-w-[1500px] sm:flex-row'>
       <Navigation />
-      <div className='bg-primary-0 h-full w-full min-w-[752px]'>
+      <div className='bg-primary-0 h-full w-full sm:min-w-[752px]'>
         <div className='flex flex-col'>
           <BoardTitle title={'오늘의 일정'}>
             <CalendarType />
@@ -38,8 +38,8 @@ export default function Daily() {
               totalTaskCount={taskList.length}
             />
           </BoardTitle>
-          <div className='flex h-full justify-between bg-[#FAFAFA] px-[32px] py-[24px]'>
-            <div className='mr-[34px] w-full min-w-[752px]'>
+          <div className='flex h-full flex-col justify-between bg-[#FAFAFA] px-[32px] py-[24px] sm:flex-row'>
+            <div className='mr-[34px] mb-[20px] w-full min-w-[400px] sm:min-w-[752px]'>
               <div className='mb-[18px] flex justify-between'>
                 <span className='text-[24px] font-semibold'>Todos</span>
                 <button
@@ -48,7 +48,9 @@ export default function Daily() {
                 ></button>
               </div>
               {taskList.length === 0 ? (
-                <div className='mt-30 w-full text-center'>일정이 없습니다</div>
+                <div className='mt-30 mb-30 w-full text-center sm:mb-0'>
+                  일정이 없습니다
+                </div>
               ) : (
                 <ul className='flex flex-col gap-y-[10px]'>
                   {taskList.map(task => {
@@ -59,7 +61,9 @@ export default function Daily() {
             </div>
             <div className='min-w-[400px]'>
               <div className='mb-[18px]'>
-                <span className='text-[24px] font-semibold'>Next moves</span>
+                <span className='text-[20px] font-semibold sm:text-[24px]'>
+                  Next moves
+                </span>
               </div>
               <div className='flex flex-col gap-[18px]'>
                 {pendingTask
@@ -79,11 +83,11 @@ export default function Daily() {
                         {task.travel_duration && (
                           <div className='mb-[10px] flex items-center justify-between'>
                             <div>
-                              <span className='mr-[10px] text-[20px] font-bold'>
+                              <span className='mr-[10px] text-[16px] font-bold sm:text-[20px]'>
                                 소요시간
                               </span>
                             </div>
-                            <span className='bg-primary-200 rounded-[5px] px-[4px] py-[2px] text-[16px] font-bold'>
+                            <span className='bg-primary-200 rounded-[5px] px-[4px] py-[2px] text-[14px] font-bold sm:text-[16px]'>
                               {task.travel_duration}
                             </span>
                           </div>
@@ -91,11 +95,11 @@ export default function Daily() {
                         {task.travel_duration && (
                           <div className='flex items-center justify-between'>
                             <div>
-                              <span className='mr-[10px] text-[20px] font-bold'>
+                              <span className='mr-[10px] text-[16px] font-bold sm:text-[20px]'>
                                 추천 출발시각
                               </span>
                             </div>
-                            <span className='bg-primary-200 rounded-[5px] px-[4px] py-[2px] text-[16px] font-bold'>
+                            <span className='bg-primary-200 rounded-[5px] px-[4px] py-[2px] text-[14px] font-bold sm:text-[16px]'>
                               {task.recommended_departure_time}
                             </span>
                           </div>
