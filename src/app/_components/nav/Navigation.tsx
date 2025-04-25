@@ -37,7 +37,7 @@ function Navigation() {
       id: 2,
       title: '날씨',
       icon: '/assets/sun.png',
-      activeIcon: '/assets/book-dark.png',
+      activeIcon: '/assets/sun.png',
       href: '/weather',
     },
   ];
