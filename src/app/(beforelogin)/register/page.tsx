@@ -5,27 +5,27 @@ import Link from 'next/link';
 export default function Register() {
   return (
     <div className='relative inset-0 h-dvh w-dvw bg-[#FAFAFA]'>
-      <div className='absolute top-1/2 left-1/2 flex w-[392px] -translate-1/2 flex-col'>
+      <div className='absolute top-1/2 left-1/2 flex -translate-1/2 flex-col sm:w-[392px]'>
         <div className='mb-[10px] flex flex-col gap-[30px]'>
-          <div className='text-primary-900 text-center text-6xl font-bold'>
+          <div className='text-primary-900 text-center text-4xl font-bold sm:text-6xl'>
             회원가입
           </div>
           <form className='text-secondary-500 flex flex-col gap-[30px]'>
             <div className='flex flex-col gap-[10px]'>
               <div className='flex flex-col gap-[6px]'>
-                <label htmlFor='id' className='text-xl'>
+                <label htmlFor='id' className='text-[14px] sm:text-xl'>
                   아이디
                 </label>
                 <NormalInput id='id' type='text' placeholder='아이디' />
               </div>
               <div className='flex flex-col gap-[6px]'>
-                <label htmlFor='nickname' className='text-xl'>
+                <label htmlFor='nickname' className='text-[14px] sm:text-xl'>
                   닉네임
                 </label>
                 <NormalInput id='nickname' type='text' placeholder='닉네임' />
               </div>
               <div className='flex flex-col gap-[6px]'>
-                <label htmlFor='password' className='text-xl'>
+                <label htmlFor='password' className='text-[14px] sm:text-xl'>
                   비밀번호
                 </label>
                 <NormalInput
@@ -35,7 +35,10 @@ export default function Register() {
                 />
               </div>
               <div className='flex flex-col gap-[6px]'>
-                <label htmlFor='verifyPassword' className='text-xl'>
+                <label
+                  htmlFor='verifyPassword'
+                  className='text-[14px] sm:text-xl'
+                >
                   비밀번호 확인
                 </label>
                 <NormalInput
@@ -48,7 +51,7 @@ export default function Register() {
             <SubmitButton>회원가입</SubmitButton>
           </form>
         </div>
-        <div className='text-secondary-300 text-center text-lg'>
+        <div className='text-secondary-300 text-center text-[14px] sm:text-lg'>
           이미 아이디가 있으신가요?{' '}
           <Link
             href='/login'
