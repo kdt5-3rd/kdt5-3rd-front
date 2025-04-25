@@ -43,8 +43,8 @@ function Navigation() {
     {
       id: 3,
       title: '뉴스',
-      icon: '/assets/book.png',
-      activeIcon: '/assets/book-dark.png',
+      icon: '/assets/news.png',
+      activeIcon: '/assets/news-dark.png',
       href: '/news',
     },
   ];
