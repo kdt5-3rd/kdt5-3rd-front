@@ -14,12 +14,12 @@ function NormalInput({
 }: NormalInputProps) {
   return (
     <div
-      className={`${className} ${isError ? 'border-error-600 border-2' : 'border-primary-200 border'} bg-primary-0 placeholder-secondary-400 flex gap-[16px] rounded-lg p-[16px]`}
+      className={`${className} ${isError ? 'border-error-600 border-2' : 'border-primary-200 border'} bg-primary-0 placeholder-secondary-400 flex gap-[16px] rounded-lg p-[12px] sm:p-[16px]`}
     >
       {children}
       <input
         {...rest}
-        className='w-full flex-1 outline-none read-only:cursor-default'
+        className='w-full text-[14px] flex-1 outline-none read-only:cursor-default'
       />
     </div>
   );
