@@ -68,14 +68,14 @@ export default function News() {
   };
 
   return (
-    <div className='text-secondary-500 inline-flex min-h-screen w-full bg-[#FAFAFA]'>
+    <div className='text-secondary-500 flex h-full min-h-screen flex-col sm:min-w-[1440px] sm:flex-row'>
       <Navigation />
-      <div className='w-full min-w-[752px]'>
+      <div className='min-h-dvh w-dvw bg-[#F5F5F7] sm:min-w-[752px]'>
         <div className='bg-primary-0 flex flex-col'>
           <BoardTitle title='뉴스' />
         </div>
         <div className='flex w-full flex-col gap-[20px] px-[32px] py-[20px]'>
-          <section className='flex justify-between'>
+          <section className='scrollbar-hidden flex gap-[10px] overflow-x-scroll sm:justify-between'>
             <NewsCategory
               selectedCategory={category}
               onSelectedCategory={handleCategory}
