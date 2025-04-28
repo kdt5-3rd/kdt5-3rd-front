@@ -13,7 +13,6 @@ import useGetWeatherQuery from '@/app/_hooks/useGetWeatherQuery';
 import { format } from 'date-fns';
 import useGetLocationName from '@/app/_hooks/useGetLocationName';
 import WeeklyContainer from './WeeklyContainer';
-import { ko } from 'date-fns/locale';
 
 export default function Weather() {
   const { data: weatherData, isPending } = useGetWeatherQuery();
@@ -28,21 +27,19 @@ export default function Weather() {
   const weeklyData = weatherData.daily;
 
   return (
-    <div className='text-secondary-500 inline-flex h-full min-h-screen w-full bg-[#FAFAFA]'>
+    <div className='text-secondary-500 inline-flex h-full min-h-screen w-full flex-col bg-[#FAFAFA] sm:flex-row'>
       <Navigation />
       <div className='h-full w-full min-w-[752px]'>
         <div className='bg-primary-0 flex flex-col'>
           <BoardTitle title='날씨'></BoardTitle>
         </div>
-        <main className='flex w-full gap-x-[50px] gap-y-[23px] p-[32px]'>
-          <div className='flex w-[60%] flex-col gap-[23px]'>
+        <main className='flex w-dvw min-w-[375px] flex-col gap-x-[50px] gap-y-[23px] p-[32px] sm:w-full sm:flex-row'>
+          <div className='flex flex-col gap-[23px] sm:w-[60%]'>
             <section className='flex flex-col gap-[15px]'>
-              <p className='text-[24px] font-semibold'>현재</p>
+              <p className='text-[22px] font-semibold sm:text-[24px]'>현재</p>
               <CurrentWeather
                 location={locationName}
-                currentTime={format(currentData.time, 'M월 d일(eee) a h:mm ', {
-                  locale: ko,
-                })}
+                currentTime={currentData.time}
                 temperature={`${currentData?.temperature}°`}
                 weatherInfo={getWeatherInfo(currentData.weathercode)}
               />
@@ -60,7 +57,7 @@ export default function Weather() {
                 )}
               </HourlyContainer>
             </section>
-            <section className='grid grid-cols-3 gap-[30px]'>
+            <section className='grid grid-cols-2 gap-[16px] sm:grid-cols-3 sm:gap-[30px]'>
               <CurrentIndex
                 type='미세먼지'
                 value={currentData.pm10}
@@ -93,9 +90,11 @@ export default function Weather() {
               />
             </section>
           </div>
-          <div className='flex w-[40%] flex-col gap-[23px]'>
+          <div className='flex flex-col gap-[23px] sm:w-[40%]'>
             <section className='flex flex-col gap-[15px]'>
-              <p className='text-[24px] font-semibold'>주간 날씨</p>
+              <p className='text-[22px] font-semibold sm:text-[24px]'>
+                주간 날씨
+              </p>
               <WeeklyContainer>
                 {weeklyData.map(data => (
                   <WeeklyWeather key={data.date} data={data} />

@@ -14,7 +14,7 @@ function RecommendDress() {
           옷차림 추천
         </p>
       </div>
-      <p className='flex h-full items-center justify-center'>
+      <p className='flex h-full items-center justify-center py-[15px] text-[12px] sm:text-[16px]'>
         서비스 준비 중입니다.
       </p>
     </div>
