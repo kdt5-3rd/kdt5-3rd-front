@@ -3,7 +3,6 @@ import { TaskPayload, TaskWithDuration } from '../_types';
 import { getWeekOfMonth } from 'date-fns';
 import { useAuthStore } from '../store/authStore';
 import { validateToken } from './users';
-import { useRouter } from 'next/navigation';
 
 type TaskParams = {
   year: number;
@@ -26,9 +25,7 @@ api.interceptors.request.use(
 
         return config;
       } catch (error) {
-        const router = useRouter();
-        router.push('/login');
-
+        window.location.href = '/login';
         return Promise.reject(error);
       }
     } else {
