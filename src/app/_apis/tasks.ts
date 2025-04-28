@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { TaskPayload, TaskWithDuration } from '../_types';
 import { getWeekOfMonth } from 'date-fns';
+import { useAuthStore } from '../store/authStore';
+import { validateToken } from './users';
+import { useRouter } from 'next/navigation';
 
 type TaskParams = {
   year: number;
@@ -12,6 +15,30 @@ type TaskParams = {
 export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_SERVER_URL,
 });
+
+api.interceptors.request.use(
+  async config => {
+    const accessToken = useAuthStore.getState().accessToken;
+
+    if (accessToken) {
+      try {
+        await validateToken();
+
+        return config;
+      } catch (error) {
+        const router = useRouter();
+        router.push('/login');
+
+        return Promise.reject(error);
+      }
+    } else {
+      return config;
+    }
+  },
+  error => {
+    return Promise.reject(error);
+  },
+);
 
 const formatDateParams = (date: Date, type: 'day' | 'week' | 'month') => {
   const dateParams: TaskParams = {
@@ -56,7 +83,9 @@ export const getMonthlyTask = (date: Date): Promise<TaskWithDuration[]> => {
   return getTasks('/tasks/month', params);
 };
 
-export const getTaskPath = async (taskId: number): Promise<[number, number][]> => {
+export const getTaskPath = async (
+  taskId: number,
+): Promise<[number, number][]> => {
   const response = await api.get(`/tasks/${taskId}/path`);
 
   return response.data.data.path;
