@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { devtools, persist } from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
 
 interface AuthState {
   accessToken: string | null;
@@ -10,24 +10,22 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>()(
-  devtools(
-    persist(
-      (set, get) => ({
-        accessToken: null,
-        refreshToken: null,
-        setTokens: (accessToken, refreshToken) =>
-          set({ accessToken, refreshToken }),
-        clearTokens: () => set({ accessToken: null, refreshToken: null }),
-        checkLoggedIn: () => {
-          const { accessToken } = get();
-          return accessToken !== null;
-        },
-      }),
-      {
-        name: 'authToken',
-        skipHydration: true,
+  persist(
+    (set, get) => ({
+      accessToken: null,
+      refreshToken: null,
+      setTokens: (accessToken, refreshToken) =>
+        set({ accessToken, refreshToken }),
+      clearTokens: () => set({ accessToken: null, refreshToken: null }),
+      checkLoggedIn: () => {
+        const { accessToken } = get();
+        return accessToken !== null;
       },
-    ),
+    }),
+    {
+      name: 'authToken',
+      skipHydration: true,
+    },
   ),
 );
 
