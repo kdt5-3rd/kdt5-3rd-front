@@ -7,6 +7,51 @@ import { ChangeEvent, useState } from 'react';
 import { RegisterParams } from '@/app/_types/users';
 import useRegisterMutation from '@/app/_hooks/useRegisterMutation';
 
+const initialErrors = {
+  email: '',
+  username: '',
+  password: '',
+  verifyPassword: '',
+};
+
+const validateInputData = (
+  registerData: RegisterParams,
+  verifyPassword: string,
+) => {
+  const errors = { ...initialErrors };
+  let isValid = true;
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!registerData.email.trim()) {
+    errors.email = '아이디를 입력해주세요.';
+    isValid = false;
+  } else if (!emailRegex.test(registerData.email)) {
+    errors.email = '아이디는 이메일 형식입니다.';
+    isValid = false;
+  }
+
+  if (!registerData.username.trim()) {
+    errors.username = '닉네임을 입력해주세요.';
+    isValid = false;
+  }
+
+  if (!registerData.password.trim()) {
+    errors.password = '비밀번호를 입력해주세요.';
+    isValid = false;
+  }
+
+  if (!verifyPassword.trim()) {
+    errors.verifyPassword = '비밀번호 확인을 입력해주세요.';
+    isValid = false;
+  } else if (registerData.password !== verifyPassword) {
+    errors.verifyPassword = '비밀번호가 일치하지 않습니다.';
+    isValid = false;
+  }
+
+  return { isValid, errors };
+};
+
 export default function Register() {
   const { mutate: registerMutate } = useRegisterMutation();
 
@@ -16,52 +61,21 @@ export default function Register() {
     password: '',
   });
   const [verifyPassword, setVerifyPassword] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [usernameError, setUsernameError] = useState('');
-  const [verifyPasswordError, setVerifyPasswordError] = useState('');
+  const [errors, setErrors] = useState(initialErrors);
 
   const handleRegisterClick = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    let isValid = true;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const { isValid, errors: validationErrors } = validateInputData(
+      registerData,
+      verifyPassword,
+    );
 
-    if (!registerData.email.trim()) {
-      setEmailError('아이디를 입력해주세요.');
-      isValid = false;
-    } else if (!emailRegex.test(registerData.email)) {
-      setEmailError('아이디는 이메일 형식입니다.');
-      isValid = false;
-    } else {
-      setEmailError('');
+    if (!isValid) {
+      setErrors(validationErrors);
+      return;
     }
 
-    if (!registerData.username.trim()) {
-      setUsernameError('닉네임을 입력해주세요.');
-      isValid = false;
-    } else {
-      setUsernameError('');
-    }
-
-    if (!registerData.password.trim()) {
-      setPasswordError('비밀번호를 입력해주세요.');
-      isValid = false;
-    } else {
-      setPasswordError('');
-    }
-
-    if (!verifyPassword.trim()) {
-      setVerifyPasswordError('비밀번호 확인을 입력해주세요.');
-      isValid = false;
-    } else if (registerData.password !== verifyPassword) {
-      setVerifyPasswordError('비밀번호가 일치하지 않습니다.');
-      isValid = false;
-    } else {
-      setVerifyPasswordError('');
-    }
-
-    if (!isValid) return;
     registerMutate(registerData);
   };
 
@@ -91,16 +105,14 @@ export default function Register() {
                   className='flex items-center gap-[10px] text-[14px] sm:text-xl'
                 >
                   아이디
-                  {emailError && (
-                    <p className='text-error-600 text-[14px]'>{emailError}</p>
-                  )}
+                  {errors.email}
                 </label>
                 <NormalInput
                   id='id'
                   type='email'
                   value={registerData.email}
                   onChange={e => handleInputChange('email', e)}
-                  className={emailError && '!border-error-600'}
+                  className={errors.email && '!border-error-600'}
                   placeholder='아이디'
                 />
               </div>
@@ -111,18 +123,14 @@ export default function Register() {
                   className='flex items-center gap-[10px] text-[14px] sm:text-xl'
                 >
                   닉네임
-                  {usernameError && (
-                    <p className='text-error-600 text-[14px]'>
-                      {usernameError}
-                    </p>
-                  )}
+                  {errors.username}
                 </label>
                 <NormalInput
                   id='nickname'
                   type='text'
                   value={registerData.username}
                   onChange={e => handleInputChange('username', e)}
-                  className={usernameError && '!border-error-600'}
+                  className={errors.username && '!border-error-600'}
                   placeholder='닉네임'
                 />
               </div>
@@ -132,18 +140,14 @@ export default function Register() {
                   className='flex items-center gap-[10px] text-[14px] sm:text-xl'
                 >
                   비밀번호
-                  {passwordError && (
-                    <p className='text-error-600 text-[14px]'>
-                      {passwordError}
-                    </p>
-                  )}
+                  {errors.password}
                 </label>
                 <NormalInput
                   id='password'
                   type='password'
                   value={registerData.password}
                   onChange={e => handleInputChange('password', e)}
-                  className={passwordError && '!border-error-600'}
+                  className={errors.password && '!border-error-600'}
                   placeholder='비밀번호'
                 />
               </div>
@@ -153,18 +157,14 @@ export default function Register() {
                   className='flex items-center gap-[10px] text-[14px] sm:text-xl'
                 >
                   비밀번호 확인
-                  {verifyPasswordError && (
-                    <p className='text-error-600 text-[14px]'>
-                      {verifyPasswordError}
-                    </p>
-                  )}
+                  {errors.verifyPassword}
                 </label>
                 <NormalInput
                   id='verifyPassword'
                   type='password'
                   value={verifyPassword}
                   onChange={e => setVerifyPassword(e.target.value)}
-                  className={verifyPasswordError && '!border-error-600'}
+                  className={errors.verifyPassword && '!border-error-600'}
                   placeholder='비밀번호'
                 />
               </div>
