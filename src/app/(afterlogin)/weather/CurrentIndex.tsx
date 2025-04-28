@@ -31,7 +31,7 @@ const indexType: Record<IndexType, { imageUrl: string }> = {
 
 interface CurrentIndexProps {
   type: IndexType;
-  value: string;
+  value: number;
   subValue?: string;
 }
 

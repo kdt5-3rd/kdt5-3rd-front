@@ -9,8 +9,19 @@ import WeeklyWeather from './WeeklyWeather';
 import RecommendDress from './RecommendDress';
 import HourlyContainer from './HourlyContainer';
 import { getWeatherInfo } from './weatherCode';
+import useGetWeatherQuery from '@/app/_hooks/useGetWeatherQuery';
+import { format } from 'date-fns';
 
 export default function Weather() {
+  const { data: weatherData, isPending } = useGetWeatherQuery();
+
+  if (!weatherData || isPending) {
+    return;
+  }
+
+  const currentData = weatherData.current;
+  const hourlyData = weatherData.hourly;
+
   return (
     <div className='text-secondary-500 inline-flex h-full min-h-screen w-full bg-[#FAFAFA]'>
       <Navigation />
@@ -22,102 +33,23 @@ export default function Weather() {
           <section className='col-span-3 flex max-w-[1000px] flex-col gap-[15px]'>
             <p className='text-[24px] font-semibold'>현재</p>
             <CurrentWeather
-              location='수원시 영통구'
-              currentTime='9:00 AM'
-              temperature='17°'
-              weatherInfo={getWeatherInfo(0)}
+              location='동네 이름'
+              currentTime={format(currentData.time, 'h:mm a')}
+              temperature={`${currentData?.temperature}°`}
+              weatherInfo={getWeatherInfo(currentData.weathercode)}
             />
             <HourlyContainer>
-              <HourlyWeather
-                time='Now'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(0)}
-              />
-              <HourlyWeather
-                time='10AM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(1)}
-              />
-              <HourlyWeather
-                time='11AM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(3)}
-              />
-              <HourlyWeather
-                time='12AM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(45)}
-              />
-              <HourlyWeather
-                time='1PM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(51)}
-              />
-              <HourlyWeather
-                time='2PM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(61)}
-              />
-              <HourlyWeather
-                time='3PM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(71)}
-              />
-              <HourlyWeather
-                time='4PM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(80)}
-              />
-              <HourlyWeather
-                time='5PM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(95)}
-              />
-              <HourlyWeather
-                time='6PM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(95)}
-              />
-              <HourlyWeather
-                time='7PM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(95)}
-              />
-              <HourlyWeather
-                time='8PM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(95)}
-              />
-              <HourlyWeather
-                time='9PM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(95)}
-              />
-              <HourlyWeather
-                time='10PM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(95)}
-              />
-              <HourlyWeather
-                time='11PM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(95)}
-              />
+              {hourlyData.map(
+                ({ time, temperature, precipitation, weathercode }) => (
+                  <HourlyWeather
+                    key={time}
+                    time={format(time, 'ha')}
+                    temperature={`${temperature}°`}
+                    rainfall={`${precipitation}%`}
+                    weatherInfo={getWeatherInfo(weathercode)}
+                  />
+                ),
+              )}
             </HourlyContainer>
           </section>
           <section className='col-span-2 flex h-full flex-col gap-[15px]'>
@@ -125,12 +57,36 @@ export default function Weather() {
             <WeeklyWeather />
           </section>
           <section className='col-span-3 grid grid-cols-3 gap-[30px]'>
-            <CurrentIndex type='미세먼지' value='43' subValue='(bad)' />
-            <CurrentIndex type='초미세먼지' value='43' subValue='(bad)' />
-            <CurrentIndex type='자외선' value='43' subValue='(bad)' />
-            <CurrentIndex type='습도' value='43' subValue='(bad)' />
-            <CurrentIndex type='바람' value='43' subValue='(bad)' />
-            <CurrentIndex type='기압' value='43' subValue='(bad)' />
+            <CurrentIndex
+              type='미세먼지'
+              value={currentData.pm10}
+              subValue='µg/m³'
+            />
+            <CurrentIndex
+              type='초미세먼지'
+              value={currentData.pm2_5}
+              subValue='µg/m³'
+            />
+            <CurrentIndex
+              type='자외선'
+              value={currentData.uv_index}
+              subValue=''
+            />
+            <CurrentIndex
+              type='습도'
+              value={currentData.humidity}
+              subValue='%'
+            />
+            <CurrentIndex
+              type='바람'
+              value={currentData.windspeed}
+              subValue='m/s'
+            />
+            <CurrentIndex
+              type='기압'
+              value={currentData.pressure}
+              subValue='hPa'
+            />
           </section>
           <section className='col-span-2'>
             <RecommendDress />
