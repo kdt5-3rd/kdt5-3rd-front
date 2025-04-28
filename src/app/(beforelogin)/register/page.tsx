@@ -105,7 +105,7 @@ export default function Register() {
                   className='flex items-center gap-[10px] text-[14px] sm:text-xl'
                 >
                   아이디
-                  {errors.email}
+                  <p className='text-error-600 text-[14px]'>{errors.email}</p>
                 </label>
                 <NormalInput
                   id='id'
@@ -123,7 +123,9 @@ export default function Register() {
                   className='flex items-center gap-[10px] text-[14px] sm:text-xl'
                 >
                   닉네임
-                  {errors.username}
+                  <p className='text-error-600 text-[14px]'>
+                    {errors.username}
+                  </p>
                 </label>
                 <NormalInput
                   id='nickname'
@@ -140,7 +142,9 @@ export default function Register() {
                   className='flex items-center gap-[10px] text-[14px] sm:text-xl'
                 >
                   비밀번호
-                  {errors.password}
+                  <p className='text-error-600 text-[14px]'>
+                    {errors.password}
+                  </p>
                 </label>
                 <NormalInput
                   id='password'
@@ -157,7 +161,9 @@ export default function Register() {
                   className='flex items-center gap-[10px] text-[14px] sm:text-xl'
                 >
                   비밀번호 확인
-                  {errors.verifyPassword}
+                  <p className='text-error-600 text-[14px]'>
+                    {errors.verifyPassword}
+                  </p>
                 </label>
                 <NormalInput
                   id='verifyPassword'

@@ -7,6 +7,33 @@ import useLoginMutation from '@/app/_hooks/useLoginMutation';
 import { ChangeEvent, useState } from 'react';
 import { LoginParams } from '@/app/_types/users';
 
+const initialErrors = {
+  email: '',
+  password: '',
+};
+
+const validateInputData = (loginData: LoginParams) => {
+  const errors = { ...initialErrors };
+  let isValid = true;
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!loginData.email.trim()) {
+    errors.email = '아이디를 입력해주세요.';
+    isValid = false;
+  } else if (!emailRegex.test(loginData.email)) {
+    errors.email = '아이디는 이메일 형식입니다.';
+    isValid = false;
+  }
+
+  if (!loginData.password.trim()) {
+    errors.password = '비밀번호를 입력해주세요.';
+    isValid = false;
+  }
+
+  return { isValid, errors };
+};
+
 export default function Login() {
   const { mutate: loginMutate } = useLoginMutation();
 
@@ -14,9 +41,18 @@ export default function Login() {
     email: '',
     password: '',
   });
+  const [errors, setErrors] = useState(initialErrors);
 
   const handleLoginClick = (e: React.MouseEvent) => {
     e.preventDefault();
+
+    const { isValid, errors: validationErrors } = validateInputData(loginData);
+
+    if (!isValid) {
+      setErrors(validationErrors);
+      return;
+    }
+
     loginMutate(loginData);
   };
 
@@ -41,26 +77,38 @@ export default function Login() {
           <form className='text-secondary-500 flex flex-col gap-[30px]'>
             <div className='flex flex-col gap-[10px]'>
               <div className='flex flex-col gap-[6px]'>
-                <label htmlFor='id' className='text-[14px] sm:text-xl'>
+                <label
+                  htmlFor='id'
+                  className='flex items-center gap-[10px] text-[14px] sm:text-xl'
+                >
                   아이디
+                  <p className='text-error-600 text-[14px]'>{errors.email}</p>
                 </label>
                 <NormalInput
                   id='id'
                   type='text'
                   value={loginData.email}
                   onChange={e => handleInputChange('email', e)}
+                  className={errors.email && '!border-error-600'}
                   placeholder='아이디'
                 />
               </div>
               <div className='flex flex-col gap-[6px]'>
-                <label htmlFor='password' className='text-[14px] sm:text-xl'>
+                <label
+                  htmlFor='password'
+                  className='flex items-center gap-[10px] text-[14px] sm:text-xl'
+                >
                   비밀번호
+                  <p className='text-error-600 text-[14px]'>
+                    {errors.password}
+                  </p>
                 </label>
                 <NormalInput
                   id='password'
                   type='password'
                   value={loginData.password}
                   onChange={e => handleInputChange('password', e)}
+                  className={errors.password && '!border-error-600'}
                   placeholder='비밀번호'
                 />
               </div>
