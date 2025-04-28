@@ -3,7 +3,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import CategoryButton from './CategoryButton';
 import { useEffect, useState } from 'react';
 
-const categories = [
+export const categories = [
   {
     categoryId: 1,
     categoryName: 'Top',
