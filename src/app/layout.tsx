@@ -19,7 +19,7 @@ export default function RootLayout({
         <Script
           strategy='beforeInteractive'
           type='text/javascript'
-          src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${process.env.MAP_CLIENT_ID}`}
+          src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${process.env.MAP_CLIENT_ID}&submodules=geocoder`}
         ></Script>
       </head>
       <body className={`antialiased`}>

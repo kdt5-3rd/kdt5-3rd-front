@@ -11,9 +11,11 @@ import HourlyContainer from './HourlyContainer';
 import { getWeatherInfo } from './weatherCode';
 import useGetWeatherQuery from '@/app/_hooks/useGetWeatherQuery';
 import { format } from 'date-fns';
+import useGetLocationName from '@/app/_hooks/useGetLocationName';
 
 export default function Weather() {
   const { data: weatherData, isPending } = useGetWeatherQuery();
+  const { locationName } = useGetLocationName();
 
   if (!weatherData || isPending) {
     return;
@@ -33,7 +35,7 @@ export default function Weather() {
           <section className='col-span-3 flex max-w-[1000px] flex-col gap-[15px]'>
             <p className='text-[24px] font-semibold'>현재</p>
             <CurrentWeather
-              location='동네 이름'
+              location={locationName}
               currentTime={format(currentData.time, 'h:mm a')}
               temperature={`${currentData?.temperature}°`}
               weatherInfo={getWeatherInfo(currentData.weathercode)}
