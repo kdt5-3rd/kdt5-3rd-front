@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import TaskModal from './_components/tasks/TaskModal';
 import useGetTaskQuery from './_hooks/useGetTaskQuery';
+import { rehydrateAuthStore } from './store/authStore';
 
 export default function Dashboard() {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,6 +31,7 @@ export default function Dashboard() {
   const addTask = () => setIsOpen(true);
 
   useEffect(() => {
+    rehydrateAuthStore();
     const interval = setInterval(() => {
       getCurrentTime();
     }, 1000);
