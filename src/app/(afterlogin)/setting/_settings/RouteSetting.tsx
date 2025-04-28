@@ -48,7 +48,7 @@ function RouteSetting() {
         }
       />
       {isActive && (
-        <div className='border-primary-200 bg-primary-0 absolute top-[48px] z-20 flex w-full max-w-[400px] flex-col rounded-b-[8px] border border-t-0 p-[12px]'>
+        <div className='border-primary-200 bg-primary-0 absolute top-[38px] z-20 flex w-full max-w-[400px] flex-col rounded-b-[8px] border border-t-0 p-[12px] sm:top-[48px]'>
           {selectItems.map(({ label, id }) => (
             <button
               key={id}
