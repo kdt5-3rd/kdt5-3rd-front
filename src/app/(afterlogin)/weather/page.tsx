@@ -12,6 +12,8 @@ import { getWeatherInfo } from './weatherCode';
 import useGetWeatherQuery from '@/app/_hooks/useGetWeatherQuery';
 import { format } from 'date-fns';
 import useGetLocationName from '@/app/_hooks/useGetLocationName';
+import WeeklyContainer from './WeeklyContainer';
+import { ko } from 'date-fns/locale';
 
 export default function Weather() {
   const { data: weatherData, isPending } = useGetWeatherQuery();
@@ -23,6 +25,7 @@ export default function Weather() {
 
   const currentData = weatherData.current;
   const hourlyData = weatherData.hourly;
+  const weeklyData = weatherData.daily;
 
   return (
     <div className='text-secondary-500 inline-flex h-full min-h-screen w-full bg-[#FAFAFA]'>
@@ -31,68 +34,78 @@ export default function Weather() {
         <div className='bg-primary-0 flex flex-col'>
           <BoardTitle title='날씨'></BoardTitle>
         </div>
-        <main className='grid grid-cols-5 gap-x-[50px] gap-y-[23px] p-[32px]'>
-          <section className='col-span-3 flex max-w-[1000px] flex-col gap-[15px]'>
-            <p className='text-[24px] font-semibold'>현재</p>
-            <CurrentWeather
-              location={locationName}
-              currentTime={format(currentData.time, 'h:mm a')}
-              temperature={`${currentData?.temperature}°`}
-              weatherInfo={getWeatherInfo(currentData.weathercode)}
-            />
-            <HourlyContainer>
-              {hourlyData.map(
-                ({ time, temperature, precipitation, weathercode }) => (
-                  <HourlyWeather
-                    key={time}
-                    time={format(time, 'ha')}
-                    temperature={`${temperature}°`}
-                    rainfall={`${precipitation}%`}
-                    weatherInfo={getWeatherInfo(weathercode)}
-                  />
-                ),
-              )}
-            </HourlyContainer>
-          </section>
-          <section className='col-span-2 flex h-full flex-col gap-[15px]'>
-            <p className='text-[24px] font-semibold'>주간 날씨</p>
-            <WeeklyWeather />
-          </section>
-          <section className='col-span-3 grid grid-cols-3 gap-[30px]'>
-            <CurrentIndex
-              type='미세먼지'
-              value={currentData.pm10}
-              subValue='µg/m³'
-            />
-            <CurrentIndex
-              type='초미세먼지'
-              value={currentData.pm2_5}
-              subValue='µg/m³'
-            />
-            <CurrentIndex
-              type='자외선'
-              value={currentData.uv_index}
-              subValue=''
-            />
-            <CurrentIndex
-              type='습도'
-              value={currentData.humidity}
-              subValue='%'
-            />
-            <CurrentIndex
-              type='바람'
-              value={currentData.windspeed}
-              subValue='m/s'
-            />
-            <CurrentIndex
-              type='기압'
-              value={currentData.pressure}
-              subValue='hPa'
-            />
-          </section>
-          <section className='col-span-2'>
-            <RecommendDress />
-          </section>
+        <main className='flex w-full gap-x-[50px] gap-y-[23px] p-[32px]'>
+          <div className='flex w-[60%] flex-col gap-[23px]'>
+            <section className='flex flex-col gap-[15px]'>
+              <p className='text-[24px] font-semibold'>현재</p>
+              <CurrentWeather
+                location={locationName}
+                currentTime={format(currentData.time, 'M월 d일(eee) a h:mm ', {
+                  locale: ko,
+                })}
+                temperature={`${currentData?.temperature}°`}
+                weatherInfo={getWeatherInfo(currentData.weathercode)}
+              />
+              <HourlyContainer>
+                {hourlyData.map(
+                  ({ time, temperature, precipitation, weathercode }) => (
+                    <HourlyWeather
+                      key={time}
+                      time={format(time, 'ha')}
+                      temperature={`${temperature}°`}
+                      rainfall={`${precipitation}%`}
+                      weatherInfo={getWeatherInfo(weathercode)}
+                    />
+                  ),
+                )}
+              </HourlyContainer>
+            </section>
+            <section className='grid grid-cols-3 gap-[30px]'>
+              <CurrentIndex
+                type='미세먼지'
+                value={currentData.pm10}
+                subValue='µg/m³'
+              />
+              <CurrentIndex
+                type='초미세먼지'
+                value={currentData.pm2_5}
+                subValue='µg/m³'
+              />
+              <CurrentIndex
+                type='자외선'
+                value={currentData.uv_index}
+                subValue=''
+              />
+              <CurrentIndex
+                type='습도'
+                value={currentData.humidity}
+                subValue='%'
+              />
+              <CurrentIndex
+                type='바람'
+                value={currentData.windspeed}
+                subValue='m/s'
+              />
+              <CurrentIndex
+                type='기압'
+                value={currentData.pressure}
+                subValue='hPa'
+              />
+            </section>
+          </div>
+          <div className='flex w-[40%] flex-col gap-[23px]'>
+            <section className='flex flex-col gap-[15px]'>
+              <p className='text-[24px] font-semibold'>주간 날씨</p>
+              <WeeklyContainer>
+                {weeklyData.map(data => (
+                  <WeeklyWeather key={data.date} data={data} />
+                ))}
+              </WeeklyContainer>
+            </section>
+            <section className=''>
+              <RecommendDress />
+            </section>
+          </div>
         </main>
       </div>
     </div>

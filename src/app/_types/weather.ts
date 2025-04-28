@@ -1,8 +1,16 @@
-export interface HourlyWeather {
+export interface HourlyWeatherType {
   time: string;
   temperature: number;
   precipitation: number;
   weathercode: number;
+}
+
+export interface WeeklyWeatherType {
+  date: string;
+  weathercode: number;
+  tempMax: number;
+  tempMin: number;
+  precipitationProbability: number;
 }
 
 export interface WeatherResponse {
@@ -23,5 +31,6 @@ export interface WeatherResponse {
     pm10: number;
     pm2_5: number;
   };
-  hourly: HourlyWeather[];
+  hourly: HourlyWeatherType[];
+  daily: WeeklyWeatherType[];
 }
