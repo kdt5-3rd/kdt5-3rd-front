@@ -14,7 +14,7 @@ function NewsSetting() {
     return setSelectedCategory(prev => [...prev, category]);
   };
   return (
-    <div className='flex gap-[10px] *:text-[12px]!'>
+    <div className='flex flex-wrap gap-[10px] *:text-[12px]!'>
       {categories.map(({ categoryId, categoryName, category }) => (
         <CategoryButton
           key={categoryId}

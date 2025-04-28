@@ -30,7 +30,7 @@ function NoticeSetting() {
         </SettingContainer>
       </div>
 
-      <SubmitButton className='max-w-[216px]'>저장</SubmitButton>
+      <SubmitButton className='sm:max-w-[216px]'>저장</SubmitButton>
     </div>
   );
 }

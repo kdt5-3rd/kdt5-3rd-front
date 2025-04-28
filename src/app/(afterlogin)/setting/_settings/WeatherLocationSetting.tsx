@@ -5,7 +5,7 @@ function WeatherLocationSetting() {
   return (
     <div className='flex'>
       <NormalInput
-        className='mr-[10px] max-w-[400px] flex-grow text-[14px] sm:text-[16px]'
+        className='flex-grow text-[14px] sm:max-w-[400px] sm:text-[16px]'
         leftIcon={
           <Image
             src='/assets/location-line.png'
