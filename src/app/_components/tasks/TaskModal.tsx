@@ -268,26 +268,29 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
                   readOnly
                   className='text-[12px] *:last:hidden sm:text-[16px]'
                   isError={isInvalidDate}
-                >
-                  <Image
-                    src='/assets/calendar-light.png'
-                    alt='calendar icon'
-                    className='shrink-0 object-contain'
-                    width={24}
-                    height={24}
+                  leftIcon={
+                    <>
+                      <Image
+                        src='/assets/calendar-light.png'
+                        alt='calendar icon'
+                        className='shrink-0 object-contain'
+                        width={24}
+                        height={24}
+                      />
+                      {renderDate(value.start_time, value.end_time)}
+                    </>
+                  }
+                />
+                {openModal?.type === 'dayPicker' && (
+                  <DayPickerModal
+                    closeModal={() => setOpenModal(null)}
+                    onChange={handleFieldChange}
+                    value={{
+                      from: value.start_time,
+                      to: value.end_time,
+                    }}
                   />
-                  {renderDate(value.start_time, value.end_time)}
-                  {openModal?.type === 'dayPicker' && (
-                    <DayPickerModal
-                      closeModal={() => setOpenModal(null)}
-                      onChange={handleFieldChange}
-                      value={{
-                        from: value.start_time,
-                        to: value.end_time,
-                      }}
-                    />
-                  )}
-                </NormalInput>
+                )}
                 {isInvalidDate && (
                   <span className='text-error-600'>
                     시작 시각이 종료 시각보다 늦습니다.
@@ -305,14 +308,15 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
                   value={value.from_place_name || ''}
                   className='mr-[10px] flex-grow text-[14px] sm:text-[16px]'
                   onChange={e => handleFieldChange('from_place_name', e)}
-                >
-                  <Image
-                    src='/assets/location-line.png'
-                    alt='calendar icon'
-                    width={24}
-                    height={24}
-                  />
-                </NormalInput>
+                  leftIcon={
+                    <Image
+                      src='/assets/location-line.png'
+                      alt='calendar icon'
+                      width={24}
+                      height={24}
+                    />
+                  }
+                />
                 <SubmitButton
                   type='button'
                   className='pr-[14px] pl-[14px] font-semibold whitespace-nowrap'
@@ -337,14 +341,15 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
                   value={value.place_name || ''}
                   className='mr-[10px] flex-grow text-[14px] sm:text-[16px]'
                   onChange={e => handleFieldChange('place_name', e)}
-                >
-                  <Image
-                    src='/assets/location-line.png'
-                    alt='calendar icon'
-                    width={24}
-                    height={24}
-                  />
-                </NormalInput>
+                  leftIcon={
+                    <Image
+                      src='/assets/location-line.png'
+                      alt='calendar icon'
+                      width={24}
+                      height={24}
+                    />
+                  }
+                />
                 <SubmitButton
                   type='button'
                   className='pr-[14px] pl-[14px] font-semibold whitespace-nowrap'
