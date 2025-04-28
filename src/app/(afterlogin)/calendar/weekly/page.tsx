@@ -74,9 +74,9 @@ export default function Weekly() {
   }, []);
 
   return (
-    <div className='text-secondary-500 inline-flex h-full min-h-screen w-full bg-[#FAFAFA]'>
+    <div className='text-secondary-500 inline-flex h-full min-h-screen w-full flex-col bg-[#FAFAFA] sm:flex-row'>
       <Navigation />
-      <div className='bg-primary-0 h-full w-full min-w-[752px]'>
+      <div className='bg-primary-0 h-full w-full min-w-[400px] sm:max-w-dvw'>
         <div className='flex flex-col'>
           <BoardTitle title='일정 관리'>
             <CalendarType />
