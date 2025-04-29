@@ -1,12 +1,19 @@
 import { NewsArticle } from '@/app/_types/news';
 import Image from 'next/image';
 import Link from 'next/link';
+import { toZonedTime } from 'date-fns-tz';
+import { formatDate } from 'date-fns';
 
 interface ArticleProps {
   article: NewsArticle;
 }
 
 function Article({ article }: ArticleProps) {
+  const pubDateKST =
+    article.pubDateTZ === 'UTC'
+      ? toZonedTime(new Date(article.pubDate), 'Asia/Seoul')
+      : article.pubDate;
+
   return (
     <div className='border-primary-200 flex items-center gap-[20px] border-b pb-[10px]'>
       {article.image_url ? (
@@ -33,7 +40,7 @@ function Article({ article }: ArticleProps) {
           >{`[${article.source_name}] ${article.title}`}</Link>
           <div className='flex flex-col gap-[5px] text-right'>
             <p className='text-secondary-300 hidden text-[12px] sm:block'>
-              {article.pubDate}
+              {formatDate(pubDateKST, 'yyyy-MM-dd HH:mm:ss')}
             </p>
             <p className='text-secondary-300 hidden text-[12px] sm:block'>
               {article.creator?.join(' ')}
