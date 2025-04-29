@@ -7,6 +7,8 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import TaskModal from './_components/tasks/TaskModal';
 import useGetTaskQuery from './_hooks/useGetTaskQuery';
+import { rehydrateAuthStore, useAuthStore } from './store/authStore';
+import { useRouter } from 'next/navigation';
 
 export default function Dashboard() {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,6 +16,7 @@ export default function Dashboard() {
   const [today, setToday] = useState('');
   const [finishedTaskCount, setFinishedTaskCount] = useState(0);
 
+  const router = useRouter();
   const { data: taskList = [] } = useGetTaskQuery('day');
 
   const getCurrentTime = () => {
@@ -30,6 +33,13 @@ export default function Dashboard() {
   const addTask = () => setIsOpen(true);
 
   useEffect(() => {
+    rehydrateAuthStore();
+    
+    const { accessToken } = useAuthStore.getState();
+    if (accessToken === null) {
+      router.push('/login');
+    }
+
     const interval = setInterval(() => {
       getCurrentTime();
     }, 1000);

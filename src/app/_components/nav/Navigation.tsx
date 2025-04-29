@@ -1,5 +1,6 @@
 'use client';
 
+import { useAuthStore } from '@/app/store/authStore';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -15,8 +16,9 @@ interface NavItem {
 
 function Navigation() {
   const pathname = usePathname();
-  const [isLoggedIn] = useState(false);
+  const { checkLoggedIn, clearTokens } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
+  const isLoggedIn = checkLoggedIn();
 
   const navItems: NavItem[] = [
     {
@@ -60,6 +62,10 @@ function Navigation() {
     if (pathname === href) {
       setIsOpen(false);
     }
+  };
+
+  const handleLogout = () => {
+    clearTokens();
   };
 
   return (
@@ -130,6 +136,7 @@ function Navigation() {
         <Link
           href={'/login'}
           className={`${isLoggedIn ? 'bg-[url(/assets/logout.png)] hover:bg-[url(/assets/logout-dark.png)]' : 'bg-[url(/assets/login.png)] hover:bg-[url(/assets/login-dark.png)]'} text-secondary-300 hover:text-secondary-500 absolute bottom-[24px] mx-[20px] flex cursor-pointer items-center bg-left bg-no-repeat py-[10px] hover:rounded-[10px]`}
+          onClick={isLoggedIn ? handleLogout : undefined}
         >
           {isLoggedIn ? (
             <span className='ml-[32px] text-[14px] font-semibold'>
