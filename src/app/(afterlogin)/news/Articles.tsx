@@ -1,7 +1,7 @@
 import useGetNewsQuery from '@/app/_hooks/useGetNewsQuery';
 import Article from './Article';
 import { NewsCategoryType } from '@/app/_types/news';
-import spinner from '../../../../public/assets/lottie/spinner.json';
+import spinner from '@/assets/lottie/spinner.json';
 import Lottie from 'lottie-react';
 
 interface ArticlesProps {
