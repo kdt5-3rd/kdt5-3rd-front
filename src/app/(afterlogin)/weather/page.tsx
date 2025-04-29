@@ -8,11 +8,12 @@ import CurrentWeather from './CurrentWeather';
 import WeeklyWeather from './WeeklyWeather';
 import RecommendDress from './RecommendDress';
 import HourlyContainer from './HourlyContainer';
-import { getWeatherInfo } from './weatherCode';
 import useGetWeatherQuery from '@/app/_hooks/useGetWeatherQuery';
 import { format } from 'date-fns';
 import useGetLocationName from '@/app/_hooks/useGetLocationName';
 import WeeklyContainer from './WeeklyContainer';
+import { currentIndex } from './_constant/currentIndex';
+import { getWeatherInfo } from '@/app/_utils/getWeatherInfo';
 
 export default function Weather() {
   const { data: weatherData, isPending } = useGetWeatherQuery();
@@ -58,36 +59,14 @@ export default function Weather() {
               </HourlyContainer>
             </section>
             <section className='grid grid-cols-2 gap-[16px] sm:grid-cols-3 sm:gap-[30px]'>
-              <CurrentIndex
-                type='미세먼지'
-                value={currentData.pm10}
-                subValue='µg/m³'
-              />
-              <CurrentIndex
-                type='초미세먼지'
-                value={currentData.pm2_5}
-                subValue='µg/m³'
-              />
-              <CurrentIndex
-                type='자외선'
-                value={currentData.uv_index}
-                subValue=''
-              />
-              <CurrentIndex
-                type='습도'
-                value={currentData.humidity}
-                subValue='%'
-              />
-              <CurrentIndex
-                type='바람'
-                value={currentData.windspeed}
-                subValue='m/s'
-              />
-              <CurrentIndex
-                type='기압'
-                value={currentData.pressure}
-                subValue='hPa'
-              />
+              {currentIndex.map(({ id, type, typeName, unit }) => (
+                <CurrentIndex
+                  key={id}
+                  type={typeName}
+                  value={currentData[type]}
+                  subValue={unit}
+                />
+              ))}
             </section>
           </div>
           <div className='flex flex-col gap-[23px] sm:w-[40%]'>

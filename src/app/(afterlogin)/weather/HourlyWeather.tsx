@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { WeatherInfo } from './weatherCode';
+import { WeatherInfo } from './_constant/weatherCode';
 
 interface HourlyWeatherProps {
   time: string;

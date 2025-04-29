@@ -1,8 +1,7 @@
 import Image from 'next/image';
-
 import { WeeklyWeatherType } from '@/app/_types/weather';
-import { getWeatherInfo } from './weatherCode';
 import { format } from 'date-fns';
+import { getWeatherInfo } from '@/app/_utils/getWeatherInfo';
 
 interface WeeklyWeatherProps {
   data: WeeklyWeatherType;

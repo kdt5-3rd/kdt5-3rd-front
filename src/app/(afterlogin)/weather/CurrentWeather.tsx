@@ -1,7 +1,7 @@
 import Image from 'next/image';
-import { WeatherInfo } from './weatherCode';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
+import { WeatherInfo } from './_constant/weatherCode';
 
 interface CurrentWeatherProps {
   location: string;

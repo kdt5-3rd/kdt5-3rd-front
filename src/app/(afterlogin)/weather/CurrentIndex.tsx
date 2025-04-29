@@ -1,36 +1,9 @@
+import { IndexNameType } from '@/app/_types/weather';
 import Image from 'next/image';
-
-type IndexType =
-  | '미세먼지'
-  | '초미세먼지'
-  | '자외선'
-  | '습도'
-  | '바람'
-  | '기압';
-
-const indexType: Record<IndexType, { imageUrl: string }> = {
-  미세먼지: {
-    imageUrl: '/assets/weather/index/bubble-index.png',
-  },
-  초미세먼지: {
-    imageUrl: '/assets/weather/index/bubble-index.png',
-  },
-  자외선: {
-    imageUrl: '/assets/weather/index/sun-uv-index.png',
-  },
-  습도: {
-    imageUrl: '/assets/weather/index/drop-index.png',
-  },
-  바람: {
-    imageUrl: '/assets/weather/index/wind-index.png',
-  },
-  기압: {
-    imageUrl: '/assets/weather/index/speedometer.png',
-  },
-};
+import { indexType } from './_constant/currentIndex';
 
 interface CurrentIndexProps {
-  type: IndexType;
+  type: IndexNameType;
   value: number;
   subValue?: string;
 }
