@@ -11,7 +11,7 @@ interface ArticlesProps {
 }
 
 function Articles({ category }: ArticlesProps) {
-  const { data: newsData, isLoading } = useGetNewsQuery(category);
+  const { data: newsData, isLoading, isError } = useGetNewsQuery(category);
 
   if (isLoading) {
     return (
@@ -22,6 +22,7 @@ function Articles({ category }: ArticlesProps) {
   }
 
   if (
+    isError ||
     !newsData ||
     !newsData.articles ||
     (newsData.articles && newsData.articles.length === 0)
