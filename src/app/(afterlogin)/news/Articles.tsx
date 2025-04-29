@@ -2,7 +2,9 @@ import useGetNewsQuery from '@/app/_hooks/useGetNewsQuery';
 import Article from './Article';
 import { NewsCategoryType } from '@/app/_types/news';
 import spinner from '@/assets/lottie/spinner.json';
-import Lottie from 'lottie-react';
+import dynamic from 'next/dynamic';
+
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
 interface ArticlesProps {
   category: NewsCategoryType;
