@@ -8,133 +8,82 @@ import CurrentWeather from './CurrentWeather';
 import WeeklyWeather from './WeeklyWeather';
 import RecommendDress from './RecommendDress';
 import HourlyContainer from './HourlyContainer';
-import { getWeatherInfo } from './weatherCode';
+import useGetWeatherQuery from '@/app/_hooks/useGetWeatherQuery';
+import { format } from 'date-fns';
+import useGetLocationName from '@/app/_hooks/useGetLocationName';
+import WeeklyContainer from './WeeklyContainer';
+import { currentIndex } from './_constant/currentIndex';
+import { getWeatherInfo } from '@/app/_utils/getWeatherInfo';
 
 export default function Weather() {
+  const { data: weatherData, isPending } = useGetWeatherQuery();
+  const { locationName } = useGetLocationName();
+
+  if (!weatherData || isPending) {
+    return;
+  }
+
+  const currentData = weatherData.current;
+  const hourlyData = weatherData.hourly;
+  const weeklyData = weatherData.daily;
+
   return (
-    <div className='text-secondary-500 inline-flex h-full min-h-screen w-full bg-[#FAFAFA]'>
+    <div className='text-secondary-500 inline-flex h-full min-h-screen w-full flex-col bg-[#FAFAFA] sm:flex-row'>
       <Navigation />
       <div className='h-full w-full min-w-[752px]'>
         <div className='bg-primary-0 flex flex-col'>
           <BoardTitle title='날씨'></BoardTitle>
         </div>
-        <main className='grid grid-cols-5 gap-x-[50px] gap-y-[23px] p-[32px]'>
-          <section className='col-span-3 flex max-w-[1000px] flex-col gap-[15px]'>
-            <p className='text-[24px] font-semibold'>현재</p>
-            <CurrentWeather
-              location='수원시 영통구'
-              currentTime='9:00 AM'
-              temperature='17°'
-              weatherInfo={getWeatherInfo(0)}
-            />
-            <HourlyContainer>
-              <HourlyWeather
-                time='Now'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(0)}
+        <main className='flex w-dvw min-w-[375px] flex-col gap-x-[50px] gap-y-[23px] p-[32px] sm:w-full sm:flex-row'>
+          <div className='flex flex-col gap-[23px] sm:w-[60%]'>
+            <section className='flex flex-col gap-[15px]'>
+              <p className='text-[22px] font-semibold sm:text-[24px]'>현재</p>
+              <CurrentWeather
+                location={locationName}
+                currentTime={currentData.time}
+                temperature={`${currentData?.temperature}°`}
+                weatherInfo={getWeatherInfo(currentData.weathercode)}
               />
-              <HourlyWeather
-                time='10AM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(1)}
-              />
-              <HourlyWeather
-                time='11AM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(3)}
-              />
-              <HourlyWeather
-                time='12AM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(45)}
-              />
-              <HourlyWeather
-                time='1PM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(51)}
-              />
-              <HourlyWeather
-                time='2PM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(61)}
-              />
-              <HourlyWeather
-                time='3PM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(71)}
-              />
-              <HourlyWeather
-                time='4PM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(80)}
-              />
-              <HourlyWeather
-                time='5PM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(95)}
-              />
-              <HourlyWeather
-                time='6PM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(95)}
-              />
-              <HourlyWeather
-                time='7PM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(95)}
-              />
-              <HourlyWeather
-                time='8PM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(95)}
-              />
-              <HourlyWeather
-                time='9PM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(95)}
-              />
-              <HourlyWeather
-                time='10PM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(95)}
-              />
-              <HourlyWeather
-                time='11PM'
-                temperature='17°'
-                rainfall='10%'
-                weatherInfo={getWeatherInfo(95)}
-              />
-            </HourlyContainer>
-          </section>
-          <section className='col-span-2 flex h-full flex-col gap-[15px]'>
-            <p className='text-[24px] font-semibold'>주간 날씨</p>
-            <WeeklyWeather />
-          </section>
-          <section className='col-span-3 grid grid-cols-3 gap-[30px]'>
-            <CurrentIndex type='미세먼지' value='43' subValue='(bad)' />
-            <CurrentIndex type='초미세먼지' value='43' subValue='(bad)' />
-            <CurrentIndex type='자외선' value='43' subValue='(bad)' />
-            <CurrentIndex type='습도' value='43' subValue='(bad)' />
-            <CurrentIndex type='바람' value='43' subValue='(bad)' />
-            <CurrentIndex type='기압' value='43' subValue='(bad)' />
-          </section>
-          <section className='col-span-2'>
-            <RecommendDress />
-          </section>
+              <HourlyContainer>
+                {hourlyData.map(
+                  ({ time, temperature, precipitation, weathercode }) => (
+                    <HourlyWeather
+                      key={time}
+                      time={format(time, 'ha')}
+                      temperature={`${temperature}°`}
+                      rainfall={`${precipitation}%`}
+                      weatherInfo={getWeatherInfo(weathercode)}
+                    />
+                  ),
+                )}
+              </HourlyContainer>
+            </section>
+            <section className='grid grid-cols-2 gap-[16px] sm:grid-cols-3 sm:gap-[30px]'>
+              {currentIndex.map(({ id, type, typeName, unit }) => (
+                <CurrentIndex
+                  key={id}
+                  type={typeName}
+                  value={currentData[type]}
+                  subValue={unit}
+                />
+              ))}
+            </section>
+          </div>
+          <div className='flex flex-col gap-[23px] sm:w-[40%]'>
+            <section className='flex flex-col gap-[15px]'>
+              <p className='text-[22px] font-semibold sm:text-[24px]'>
+                주간 날씨
+              </p>
+              <WeeklyContainer>
+                {weeklyData.map(data => (
+                  <WeeklyWeather key={data.date} data={data} />
+                ))}
+              </WeeklyContainer>
+            </section>
+            <section className=''>
+              <RecommendDress />
+            </section>
+          </div>
         </main>
       </div>
     </div>

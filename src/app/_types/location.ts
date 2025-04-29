@@ -18,3 +18,7 @@ export interface GeoSearchResult extends LocationResult {
   mapy: number;
 }
 
+export interface GeoLocation {
+  latitude: number;
+  longitude: number;
+}

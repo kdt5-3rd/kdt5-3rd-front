@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { WeatherInfo } from './weatherCode';
+import { WeatherInfo } from './_constant/weatherCode';
 
 interface HourlyWeatherProps {
   time: string;
@@ -17,16 +17,20 @@ function HourlyWeather({
   const parseTime = (timeStr: string) => {
     const match = timeStr.match(/^(\d{1,2})(AM|PM)$/i);
     if (!match) {
-      return <p className='text-[16px] font-medium'>{timeStr}</p>;
+      return (
+        <p className='text-[12px] font-medium sm:text-[16px]'>{timeStr}</p>
+      );
     }
 
     const hour = parseInt(match[1], 10);
     const period = match[2].toUpperCase() as 'AM' | 'PM';
 
     return (
-      <div className='flex items-baseline'>
-        <p className='text-[16px] font-medium'>{hour}</p>
-        {period && <p className='text-[12px] font-normal'>{period}</p>}
+      <div className='flex items-baseline justify-center'>
+        <p className='text-[12px] font-medium sm:text-[16px]'>{hour}</p>
+        {period && (
+          <p className='text-[8px] font-normal sm:text-[12px]'>{period}</p>
+        )}
       </div>
     );
   };
@@ -41,16 +45,22 @@ function HourlyWeather({
           width={36}
           height={36}
         />
-        <p className='text-[20px] font-semibold'>{temperature}</p>
+        <p className='text-[16px] font-semibold sm:text-[20px]'>
+          {temperature}
+        </p>
       </div>
-      <div className='flex items-center'>
-        <Image
-          src='/assets/weather/drop.png'
-          alt='강수량 물방울 이미지'
-          width={14}
-          height={14}
-        />
-        <p className='text-secondary-300 text-sm font-semibold'>{rainfall}</p>
+      <div className='flex w-full items-center justify-around gap-[2px]'>
+        <div className='relative h-[10px] w-[10px] sm:h-[14px] sm:w-[14px]'>
+          <Image
+            src='/assets/weather/drop.png'
+            alt='강수량 물방울 이미지'
+            fill
+          />
+        </div>
+
+        <p className='text-secondary-300 text-sm text-[10px] font-semibold sm:text-[14px]'>
+          {rainfall}
+        </p>
       </div>
     </div>
   );
