@@ -6,32 +6,11 @@ import Link from 'next/link';
 import useLoginMutation from '@/app/_hooks/useLoginMutation';
 import { ChangeEvent, useState } from 'react';
 import { LoginParams } from '@/app/_types/users';
+import { validateLoginInput } from '@/app/_utils/validateUtil';
 
 const initialErrors = {
   email: '',
   password: '',
-};
-
-const validateInputData = (loginData: LoginParams) => {
-  const errors = { ...initialErrors };
-  let isValid = true;
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  if (!loginData.email.trim()) {
-    errors.email = '아이디를 입력해주세요.';
-    isValid = false;
-  } else if (!emailRegex.test(loginData.email)) {
-    errors.email = '아이디는 이메일 형식입니다.';
-    isValid = false;
-  }
-
-  if (!loginData.password.trim()) {
-    errors.password = '비밀번호를 입력해주세요.';
-    isValid = false;
-  }
-
-  return { isValid, errors };
 };
 
 export default function Login() {
@@ -46,7 +25,10 @@ export default function Login() {
   const handleLoginClick = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    const { isValid, errors: validationErrors } = validateInputData(loginData);
+    const { isValid, errors: validationErrors } = validateLoginInput(
+      loginData,
+      initialErrors,
+    );
 
     if (!isValid) {
       setErrors(validationErrors);
@@ -81,7 +63,7 @@ export default function Login() {
                   htmlFor='id'
                   className='flex items-center gap-[10px] text-[14px] sm:text-xl'
                 >
-                  아이디
+                  이메일
                   <p className='text-error-600 text-[14px]'>{errors.email}</p>
                 </label>
                 <NormalInput
@@ -89,8 +71,8 @@ export default function Login() {
                   type='text'
                   value={loginData.email}
                   onChange={e => handleInputChange('email', e)}
-                  className={errors.email && '!border-error-600'}
-                  placeholder='아이디'
+                  isError={errors.email ? true : false}
+                  placeholder='이메일'
                 />
               </div>
               <div className='flex flex-col gap-[6px]'>
@@ -108,7 +90,7 @@ export default function Login() {
                   type='password'
                   value={loginData.password}
                   onChange={e => handleInputChange('password', e)}
-                  className={errors.password && '!border-error-600'}
+                  isError={errors.password ? true : false}
                   placeholder='비밀번호'
                 />
               </div>

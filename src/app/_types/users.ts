@@ -8,3 +8,13 @@ export interface RegisterParams {
   email: string;
   password: string;
 }
+
+export interface InitialErrors {
+  email: string;
+  password: string;
+}
+
+export interface RegisterErrors extends InitialErrors {
+  username: string;
+  verifyPassword: string;
+}

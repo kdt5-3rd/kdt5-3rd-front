@@ -6,50 +6,13 @@ import Link from 'next/link';
 import { ChangeEvent, useState } from 'react';
 import { RegisterParams } from '@/app/_types/users';
 import useRegisterMutation from '@/app/_hooks/useRegisterMutation';
+import { validateRegisterInput } from '@/app/_utils/validateUtil';
 
 const initialErrors = {
   email: '',
   username: '',
   password: '',
   verifyPassword: '',
-};
-
-const validateInputData = (
-  registerData: RegisterParams,
-  verifyPassword: string,
-) => {
-  const errors = { ...initialErrors };
-  let isValid = true;
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  if (!registerData.email.trim()) {
-    errors.email = '아이디를 입력해주세요.';
-    isValid = false;
-  } else if (!emailRegex.test(registerData.email)) {
-    errors.email = '아이디는 이메일 형식입니다.';
-    isValid = false;
-  }
-
-  if (!registerData.username.trim()) {
-    errors.username = '닉네임을 입력해주세요.';
-    isValid = false;
-  }
-
-  if (!registerData.password.trim()) {
-    errors.password = '비밀번호를 입력해주세요.';
-    isValid = false;
-  }
-
-  if (!verifyPassword.trim()) {
-    errors.verifyPassword = '비밀번호 확인을 입력해주세요.';
-    isValid = false;
-  } else if (registerData.password !== verifyPassword) {
-    errors.verifyPassword = '비밀번호가 일치하지 않습니다.';
-    isValid = false;
-  }
-
-  return { isValid, errors };
 };
 
 export default function Register() {
@@ -66,9 +29,10 @@ export default function Register() {
   const handleRegisterClick = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    const { isValid, errors: validationErrors } = validateInputData(
+    const { isValid, errors: validationErrors } = validateRegisterInput(
       registerData,
       verifyPassword,
+      initialErrors,
     );
 
     if (!isValid) {
@@ -104,7 +68,7 @@ export default function Register() {
                   htmlFor='id'
                   className='flex items-center gap-[10px] text-[14px] sm:text-xl'
                 >
-                  아이디
+                  이메일
                   <p className='text-error-600 text-[14px]'>{errors.email}</p>
                 </label>
                 <NormalInput
@@ -112,8 +76,8 @@ export default function Register() {
                   type='email'
                   value={registerData.email}
                   onChange={e => handleInputChange('email', e)}
-                  className={errors.email && '!border-error-600'}
-                  placeholder='아이디'
+                  isError={errors.email ? true : false}
+                  placeholder='이메일'
                 />
               </div>
 
@@ -132,7 +96,7 @@ export default function Register() {
                   type='text'
                   value={registerData.username}
                   onChange={e => handleInputChange('username', e)}
-                  className={errors.username && '!border-error-600'}
+                  isError={errors.username ? true : false}
                   placeholder='닉네임'
                 />
               </div>
@@ -151,7 +115,7 @@ export default function Register() {
                   type='password'
                   value={registerData.password}
                   onChange={e => handleInputChange('password', e)}
-                  className={errors.password && '!border-error-600'}
+                  isError={errors.password ? true : false}
                   placeholder='비밀번호'
                 />
               </div>
@@ -170,7 +134,7 @@ export default function Register() {
                   type='password'
                   value={verifyPassword}
                   onChange={e => setVerifyPassword(e.target.value)}
-                  className={errors.verifyPassword && '!border-error-600'}
+                  isError={errors.verifyPassword ? true : false}
                   placeholder='비밀번호'
                 />
               </div>
