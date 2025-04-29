@@ -1,8 +1,8 @@
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import { TaskPayload, TaskWithDuration } from '../_types';
 import { getWeekOfMonth } from 'date-fns';
 import { useAuthStore } from '../store/authStore';
-import { validateToken } from './users';
+import { refreshAccessToken, validateToken } from './users';
 
 type TaskParams = {
   year: number;
@@ -17,19 +17,41 @@ export const api = axios.create({
 
 api.interceptors.request.use(
   async config => {
-    const accessToken = useAuthStore.getState().accessToken;
+    const { accessToken, refreshToken, clearTokens, setTokens } =
+      useAuthStore.getState();
 
     if (accessToken) {
-      try {
-        await validateToken();
-
-        return config;
-      } catch (error) {
-        window.location.href = '/login';
-        return Promise.reject(error);
-      }
+      config.headers.Authorization = `Bearer ${accessToken}`;
     } else {
       return config;
+    }
+
+    try {
+      await validateToken();
+      return config;
+    } catch (error) {
+      if (isAxiosError(error) && error.response?.status === 401) {
+        if (!refreshToken) {
+          clearTokens();
+          window.location.href = '/login';
+          return Promise.reject(new Error('리프레시 토큰이 없습니다.'));
+        }
+
+        try {
+          const response = await refreshAccessToken(refreshToken);
+          const newAccessToken = response.data.accessToken;
+
+          setTokens(newAccessToken, refreshToken);
+          config.headers.Authorization = `Bearer ${newAccessToken}`;
+
+          return config;
+        } catch (refreshError) {
+          clearTokens();
+          window.location.href = '/login';
+          return Promise.reject(refreshError);
+        }
+      }
+      return Promise.reject(error);
     }
   },
   error => {

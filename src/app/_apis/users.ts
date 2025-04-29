@@ -28,3 +28,9 @@ export const validateToken = async () => {
 
   return response;
 };
+
+export const refreshAccessToken = async (refreshToken: string) => {
+  const response = await api.post('/users/refresh', refreshToken);
+
+  return response;
+};
