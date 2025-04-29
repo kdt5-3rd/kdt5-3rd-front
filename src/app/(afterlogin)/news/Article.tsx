@@ -13,7 +13,7 @@ function Article({ article }: ArticleProps) {
     article.pubDateTZ === 'UTC'
       ? toZonedTime(new Date(article.pubDate + 'Z'), 'Asia/Seoul')
       : article.pubDate;
-  console.log(pubDateKST);
+
   return (
     <div className='border-primary-200 flex items-center gap-[20px] border-b pb-[10px]'>
       {article.image_url ? (
