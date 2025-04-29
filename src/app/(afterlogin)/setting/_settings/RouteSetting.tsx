@@ -39,12 +39,19 @@ function RouteSetting() {
         value={selected}
         readOnly
         rightIcon={
-          <Image
-            src='/assets/arrow-down.png'
-            alt='아래방향 화살표 아이콘'
-            width={20}
-            height={20}
-          />
+          <button
+            type='button'
+            onClick={() => setIsActive(prev => !prev)}
+            className={`cursor-pointer ${isActive ? '-rotate-180' : 'rotate-0'} transition duration-200`}
+            aria-label='옵션 열기'
+          >
+            <Image
+              src='/assets/arrow-down.png'
+              alt='아래방향 화살표 아이콘'
+              width={20}
+              height={20}
+            />
+          </button>
         }
       />
       {isActive && (
