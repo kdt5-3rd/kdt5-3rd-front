@@ -31,19 +31,17 @@ function Article({ article }: ArticleProps) {
             href={article.link}
             className='text-[14px] font-semibold hover:underline sm:text-[20px]'
           >{`[${article.source_name}] ${article.title}`}</Link>
-          <div className='flex gap-[15px]'>
-            <p className='text-secondary-300 hidden text-[15px] sm:block'>
-              {article.creator.join(' ')}
-            </p>
-            <p className='text-secondary-300 hidden text-[15px] sm:block'>
+          <div className='flex flex-col gap-[5px] text-right'>
+            <p className='text-secondary-300 hidden text-[12px] sm:block'>
               {article.pubDate}
+            </p>
+            <p className='text-secondary-300 hidden text-[12px] sm:block'>
+              {article.creator?.join(' ')}
             </p>
           </div>
         </div>
         <p className='text-overflow-2-line sm:text-overflow-3-line max-w-[700px] text-[10px] sm:min-h-[72px] sm:text-[16px]'>
-          {/* {article.description} */}
-          뉴스 내용의 첫 문장부터 들어갑니다. 길이가 길어지면 말줄임표를
-          사용하여 줄어듭니다. Lorem ipsum dolor sit amet...
+          {article.description}
         </p>
       </div>
     </div>

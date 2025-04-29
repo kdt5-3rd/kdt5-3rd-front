@@ -15,13 +15,13 @@ function NewsSetting() {
   };
   return (
     <div className='flex flex-wrap gap-[10px] *:text-[12px]!'>
-      {categories.map(({ categoryId, categoryName, category }) => (
+      {categories.map(({ id, name, category }) => (
         <CategoryButton
-          key={categoryId}
+          key={id}
           onClick={() => handleToggle(category)}
           isActive={selectedCategory.includes(category)}
         >
-          {categoryName}
+          {name}
         </CategoryButton>
       ))}
     </div>
