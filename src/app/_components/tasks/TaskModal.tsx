@@ -169,9 +169,6 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
       end_time: value.end_time.toISOString(),
     };
 
-    console.log('value', value.start_time);
-    console.log('newTask', newTask.start_time);
-
     switch (mode) {
       case 'add':
         addTaskMutate(newTask);
