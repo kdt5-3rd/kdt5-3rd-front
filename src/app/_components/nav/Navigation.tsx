@@ -105,6 +105,21 @@ function Navigation() {
                   </span>
                 </Link>
               ))}
+              <Link
+                href={'/login'}
+                className={`${isLoggedIn ? 'bg-[url(/assets/logout.png)] hover:bg-[url(/assets/logout-dark.png)]' : 'bg-[url(/assets/login.png)] hover:bg-[url(/assets/login-dark.png)]'} text-secondary-300 hover:text-secondary-500 mx-[20px] flex cursor-pointer items-center bg-left bg-no-repeat py-[10px] hover:rounded-[10px]`}
+                onClick={isLoggedIn ? handleLogout : undefined}
+              >
+                {isLoggedIn ? (
+                  <span className='ml-[32px] text-[14px] font-semibold'>
+                    로그아웃
+                  </span>
+                ) : (
+                  <span className='ml-[32px] text-[14px] font-semibold'>
+                    로그인
+                  </span>
+                )}
+              </Link>
             </ul>
           </div>
         </>
