@@ -62,7 +62,7 @@ export default function Monthly() {
             />
           </BoardTitle>
           <CalendarContainer type='month'>
-            <div className='h-[937px] min-w-[400px]'>
+            <div className='h-[937px] min-w-[335px]'>
               <Calendar
                 localizer={localizer}
                 defaultDate={new Date()}

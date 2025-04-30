@@ -70,7 +70,7 @@ function Navigation() {
 
   return (
     <>
-      <div className='text-secondary-500 bg-primary-0 border-primary-100 z-10 flex min-w-[400px] items-center justify-between border-b-1 px-[24px] py-[20px] sm:hidden'>
+      <div className='text-secondary-500 bg-primary-0 border-primary-100 z-10 flex min-w-[375px] items-center justify-between border-b-1 px-[24px] py-[20px] sm:hidden'>
         <span className='text-primary-900 text-[24px] font-bold'>똘개비</span>
         <button
           onClick={() => setIsOpen(prev => !prev)}

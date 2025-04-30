@@ -62,7 +62,7 @@ function LocationModal({ closeModal, setPlace }: LocationModalProps) {
   return (
     <div
       ref={locationRef}
-      className='bg-primary-0 absolute top-1/2 left-1/2 z-10 min-w-[400px] w-[140%] sm:w-[550px] -translate-x-1/2 -translate-y-1/2 transform rounded-[10px] p-2.5 px-[40px] py-[30px] shadow-[0_0_30px_0_rgba(84,87,122,0.7)]'
+      className='bg-primary-0 absolute top-1/2 left-1/2 z-10 min-w-[375px] w-[140%] sm:w-[550px] -translate-x-1/2 -translate-y-1/2 transform rounded-[10px] p-2.5 px-[40px] py-[30px] shadow-[0_0_30px_0_rgba(84,87,122,0.7)]'
     >
       <div className='mb-[30px] flex justify-between'>
         <p className='text-[24px] font-semibold'>장소 검색</p>
