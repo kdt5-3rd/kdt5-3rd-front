@@ -1,4 +1,10 @@
-import { format, setHours, setMinutes } from 'date-fns';
+import {
+  format,
+  secondsToHours,
+  secondsToMinutes,
+  setHours,
+  setMinutes,
+} from 'date-fns';
 
 export const formatTime = (date: string | Date) => {
   return new Intl.DateTimeFormat('en-US', {
@@ -21,3 +27,14 @@ export const applyTimeToDate = (date: Date, time: string) => {
 
 export const formatDateISO8601 = (date: Date) =>
   format(date, "yyyy-MM-dd'T'HH:mm:ss");
+
+export const formatSecondToMinute = (timeString: string) => {
+  const time = parseInt(timeString);
+  const hour = secondsToHours(time);
+  const minute = secondsToMinutes(time) - hour * 60;
+
+  if (hour > 0) {
+    return `${hour}시간 ${minute}분`;
+  }
+  return `${minute}분`;
+};
