@@ -14,6 +14,7 @@ function EtcSetting() {
 
   const saveSetting = () => {
     setCategories(selectedCategory);
+    alert('저장되었습니다.');
   };
 
   return (
