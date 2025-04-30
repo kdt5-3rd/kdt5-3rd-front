@@ -5,7 +5,7 @@ import { WeatherInfo } from './_constant/weatherCode';
 
 interface CurrentWeatherProps {
   location: string;
-  currentTime: string;
+  currentTime?: string;
   temperature: string;
   weatherInfo: WeatherInfo;
 }
@@ -31,18 +31,20 @@ function CurrentWeather({
             {location}
           </p>
         </div>
-        <div className='text-secondary-400 flex flex-col items-end text-[14px] font-medium text-nowrap sm:flex-row sm:gap-[10px] sm:text-2xl'>
-          <p>
-            {format(currentTime, 'M월 d일(eee)', {
-              locale: ko,
-            })}
-          </p>
-          <p>
-            {format(currentTime, ' a h:mm', {
-              locale: ko,
-            })}
-          </p>
-        </div>
+        {currentTime && (
+          <div className='text-secondary-400 flex flex-col items-end text-[14px] font-medium text-nowrap sm:flex-row sm:gap-[10px] sm:text-2xl'>
+            <p>
+              {format(currentTime, 'M월 d일(eee)', {
+                locale: ko,
+              })}
+            </p>
+            <p>
+              {format(currentTime, ' a h:mm', {
+                locale: ko,
+              })}
+            </p>
+          </div>
+        )}
       </div>
       <div className='flex items-center gap-[15px]'>
         <div className='relative h-[76px] w-[76px] sm:h-[96px] sm:w-[96px]'>
