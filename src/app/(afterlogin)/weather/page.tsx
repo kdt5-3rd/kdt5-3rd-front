@@ -30,7 +30,7 @@ export default function Weather() {
   return (
     <div className='text-secondary-500 inline-flex h-full min-h-screen w-full flex-col bg-[#FAFAFA] sm:flex-row'>
       <Navigation />
-      <div className='relative flex h-dvh w-full min-w-[752px] flex-col'>
+      <div className='relative flex h-dvh w-full flex-col sm:min-w-[752px]'>
         <div className='bg-primary-0 flex flex-col'>
           <BoardTitle title='날씨'></BoardTitle>
         </div>
@@ -45,7 +45,7 @@ export default function Weather() {
             ) : (
               <Lottie
                 animationData={spinner}
-                style={{ width: 100, height: 100 }}
+                style={{ width: 50, height: 50 }}
               />
             )}
           </div>
