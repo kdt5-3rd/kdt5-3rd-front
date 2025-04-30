@@ -12,7 +12,7 @@ import TaskModal from '@/app/_components/tasks/TaskModal';
 import useGetTaskQuery from '@/app/_hooks/useGetTaskQuery';
 import RouteInfo from '../_components/RouteInfo';
 import { formatSecondToMinute } from '@/app/_utils/dateTimeUtil';
-import { formatInTimeZone } from 'date-fns-tz';
+import { format } from 'date-fns';
 
 export default function Daily() {
   const [isOpen, setIsOpen] = useState(false);
@@ -102,9 +102,8 @@ export default function Daily() {
                               </span>
                             </div>
                             <span className='bg-primary-200 rounded-[5px] px-[4px] py-[2px] text-[14px] font-bold sm:text-[16px]'>
-                              {formatInTimeZone(
+                              {format(
                                 new Date(task.recommended_departure_time),
-                                'UTC',
                                 'hh:mm aa',
                               )}
                             </span>
