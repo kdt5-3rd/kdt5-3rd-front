@@ -18,5 +18,5 @@ export default function AfterLoginLayout({
     }
   }, []);
 
-  return <>{children};</>;
+  return <>{children}</>;
 }
