@@ -217,7 +217,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
 
   return (
     isOpen && (
-      <div className='fixed inset-0 z-50 flex h-dvh w-dvw items-center justify-center bg-[rgba(84,87,122,0.3)]'>
+      <div className='fixed inset-0 z-50 flex min-h-dvh w-dvw items-center justify-center bg-[rgba(84,87,122,0.3)]'>
         <div className='bg-primary-0 w-[80%] min-w-[335px] rounded-[10px] px-[30px] py-[20px] shadow-[0_0_30px_0_rgba(84,87,122,0.7)] *:w-full sm:w-[708px] sm:px-[40px] sm:py-[30px]'>
           <div className='mb-[30px] flex justify-between'>
             <p className='text-[24px] font-semibold sm:text-3xl'>
