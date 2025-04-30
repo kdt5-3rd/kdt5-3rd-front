@@ -33,7 +33,7 @@ function NormalTextarea({
         {...rest}
         ref={textareaRef}
         value={value}
-        className='scroll-none flex-1 resize-none outline-none'
+        className='scroll-none w-full flex-1 resize-none outline-none'
       />
     </div>
   );

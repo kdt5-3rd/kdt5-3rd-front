@@ -13,6 +13,10 @@ import useGetLocationName from './_hooks/useGetLocationName';
 import useGetWeatherQuery from './_hooks/useGetWeatherQuery';
 import { getWeatherInfo } from './_utils/getWeatherInfo';
 import DashBoardTopNews from './(afterlogin)/news/DashBoardTopNews';
+import spinner from '@/assets/lottie/spinner.json';
+import dynamic from 'next/dynamic';
+
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
 export default function Dashboard() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,7 +27,11 @@ export default function Dashboard() {
   const router = useRouter();
   const { data: taskList = [] } = useGetTaskQuery('day');
   const { locationName } = useGetLocationName();
-  const { data: weatherData } = useGetWeatherQuery();
+  const {
+    data: weatherData,
+    geoLocationError,
+    isLoading,
+  } = useGetWeatherQuery();
 
   const getCurrentTime = () => {
     const currentDate = new Date();
@@ -70,10 +78,6 @@ export default function Dashboard() {
   useEffect(() => {
     setFinishedTaskCount(taskList.filter(task => task.is_completed).length);
   }, [taskList]);
-
-  if (!weatherData) {
-    return;
-  }
 
   return (
     <div className='text-secondary-500 flex h-full min-h-screen flex-col sm:min-w-[1440px] sm:flex-row'>
@@ -125,11 +129,27 @@ export default function Dashboard() {
           <div className='text-secondary-500 hidden text-[24px] font-medium sm:block sm:text-[40px]'>
             {currentTime}
           </div>
-          <CurrentWeather
-            location={locationName}
-            temperature={`${weatherData.current?.temperature}°`}
-            weatherInfo={getWeatherInfo(weatherData.current.weathercode)}
-          />
+          {!weatherData || isLoading ? (
+            <div className='border-primary-200 bg-primary-0 flex flex-col items-center justify-center gap-[10px] rounded-2xl border px-[30px] py-[26px]'>
+              {geoLocationError ? (
+                <div>
+                  날씨 정보를 불러올 수 없습니다.
+                  <br /> 위치 액세스를 허용해주세요
+                </div>
+              ) : (
+                <Lottie
+                  animationData={spinner}
+                  style={{ width: 50, height: 50 }}
+                />
+              )}
+            </div>
+          ) : (
+            <CurrentWeather
+              location={locationName}
+              temperature={`${weatherData.current?.temperature}°`}
+              weatherInfo={getWeatherInfo(weatherData.current.weathercode)}
+            />
+          )}
           <DashBoardTopNews />
         </div>
       </div>
