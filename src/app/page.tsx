@@ -3,10 +3,16 @@
 import Navigation from '@/app/_components/nav/Navigation';
 import ProgressBar from '@/app/_components/tasks/ProgressBar';
 import TaskListItem from '@/app/_components/tasks/TaskListItem';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import TaskModal from './_components/tasks/TaskModal';
 import useGetTaskQuery from './_hooks/useGetTaskQuery';
+import { rehydrateAuthStore, useAuthStore } from './store/authStore';
+import { useRouter } from 'next/navigation';
+import CurrentWeather from './(afterlogin)/weather/CurrentWeather';
+import useGetLocationName from './_hooks/useGetLocationName';
+import useGetWeatherQuery from './_hooks/useGetWeatherQuery';
+import { getWeatherInfo } from './_utils/getWeatherInfo';
+import DashBoardTopNews from './(afterlogin)/news/DashBoardTopNews';
 
 export default function Dashboard() {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,7 +20,10 @@ export default function Dashboard() {
   const [today, setToday] = useState('');
   const [finishedTaskCount, setFinishedTaskCount] = useState(0);
 
+  const router = useRouter();
   const { data: taskList = [] } = useGetTaskQuery('day');
+  const { locationName } = useGetLocationName();
+  const { data: weatherData } = useGetWeatherQuery();
 
   const getCurrentTime = () => {
     const currentDate = new Date();
@@ -30,6 +39,13 @@ export default function Dashboard() {
   const addTask = () => setIsOpen(true);
 
   useEffect(() => {
+    rehydrateAuthStore();
+
+    const { accessToken } = useAuthStore.getState();
+    if (accessToken === null) {
+      router.push('/login');
+    }
+
     const interval = setInterval(() => {
       getCurrentTime();
     }, 1000);
@@ -55,24 +71,31 @@ export default function Dashboard() {
     setFinishedTaskCount(taskList.filter(task => task.is_completed).length);
   }, [taskList]);
 
+  if (!weatherData) {
+    return;
+  }
+
   return (
-    <div className='text-secondary-500 flex h-full min-h-screen flex-col bg-[#F5F5F7] sm:min-w-[1440px] sm:flex-row'>
+    <div className='text-secondary-500 flex h-full min-h-screen flex-col sm:min-w-[1440px] sm:flex-row'>
       <Navigation />
       <div className='w-full min-w-[400px] bg-[#FAFAFA] sm:min-w-[752px]'>
         <div className='p-[32px]'>
           <div className='flex justify-between'>
             <div>
-              <p className='text-secondary-500 text-[34px] font-semibold'>
+              <p className='text-secondary-500 text-[30px] font-semibold sm:text-[34px]'>
                 오늘의 일정
               </p>
-              <span className='text-primary-500 text-[30px] font-semibold'>
+              <span className='text-primary-500 text-[22px] font-semibold sm:text-[30px]'>
                 {today}
+              </span>
+              <span className='block text-[24px] font-medium sm:hidden'>
+                {currentTime}
               </span>
             </div>
             <div className='flex items-end'>
               <button
                 onClick={addTask}
-                className='bg-primary-400 hover:bg-primary-500 h-[50px] w-[50px] cursor-pointer rounded-[10px] bg-[url(/assets/plus-big.png)] bg-center bg-no-repeat'
+                className='bg-primary-400 hover:bg-primary-500 h-[30px] w-[30px] cursor-pointer rounded-[10px] bg-[url(/assets/plus-big.png)] bg-center bg-no-repeat sm:h-[50px] sm:w-[50px]'
               ></button>
             </div>
           </div>
@@ -97,31 +120,17 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-      <div className='min-w-[400px] shrink-0 sm:w-[436px]'>
-        <div className='px-[32px] py-[49px]'>
-          <div className='text-secondary-500 text-[40px] font-medium'>
+      <div className='min-w-[400px] shrink-0 bg-[#F5F5F7] sm:w-[436px]'>
+        <div className='flex flex-col gap-[20px] px-[24px] py-[20px] sm:gap-[26px] sm:px-[32px] sm:py-[49px]'>
+          <div className='text-secondary-500 hidden text-[24px] font-medium sm:block sm:text-[40px]'>
             {currentTime}
           </div>
-          <div className='text-secondary-500 bg-primary-0 border-primary-100 mt-[26px] w-full rounded-[10px] border-1 px-[22px] py-[17px]'>
-            <div className='flex items-center text-[24px] font-medium'>
-              <div className='mr-[5px]'>
-                <Image
-                  src='/assets/location-big.png'
-                  width={30}
-                  height={30}
-                  alt='location icon'
-                />
-              </div>
-              수원시 영통구
-            </div>
-            <div className='flex py-[14px]'>
-              <div className='bg-primary-100 h-[100px] w-[100px] rounded-[10px]'></div>
-              <div className='ml-[30px]'>
-                <span className='block text-[36px] font-medium'>10°C</span>
-                <span className='block text-[24px] font-medium'>맑음</span>
-              </div>
-            </div>
-          </div>
+          <CurrentWeather
+            location={locationName}
+            temperature={`${weatherData.current?.temperature}°`}
+            weatherInfo={getWeatherInfo(weatherData.current.weathercode)}
+          />
+          <DashBoardTopNews />
         </div>
       </div>
       <TaskModal

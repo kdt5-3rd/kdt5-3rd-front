@@ -1,5 +1,6 @@
 'use client';
 
+import { useAuthStore } from '@/app/store/authStore';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -15,8 +16,9 @@ interface NavItem {
 
 function Navigation() {
   const pathname = usePathname();
-  const [isLoggedIn] = useState(false);
+  const { checkLoggedIn, clearTokens } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
+  const isLoggedIn = checkLoggedIn();
 
   const navItems: NavItem[] = [
     {
@@ -33,12 +35,37 @@ function Navigation() {
       activeIcon: '/assets/book-dark.png',
       href: '/calendar/daily',
     },
+    {
+      id: 2,
+      title: '날씨',
+      icon: '/assets/sun.png',
+      activeIcon: '/assets/sun-dark.png',
+      href: '/weather',
+    },
+    {
+      id: 3,
+      title: '뉴스',
+      icon: '/assets/news.png',
+      activeIcon: '/assets/news-dark.png',
+      href: '/news',
+    },
+    {
+      id: 4,
+      title: '설정',
+      icon: '/assets/setting.png',
+      activeIcon: '/assets/setting-dark.png',
+      href: '/setting',
+    },
   ];
 
   const handleNavClick = (href: string) => {
     if (pathname === href) {
       setIsOpen(false);
     }
+  };
+
+  const handleLogout = () => {
+    clearTokens();
   };
 
   return (
@@ -58,7 +85,7 @@ function Navigation() {
             className='bg-secondary-400 fixed inset-0 opacity-30 sm:hidden'
             onClick={() => setIsOpen(false)}
           />
-          <div className='bg-primary-0 absolute top-[86px] w-full px-[20px] py-[18px] shadow-md sm:hidden'>
+          <div className='bg-primary-0 absolute top-[86px] z-10 w-full px-[20px] py-[18px] shadow-md sm:hidden'>
             <ul className='text-secondary-300 flex flex-col gap-y-[12px]'>
               {navItems.map(navItem => (
                 <Link
@@ -109,6 +136,7 @@ function Navigation() {
         <Link
           href={'/login'}
           className={`${isLoggedIn ? 'bg-[url(/assets/logout.png)] hover:bg-[url(/assets/logout-dark.png)]' : 'bg-[url(/assets/login.png)] hover:bg-[url(/assets/login-dark.png)]'} text-secondary-300 hover:text-secondary-500 absolute bottom-[24px] mx-[20px] flex cursor-pointer items-center bg-left bg-no-repeat py-[10px] hover:rounded-[10px]`}
+          onClick={isLoggedIn ? handleLogout : undefined}
         >
           {isLoggedIn ? (
             <span className='ml-[32px] text-[14px] font-semibold'>

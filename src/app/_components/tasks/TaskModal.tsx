@@ -21,7 +21,6 @@ import {
   validateIsBlank,
 } from '@/app/_utils/validateUtil';
 import isEqual from 'lodash/isEqual';
-import { formatDateISO8601 } from '@/app/_utils/dateTimeUtil';
 import useAddTaskMutation from '@/app/_hooks/useAddTaskMutation';
 import useEditTaskMutation from '@/app/_hooks/useEditTaskMutation';
 import useDeleteTaskMutation from '@/app/_hooks/useDeleteTaskMutation';
@@ -67,6 +66,11 @@ const initialTask = {
   place_name: '',
   latitude: 0,
   longitude: 0,
+  from_lat: 0,
+  from_lng: 0,
+  from_address: '',
+  from_place_name: '',
+  route_option: 'trafast',
   is_completed: false,
 };
 
@@ -97,14 +101,17 @@ const renderDate = (start: Date, end: Date) => {
   const endTime = format(end, 'hh:mm a');
 
   return (
-    <span className='whitespace-nowrap'>
+    <span>
       <strong>{startDate}</strong> {startTime} ~ <strong>{endDate}</strong>{' '}
       {endTime}
     </span>
   );
 };
 
-type NestedModalType = null | 'dayPicker' | 'location';
+type NestedModalType =
+  | null
+  | { type: 'dayPicker' }
+  | { type: 'location'; target: 'place_name' | 'from_place_name' };
 
 function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
   const [openModal, setOpenModal] = useState<NestedModalType>(null);
@@ -115,10 +122,10 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
     task ? normalizeTaskDate(task) : initialTask,
   );
   const BASE_STYLE =
-    'flex gap-[20px] *:first:text-xl *:first:font-semibold *:last:flex-1';
+    'flex gap-[20px] *:first:text-[16px] sm\*:first:text-xl *:first:font-semibold *:last:flex-1';
 
   const { mutate: addTaskMutate } = useAddTaskMutation(type);
-  const { mutate: editTaskMutate } = useEditTaskMutation(type);
+  const { mutate: editTaskMutate } = useEditTaskMutation(type, task?.task_id);
   const { mutate: deleteTaskMutate } = useDeleteTaskMutation(type);
 
   const handleFieldChange = useCallback(
@@ -135,21 +142,31 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
     [],
   );
 
-  const handlePlaceChange = (place: GeoSearchResult) => {
-    setValue(prev => ({
-      ...prev,
-      longitude: place.mapx,
-      latitude: place.mapy,
-      place_name: place.title,
-      address: place.address,
-    }));
+  const handlePlaceChange = (place: GeoSearchResult, target: string) => {
+    if (target === 'from_place_name') {
+      setValue(prev => ({
+        ...prev,
+        from_lng: place.mapx,
+        from_lat: place.mapy,
+        from_place_name: place.title,
+        from_address: place.address,
+      }));
+    } else {
+      setValue(prev => ({
+        ...prev,
+        longitude: place.mapx,
+        latitude: place.mapy,
+        place_name: place.title,
+        address: place.address,
+      }));
+    }
   };
 
   const handleSaveTask = () => {
     const newTask: TaskPayload = {
       ...value,
-      start_time: formatDateISO8601(value.start_time),
-      end_time: formatDateISO8601(value.end_time),
+      start_time: value.start_time.toISOString(),
+      end_time: value.end_time.toISOString(),
     };
 
     switch (mode) {
@@ -201,9 +218,11 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
   return (
     isOpen && (
       <div className='fixed inset-0 z-50 flex h-dvh w-dvw items-center justify-center bg-[rgba(84,87,122,0.3)]'>
-        <div className='bg-primary-0 w-[708px] rounded-[10px] px-[40px] py-[30px] shadow-[0_0_30px_0_rgba(84,87,122,0.7)] *:w-full'>
+        <div className='bg-primary-0 w-[80%] min-w-[335px] rounded-[10px] px-[30px] py-[20px] shadow-[0_0_30px_0_rgba(84,87,122,0.7)] *:w-full sm:w-[708px] sm:px-[40px] sm:py-[30px]'>
           <div className='mb-[30px] flex justify-between'>
-            <p className='text-3xl font-semibold'>{modalMode[mode].title}</p>
+            <p className='text-[24px] font-semibold sm:text-3xl'>
+              {modalMode[mode].title}
+            </p>
             <button
               onClick={() => setIsOpen(false)}
               className='bg-primary-400 flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-[10px]'
@@ -223,6 +242,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
               <div className='flex flex-col gap-[5px]'>
                 <NormalInput
                   placeholder='제목'
+                  className='text-[14px] sm:text-[16px]'
                   isError={isInvalidTitle}
                   value={value.title}
                   onChange={e => handleFieldChange('title', e)}
@@ -237,33 +257,39 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
             </fieldset>
             <fieldset
               className={`items-center ${BASE_STYLE}`}
-              onClick={() => setOpenModal('dayPicker')}
+              onClick={() => setOpenModal({ type: 'dayPicker' })}
             >
-              <label htmlFor='date'>날짜</label>
+              <label htmlFor='date' className='whitespace-nowrap'>
+                날짜
+              </label>
               <div className='flex flex-col gap-[5px]'>
                 <NormalInput
                   readOnly
-                  className='*:last:hidden'
+                  className='text-[12px] *:last:hidden sm:text-[16px]'
                   isError={isInvalidDate}
-                >
-                  <Image
-                    src='/assets/calendar-light.png'
-                    alt='calendar icon'
-                    width={24}
-                    height={24}
+                  leftIcon={
+                    <>
+                      <Image
+                        src='/assets/calendar-light.png'
+                        alt='calendar icon'
+                        className='shrink-0 object-contain'
+                        width={24}
+                        height={24}
+                      />
+                      {renderDate(value.start_time, value.end_time)}
+                    </>
+                  }
+                />
+                {openModal?.type === 'dayPicker' && (
+                  <DayPickerModal
+                    closeModal={() => setOpenModal(null)}
+                    onChange={handleFieldChange}
+                    value={{
+                      from: value.start_time,
+                      to: value.end_time,
+                    }}
                   />
-                  {renderDate(value.start_time, value.end_time)}
-                  {openModal === 'dayPicker' && (
-                    <DayPickerModal
-                      closeModal={() => setOpenModal(null)}
-                      onChange={handleFieldChange}
-                      value={{
-                        from: value.start_time,
-                        to: value.end_time,
-                      }}
-                    />
-                  )}
-                </NormalInput>
+                )}
                 {isInvalidDate && (
                   <span className='text-error-600'>
                     시작 시각이 종료 시각보다 늦습니다.
@@ -272,41 +298,83 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
               </div>
             </fieldset>
             <fieldset className={`relative items-center ${BASE_STYLE}`}>
-              <label htmlFor='location'>위치</label>
+              <label htmlFor='location' className='whitespace-nowrap'>
+                출발
+              </label>
               <div className='flex flex-grow justify-between'>
                 <NormalInput
-                  placeholder='위치'
-                  value={value.place_name || ''}
-                  className='mr-[10px] flex-grow'
-                  onChange={e => handleFieldChange('place_name', e)}
-                >
-                  <Image
-                    src='/assets/location-line.png'
-                    alt='calendar icon'
-                    width={24}
-                    height={24}
-                  />
-                </NormalInput>
+                  placeholder='출발 위치'
+                  value={value.from_place_name || ''}
+                  className='mr-[10px] flex-grow text-[14px] sm:text-[16px]'
+                  onChange={e => handleFieldChange('from_place_name', e)}
+                  leftIcon={
+                    <Image
+                      src='/assets/location-line.png'
+                      alt='calendar icon'
+                      width={24}
+                      height={24}
+                    />
+                  }
+                />
                 <SubmitButton
                   type='button'
-                  className='pr-[14px] pl-[14px] font-semibold'
-                  onClick={() => setOpenModal('location')}
+                  className='pr-[14px] pl-[14px] font-semibold whitespace-nowrap'
+                  onClick={() =>
+                    setOpenModal({
+                      type: 'location',
+                      target: 'from_place_name',
+                    })
+                  }
                 >
                   검색하기
                 </SubmitButton>
               </div>
-              {openModal === 'location' && (
+            </fieldset>
+            <fieldset className={`relative items-center ${BASE_STYLE}`}>
+              <label htmlFor='location' className='whitespace-nowrap'>
+                도착
+              </label>
+              <div className='flex flex-grow justify-between'>
+                <NormalInput
+                  placeholder='도착 위치'
+                  value={value.place_name || ''}
+                  className='mr-[10px] flex-grow text-[14px] sm:text-[16px]'
+                  onChange={e => handleFieldChange('place_name', e)}
+                  leftIcon={
+                    <Image
+                      src='/assets/location-line.png'
+                      alt='calendar icon'
+                      width={24}
+                      height={24}
+                    />
+                  }
+                />
+                <SubmitButton
+                  type='button'
+                  className='pr-[14px] pl-[14px] font-semibold whitespace-nowrap'
+                  onClick={() =>
+                    setOpenModal({
+                      type: 'location',
+                      target: 'place_name',
+                    })
+                  }
+                >
+                  검색하기
+                </SubmitButton>
+              </div>
+              {openModal?.type === 'location' && (
                 <LocationModal
                   closeModal={() => setOpenModal(null)}
-                  setPlace={place => handlePlaceChange(place)}
+                  setPlace={place => handlePlaceChange(place, openModal.target)}
                 />
               )}
             </fieldset>
             <fieldset className={`*:first:mt-2 ${BASE_STYLE}`}>
               <label htmlFor='memo'>메모</label>
               <NormalTextarea
+                className='text-[12px] sm:text-[16px]'
                 placeholder='메모'
-                value={value.memo}
+                value={value.memo || ''}
                 onChange={e => handleFieldChange('memo', e)}
               />
             </fieldset>

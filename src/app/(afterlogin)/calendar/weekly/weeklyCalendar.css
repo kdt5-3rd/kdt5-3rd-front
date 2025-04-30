@@ -62,11 +62,11 @@
     background-color: var(--primary-0);
   }
 
-  .rbc-event {
-    background-color: var(--primary-600);
+  /* 주간 헤더 스타일 */
+  .rbc-row-content .rbc-row {
+    max-height: 30px;
   }
 
-  /* 주간 헤더 스타일 */
   .rbc-row {
     height: 60px;
   }
@@ -76,10 +76,16 @@
     align-items: center;
     justify-content: center;
     background-color: var(--primary-300);
-    padding: 10px 8px 10px 8px;
     span {
-      font-size: 14px;
+      font-size: 8px;
       font-weight: 700;
+    }
+
+    @media (width >= 40rem) {
+      span {
+        font-size: 14px;
+        font-weight: 700;
+      }
     }
   }
 
@@ -102,9 +108,13 @@
 
   /* 주간 이벤트 스타일 */
   .rbc-label {
-    font-size: 8px;
+    font-size: 6px;
     font-weight: 700;
     color: var(--secondary-400);
+
+    @media (width >= 40rem) {
+      font-size: 8px;
+    }
   }
 
   .rbc-day-slot .rbc-event {
@@ -122,11 +132,22 @@
     height: 100%;
   }
 
+  .rbc-day-bg {
+    padding: 3px 0px;
+  }
+
+  .rbc-event-allday {
+    background-color: var(--primary-200);
+    color: black;
+    padding: 0px 3px;
+  }
+
   .rbc-event.rbc-selected,
   .rbc-day-slot.rbc-selected.rbc-background-event {
     background-color: var(--primary-700);
     color: var(--primary-0);
   }
+
   .rbc-event-continues-prior,
   .rbc-event.rbc-selected.rbc-event-allday.rbc-event-continues-prior {
     background-color: var(--primary-100);

@@ -70,7 +70,7 @@ function DayPickerModal({ closeModal, onChange, value }: DayPickerProps) {
   return (
     <div
       ref={pickerRef}
-      className='bg-primary-0 absolute z-999 mt-[46px] flex gap-[10px] rounded-[10px] p-2.5 shadow-lg'
+      className='bg-primary-0 absolute z-999 mt-[46px] flex flex-col gap-[10px] rounded-[10px] p-2.5 shadow-lg sm:flex-row'
     >
       <DayPicker
         required
