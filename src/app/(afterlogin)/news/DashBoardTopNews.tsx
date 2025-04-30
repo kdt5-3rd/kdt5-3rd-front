@@ -14,14 +14,22 @@ interface TopNewsArticleProps {
 function TopNewsArticle({ article }: TopNewsArticleProps) {
   return (
     <div className='flex gap-[10px]'>
-      <div className='relative h-[50px] w-[50px] flex-shrink-0'>
-        <Image
-          src={article.image_url}
-          alt='뉴스 썸네일 이미지'
-          fill
-          className='rounded-[10px] object-cover'
-        />
-      </div>
+      {article.image_url ? (
+        <div className='relative h-[50px] w-[50px] flex-shrink-0'>
+          <Image
+            src={article.image_url}
+            alt='뉴스 썸네일 이미지'
+            fill
+            className='rounded-[10px] object-cover'
+          />
+        </div>
+      ) : (
+        <div className='border-primary-200 inline-flex h-[50px] w-[50px] flex-shrink-0 items-center justify-center rounded-[10px] border'>
+          <div className='relative h-[18px] w-[18px]'>
+            <Image src='/assets/gallery.png' alt='기본 썸네일 이미지' fill />
+          </div>
+        </div>
+      )}
       <Link
         href={article.link}
         className='text-overflow-2-line hover:underline'
