@@ -21,7 +21,6 @@ import {
   validateIsBlank,
 } from '@/app/_utils/validateUtil';
 import isEqual from 'lodash/isEqual';
-import { formatDateISO8601 } from '@/app/_utils/dateTimeUtil';
 import useAddTaskMutation from '@/app/_hooks/useAddTaskMutation';
 import useEditTaskMutation from '@/app/_hooks/useEditTaskMutation';
 import useDeleteTaskMutation from '@/app/_hooks/useDeleteTaskMutation';
@@ -166,8 +165,8 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
   const handleSaveTask = () => {
     const newTask: TaskPayload = {
       ...value,
-      start_time: formatDateISO8601(value.start_time),
-      end_time: formatDateISO8601(value.end_time),
+      start_time: value.start_time.toISOString(),
+      end_time: value.end_time.toISOString(),
     };
 
     switch (mode) {
