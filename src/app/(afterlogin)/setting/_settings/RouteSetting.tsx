@@ -7,18 +7,27 @@ const selectItems = [
   {
     id: 1,
     label: '실시간 빠른 길',
+    value: 'trafast',
   },
   {
     id: 2,
-    label: 'select item 2',
+    label: '실시간 편한 길',
+    value: 'tracomfort',
   },
   {
     id: 3,
-    label: 'select item 3',
+    label: '실시간 최적',
+    value: 'traoptimal',
   },
   {
     id: 4,
-    label: 'select item 4',
+    label: '무료 우선',
+    value: 'traavoidtoll',
+  },
+  {
+    id: 5,
+    label: '자동차 전용 도로 회피 우선',
+    value: 'traavoidcaronly',
   },
 ];
 
