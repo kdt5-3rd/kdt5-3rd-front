@@ -23,15 +23,19 @@ function NewsSetting({
 
   return (
     <div className='flex flex-wrap gap-[10px] *:text-[12px]!'>
-      {categories.map(({ id, name, category }) => (
-        <CategoryButton
-          key={id}
-          onClick={() => handleToggle(category)}
-          isActive={selectedCategory.includes(category)}
-        >
-          {name}
-        </CategoryButton>
-      ))}
+      {categories.map(({ id, name, category }) => {
+        if (category === 'top') return;
+
+        return (
+          <CategoryButton
+            key={id}
+            onClick={() => handleToggle(category)}
+            isActive={selectedCategory.includes(category)}
+          >
+            {name}
+          </CategoryButton>
+        );
+      })}
     </div>
   );
 }
