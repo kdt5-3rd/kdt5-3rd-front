@@ -1,12 +1,19 @@
 import { NewsArticle } from '@/app/_types/news';
 import Image from 'next/image';
 import Link from 'next/link';
+import { toZonedTime } from 'date-fns-tz';
+import { formatDate } from 'date-fns';
 
 interface ArticleProps {
   article: NewsArticle;
 }
 
 function Article({ article }: ArticleProps) {
+  const pubDateKST =
+    article.pubDateTZ === 'UTC'
+      ? toZonedTime(new Date(article.pubDate + 'Z'), 'Asia/Seoul')
+      : article.pubDate;
+
   return (
     <div className='border-primary-200 flex items-center gap-[20px] border-b pb-[10px]'>
       {article.image_url ? (
@@ -31,19 +38,17 @@ function Article({ article }: ArticleProps) {
             href={article.link}
             className='text-[14px] font-semibold hover:underline sm:text-[20px]'
           >{`[${article.source_name}] ${article.title}`}</Link>
-          <div className='flex gap-[15px]'>
-            <p className='text-secondary-300 hidden text-[15px] sm:block'>
-              {article.creator.join(' ')}
+          <div className='flex flex-col gap-[5px] text-right'>
+            <p className='text-secondary-300 hidden text-[12px] sm:block'>
+              {formatDate(pubDateKST, 'yyyy-MM-dd HH:mm:ss')}
             </p>
-            <p className='text-secondary-300 hidden text-[15px] sm:block'>
-              {article.pubDate}
+            <p className='text-secondary-300 hidden text-[12px] sm:block'>
+              {article.creator?.join(' ')}
             </p>
           </div>
         </div>
         <p className='text-overflow-2-line sm:text-overflow-3-line max-w-[700px] text-[10px] sm:min-h-[72px] sm:text-[16px]'>
-          {/* {article.description} */}
-          뉴스 내용의 첫 문장부터 들어갑니다. 길이가 길어지면 말줄임표를
-          사용하여 줄어듭니다. Lorem ipsum dolor sit amet...
+          {article.description}
         </p>
       </div>
     </div>

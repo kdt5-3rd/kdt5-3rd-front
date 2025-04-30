@@ -2,76 +2,84 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import CategoryButton from './CategoryButton';
 import { useEffect, useState } from 'react';
+import { NewsCategoryType } from '@/app/_types/news';
 
-export const categories = [
+type CategoriesType = {
+  id: number;
+  name: string;
+  category: NewsCategoryType;
+};
+
+export const categories: CategoriesType[] = [
   {
-    categoryId: 1,
-    categoryName: 'Top',
+    id: 1,
+    name: 'Top',
     category: 'top',
   },
   {
-    categoryId: 2,
-    categoryName: '스포츠',
+    id: 2,
+    name: '스포츠',
     category: 'sports',
   },
   {
-    categoryId: 3,
-    categoryName: '기술',
+    id: 3,
+    name: '기술',
     category: 'technology',
   },
   {
-    categoryId: 4,
-    categoryName: '경제',
+    id: 4,
+    name: '경제',
     category: 'business',
   },
   {
-    categoryId: 5,
-    categoryName: '과학',
+    id: 5,
+    name: '과학',
     category: 'science',
   },
   {
-    categoryId: 6,
-    categoryName: '연예',
+    id: 6,
+    name: '연예',
     category: 'entertainment',
   },
   {
-    categoryId: 7,
-    categoryName: '건강',
+    id: 7,
+    name: '건강',
     category: 'health',
   },
   {
-    categoryId: 8,
-    categoryName: '세계',
+    id: 8,
+    name: '세계',
     category: 'world',
   },
   {
-    categoryId: 9,
-    categoryName: '정치',
+    id: 9,
+    name: '정치',
     category: 'politics',
   },
   {
-    categoryId: 10,
-    categoryName: '환경',
+    id: 10,
+    name: '환경',
     category: 'environment',
   },
   {
-    categoryId: 11,
-    categoryName: '음식',
+    id: 11,
+    name: '음식',
     category: 'food',
   },
 ];
 
 interface NewsCategoryProps {
-  selectedCategory: string;
-  onSelectedCategory: (category: string) => void;
+  selectedCategory: NewsCategoryType;
+  onSelectedCategory: (category: NewsCategoryType) => void;
 }
 
 function NewsCategory({ onSelectedCategory }: NewsCategoryProps) {
   const searchParam = useSearchParams();
   const router = useRouter();
-  const [selectedCategory, setSelectedCategory] = useState<string>('top');
+  const [selectedCategory, setSelectedCategory] =
+    useState<NewsCategoryType>('top');
 
-  const handleClick = (category: string) => {
+  const handleClick = (category: NewsCategoryType) => {
     const newParams = new URLSearchParams(searchParam?.toString());
     newParams.set('category', category);
     router.push(`?${newParams.toString()}`);
@@ -91,7 +99,7 @@ function NewsCategory({ onSelectedCategory }: NewsCategoryProps) {
         return;
       }
 
-      setSelectedCategory(param);
+      setSelectedCategory(param as NewsCategoryType);
     }
   }, [searchParam, router]);
 
@@ -101,13 +109,13 @@ function NewsCategory({ onSelectedCategory }: NewsCategoryProps) {
 
   return (
     <>
-      {categories.map(({ categoryId, categoryName, category }) => (
+      {categories.map(({ id, name, category }) => (
         <CategoryButton
-          key={categoryId}
+          key={id}
           onClick={() => handleClick(category)}
           isActive={selectedCategory === category}
         >
-          {categoryName}
+          {name}
         </CategoryButton>
       ))}
     </>
