@@ -46,7 +46,7 @@ function DashBoardTopNews() {
   if (isLoading) {
     return (
       <div className='flex h-full items-center justify-center'>
-        <Lottie animationData={spinner} style={{ width: 150, height: 150 }} />
+        <Lottie animationData={spinner} style={{ width: 50, height: 50 }} />
       </div>
     );
   }
