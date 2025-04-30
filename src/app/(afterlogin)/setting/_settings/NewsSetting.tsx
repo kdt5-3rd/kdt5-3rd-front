@@ -1,11 +1,18 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import CategoryButton from '../../news/CategoryButton';
 import { categories } from '../../news/NewsCategory';
+import { NewsCategoryType } from '@/app/_types/news';
 
-function NewsSetting() {
-  const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
+interface NewsSettingProps {
+  selectedCategory: NewsCategoryType[];
+  setSelectedCategory: Dispatch<SetStateAction<NewsCategoryType[]>>;
+}
 
-  const handleToggle = (category: string) => {
+function NewsSetting({
+  selectedCategory,
+  setSelectedCategory,
+}: NewsSettingProps) {
+  const handleToggle = (category: NewsCategoryType) => {
     if (selectedCategory.includes(category)) {
       return setSelectedCategory(prev =>
         prev.filter(selected => selected !== category),
@@ -13,6 +20,7 @@ function NewsSetting() {
     }
     return setSelectedCategory(prev => [...prev, category]);
   };
+
   return (
     <div className='flex flex-wrap gap-[10px] *:text-[12px]!'>
       {categories.map(({ id, name, category }) => (

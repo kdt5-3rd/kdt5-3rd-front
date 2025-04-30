@@ -3,6 +3,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import CategoryButton from './CategoryButton';
 import { useEffect, useState } from 'react';
 import { NewsCategoryType } from '@/app/_types/news';
+import { useNewsCategoryStore } from '@/app/store/newsCategoryStore';
 
 type CategoriesType = {
   id: number;
@@ -78,6 +79,11 @@ function NewsCategory({ onSelectedCategory }: NewsCategoryProps) {
   const router = useRouter();
   const [selectedCategory, setSelectedCategory] =
     useState<NewsCategoryType>('top');
+  const { newsCategories } = useNewsCategoryStore();
+
+  const formattedCategories = categories.filter(item =>
+    newsCategories.includes(item.category),
+  );
 
   const handleClick = (category: NewsCategoryType) => {
     const newParams = new URLSearchParams(searchParam?.toString());
@@ -109,7 +115,7 @@ function NewsCategory({ onSelectedCategory }: NewsCategoryProps) {
 
   return (
     <>
-      {categories.map(({ id, name, category }) => (
+      {formattedCategories.map(({ id, name, category }) => (
         <CategoryButton
           key={id}
           onClick={() => handleClick(category)}
