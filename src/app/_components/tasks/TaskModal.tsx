@@ -24,7 +24,6 @@ import isEqual from 'lodash/isEqual';
 import useAddTaskMutation from '@/app/_hooks/useAddTaskMutation';
 import useEditTaskMutation from '@/app/_hooks/useEditTaskMutation';
 import useDeleteTaskMutation from '@/app/_hooks/useDeleteTaskMutation';
-import { toZonedTime } from 'date-fns-tz';
 import { GeoSearchResult } from '@/app/_types/location';
 
 export type ModalMode = 'add' | 'edit' | 'detail';
@@ -77,10 +76,8 @@ const initialTask = {
 const normalizeTaskDate = (task: TaskPayload | TaskCalendar): TaskCalendar => {
   if (task.start_time instanceof Date) return task as TaskCalendar;
 
-  const start_time = new Date(toZonedTime(task.start_time, 'UTC'));
-  const end_time = task.end_time
-    ? new Date(toZonedTime(task.end_time, 'UTC'))
-    : start_time;
+  const start_time = new Date(task.start_time);
+  const end_time = task.end_time ? new Date(task.end_time) : start_time;
 
   return { ...task, start_time, end_time };
 };
