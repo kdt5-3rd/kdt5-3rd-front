@@ -1,5 +1,4 @@
 import { TaskWithDuration } from '@/app/_types';
-import { formatTime } from '@/app/_utils/dateTimeUtil';
 
 interface RouteInfoProps {
   label: string;
@@ -17,11 +16,6 @@ function RouteInfo({ label, task }: RouteInfoProps) {
           {label === '출발' ? task.from_place_name : task.place_name}
         </span>
       </div>
-      <span className='text-[14px] font-medium whitespace-nowrap sm:text-[16px]'>
-        {label === '출발'
-          ? formatTime(task.start_time)
-          : formatTime(task.end_time)}
-      </span>
     </div>
   );
 }
