@@ -15,7 +15,7 @@ export default function News() {
   return (
     <div className='text-secondary-500 flex h-full min-h-screen flex-col sm:min-w-[1440px] sm:flex-row'>
       <Navigation />
-      <div className='h-dvh min-h-dvh w-dvw min-w-[400px] bg-[#FAFAFA] sm:min-w-[752px]'>
+      <div className='min-h-dvh w-dvw min-w-[375px] bg-[#FAFAFA] sm:min-w-[752px]'>
         <div className='bg-primary-0 flex flex-col'>
           <BoardTitle title='설정' />
         </div>

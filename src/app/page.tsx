@@ -82,8 +82,8 @@ export default function Dashboard() {
   return (
     <div className='text-secondary-500 flex h-full min-h-screen flex-col sm:min-w-[1440px] sm:flex-row'>
       <Navigation />
-      <div className='w-full min-w-[400px] bg-[#FAFAFA] sm:min-w-[752px]'>
-        <div className='p-[32px]'>
+      <div className='w-full min-w-[375px] bg-[#FAFAFA] sm:min-w-[752px]'>
+        <div className='p-[24px] sm:p-[32px]'>
           <div className='flex justify-between'>
             <div>
               <p className='text-secondary-500 text-[30px] font-semibold sm:text-[34px]'>
@@ -124,7 +124,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-      <div className='min-w-[400px] shrink-0 bg-[#F5F5F7] sm:w-[436px]'>
+      <div className='min-w-[375px] shrink-0 bg-[#F5F5F7] sm:w-[436px]'>
         <div className='flex flex-col gap-[20px] px-[24px] py-[20px] sm:gap-[26px] sm:px-[32px] sm:py-[49px]'>
           <div className='text-secondary-500 hidden text-[24px] font-medium sm:block sm:text-[40px]'>
             {currentTime}
