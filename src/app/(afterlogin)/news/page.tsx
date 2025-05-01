@@ -23,7 +23,7 @@ export default function News() {
           <BoardTitle title='뉴스' />
         </div>
         <div className='flex w-full flex-1 flex-col gap-[20px] bg-[#F5F5F7] px-[32px] py-[20px]'>
-          <section className='scrollbar-hidden flex gap-[10px] overflow-x-scroll sm:justify-between'>
+          <section className='scrollbar-hidden flex gap-[10px] overflow-x-scroll sm:justify-start'>
             <Suspense fallback={<div>loading...</div>}>
               <NewsCategory
                 selectedCategory={category}
