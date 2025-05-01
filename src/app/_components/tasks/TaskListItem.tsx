@@ -22,8 +22,11 @@ function TaskListItem({ task }: TaskProps) {
   const editCheck = () => {
     const updatedTask = {
       ...task,
+      start_time: new Date(task.start_time).toISOString(),
+      end_time: new Date(task.end_time).toISOString(),
       is_completed: !task.is_completed,
     };
+
     editTaskMutate(updatedTask);
   };
 

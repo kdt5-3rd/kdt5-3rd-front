@@ -59,7 +59,7 @@ export default function Dashboard() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     const todayDate = new Date();
