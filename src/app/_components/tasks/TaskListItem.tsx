@@ -22,8 +22,11 @@ function TaskListItem({ task }: TaskProps) {
   const editCheck = () => {
     const updatedTask = {
       ...task,
+      start_time: new Date(task.start_time).toISOString(),
+      end_time: new Date(task.end_time).toISOString(),
       is_completed: !task.is_completed,
     };
+
     editTaskMutate(updatedTask);
   };
 
@@ -56,7 +59,7 @@ function TaskListItem({ task }: TaskProps) {
                 <span>{task.title}</span>
                 {task.from_place_name && (
                   <div className='mt-[10px] mb-[10px] flex text-[14px] font-medium sm:text-[16px]'>
-                    <div className='mr-[5px] h-[20px] w-[20px]'>
+                    <div className='mr-[5px] h-[20px] w-[20px] shrink-0'>
                       <Image
                         src={`${task.is_completed ? '/assets/location-light.png' : '/assets/location.png'}`}
                         width={20}
@@ -64,13 +67,13 @@ function TaskListItem({ task }: TaskProps) {
                         alt='location icon'
                       />
                     </div>
-                    <span className='mr-[6px]'>출발 : </span>
+                    <span className='mr-[6px] whitespace-nowrap'>출발 : </span>
                     {task.from_place_name}
                   </div>
                 )}
                 {task.place_name && (
                   <div className='mt-[10px] mb-[10px] flex text-[14px] font-medium sm:text-[16px]'>
-                    <div className='mr-[5px] h-[20px] w-[20px]'>
+                    <div className='mr-[5px] h-[20px] w-[20px] shrink-0'>
                       <Image
                         src={`${task.is_completed ? '/assets/location-light.png' : '/assets/location.png'}`}
                         width={20}
@@ -78,7 +81,7 @@ function TaskListItem({ task }: TaskProps) {
                         alt='location icon'
                       />
                     </div>
-                    <span className='mr-[6px]'>도착 : </span>
+                    <span className='mr-[6px] whitespace-nowrap'>도착 : </span>
                     {task.place_name}
                   </div>
                 )}

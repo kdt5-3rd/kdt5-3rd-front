@@ -13,6 +13,10 @@ import useGetLocationName from './_hooks/useGetLocationName';
 import useGetWeatherQuery from './_hooks/useGetWeatherQuery';
 import { getWeatherInfo } from './_utils/getWeatherInfo';
 import DashBoardTopNews from './(afterlogin)/news/DashBoardTopNews';
+import spinner from '@/assets/lottie/spinner.json';
+import dynamic from 'next/dynamic';
+
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
 export default function Dashboard() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,7 +27,11 @@ export default function Dashboard() {
   const router = useRouter();
   const { data: taskList = [] } = useGetTaskQuery('day');
   const { locationName } = useGetLocationName();
-  const { data: weatherData } = useGetWeatherQuery();
+  const {
+    data: weatherData,
+    geoLocationError,
+    isLoading,
+  } = useGetWeatherQuery();
 
   const getCurrentTime = () => {
     const currentDate = new Date();
@@ -51,7 +59,7 @@ export default function Dashboard() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     const todayDate = new Date();
@@ -71,15 +79,11 @@ export default function Dashboard() {
     setFinishedTaskCount(taskList.filter(task => task.is_completed).length);
   }, [taskList]);
 
-  if (!weatherData) {
-    return;
-  }
-
   return (
     <div className='text-secondary-500 flex h-full min-h-screen flex-col sm:min-w-[1440px] sm:flex-row'>
       <Navigation />
-      <div className='w-full min-w-[400px] bg-[#FAFAFA] sm:min-w-[752px]'>
-        <div className='p-[32px]'>
+      <div className='w-full min-w-[375px] bg-[#FAFAFA] sm:min-w-[752px]'>
+        <div className='p-[24px] sm:p-[32px]'>
           <div className='flex justify-between'>
             <div>
               <p className='text-secondary-500 text-[30px] font-semibold sm:text-[34px]'>
@@ -120,16 +124,32 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-      <div className='min-w-[400px] shrink-0 bg-[#F5F5F7] sm:w-[436px]'>
+      <div className='min-w-[375px] shrink-0 bg-[#F5F5F7] sm:w-[436px]'>
         <div className='flex flex-col gap-[20px] px-[24px] py-[20px] sm:gap-[26px] sm:px-[32px] sm:py-[49px]'>
           <div className='text-secondary-500 hidden text-[24px] font-medium sm:block sm:text-[40px]'>
             {currentTime}
           </div>
-          <CurrentWeather
-            location={locationName}
-            temperature={`${weatherData.current?.temperature}°`}
-            weatherInfo={getWeatherInfo(weatherData.current.weathercode)}
-          />
+          {!weatherData || isLoading ? (
+            <div className='border-primary-200 bg-primary-0 flex flex-col items-center justify-center gap-[10px] rounded-2xl border px-[30px] py-[26px]'>
+              {geoLocationError ? (
+                <div>
+                  날씨 정보를 불러올 수 없습니다.
+                  <br /> 위치 액세스를 허용해주세요
+                </div>
+              ) : (
+                <Lottie
+                  animationData={spinner}
+                  style={{ width: 50, height: 50 }}
+                />
+              )}
+            </div>
+          ) : (
+            <CurrentWeather
+              location={locationName}
+              temperature={`${weatherData.current?.temperature}°`}
+              weatherInfo={getWeatherInfo(weatherData.current.weathercode)}
+            />
+          )}
           <DashBoardTopNews />
         </div>
       </div>

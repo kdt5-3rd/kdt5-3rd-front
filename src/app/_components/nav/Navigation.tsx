@@ -70,7 +70,7 @@ function Navigation() {
 
   return (
     <>
-      <div className='text-secondary-500 bg-primary-0 border-primary-100 z-10 flex min-w-[400px] items-center justify-between border-b-1 px-[24px] py-[20px] sm:hidden'>
+      <div className='text-secondary-500 bg-primary-0 border-primary-100 z-10 flex min-w-[375px] items-center justify-between border-b-1 px-[24px] py-[20px] sm:hidden'>
         <span className='text-primary-900 text-[24px] font-bold'>똘개비</span>
         <button
           onClick={() => setIsOpen(prev => !prev)}
@@ -105,6 +105,21 @@ function Navigation() {
                   </span>
                 </Link>
               ))}
+              <Link
+                href={'/login'}
+                className={`${isLoggedIn ? 'bg-[url(/assets/logout.png)] hover:bg-[url(/assets/logout-dark.png)]' : 'bg-[url(/assets/login.png)] hover:bg-[url(/assets/login-dark.png)]'} text-secondary-300 hover:text-secondary-500 mx-[20px] flex cursor-pointer items-center bg-left bg-no-repeat py-[10px] hover:rounded-[10px]`}
+                onClick={isLoggedIn ? handleLogout : undefined}
+              >
+                {isLoggedIn ? (
+                  <span className='ml-[32px] text-[14px] font-semibold'>
+                    로그아웃
+                  </span>
+                ) : (
+                  <span className='ml-[32px] text-[14px] font-semibold'>
+                    로그인
+                  </span>
+                )}
+              </Link>
             </ul>
           </div>
         </>

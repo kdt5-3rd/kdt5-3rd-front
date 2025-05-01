@@ -40,13 +40,13 @@ export default function Daily() {
               totalTaskCount={taskList.length}
             />
           </BoardTitle>
-          <div className='flex h-full flex-col justify-between bg-[#FAFAFA] px-[32px] py-[24px] sm:flex-row'>
-            <div className='mr-[34px] mb-[20px] w-full min-w-[400px] sm:min-w-[752px]'>
+          <div className='flex h-full flex-col justify-between bg-[#FAFAFA] px-[20px] py-[24px] sm:flex-row sm:px-[32px]'>
+            <div className='mr-[34px] mb-[20px] w-full min-w-[335px] sm:min-w-[752px]'>
               <div className='mb-[18px] flex justify-between'>
                 <span className='text-[24px] font-semibold'>Todos</span>
                 <button
                   onClick={addTask}
-                  className='bg-primary-400 hover:bg-primary-500 h-[40px] w-[40px] cursor-pointer rounded-[10px] bg-[url(/assets/plus-small.png)] bg-center bg-no-repeat'
+                  className='bg-primary-400 hover:bg-primary-500 h-[30px] w-[30px] cursor-pointer rounded-[10px] bg-[url(/assets/plus-small.png)] bg-center bg-no-repeat sm:h-[40px] sm:w-[40px]'
                 ></button>
               </div>
               {taskList.length === 0 ? (
@@ -61,7 +61,7 @@ export default function Daily() {
                 </ul>
               )}
             </div>
-            <div className='min-w-[400px]'>
+            <div className='min-w-[335px]'>
               <div className='mb-[18px]'>
                 <span className='text-[20px] font-semibold sm:text-[24px]'>
                   Next moves
@@ -74,7 +74,7 @@ export default function Daily() {
                     return (
                       <div
                         key={task.task_id}
-                        className='bg-primary-0 border-primary-200 w-full rounded-[10px] border-1 px-[64px] py-[23px]'
+                        className='bg-primary-0 border-primary-200 w-full rounded-[10px] border-1 px-[34px] py-[23px] sm:px-[64px]'
                       >
                         {task.from_place_name && (
                           <RouteInfo label='출발' task={task} />

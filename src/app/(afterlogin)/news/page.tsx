@@ -18,12 +18,12 @@ export default function News() {
   return (
     <div className='text-secondary-500 flex h-dvh min-h-screen flex-col sm:min-w-[1440px] sm:flex-row'>
       <Navigation />
-      <div className='flex h-full w-dvw min-w-[400px] flex-col sm:min-w-[752px]'>
+      <div className='flex h-full w-dvw min-w-[375px] flex-col sm:min-w-[752px]'>
         <div className='bg-primary-0 flex flex-col'>
           <BoardTitle title='뉴스' />
         </div>
         <div className='flex w-full flex-1 flex-col gap-[20px] bg-[#F5F5F7] px-[32px] py-[20px]'>
-          <section className='scrollbar-hidden flex gap-[10px] overflow-x-scroll sm:justify-between'>
+          <section className='scrollbar-hidden flex gap-[10px] overflow-x-scroll sm:justify-start'>
             <Suspense fallback={<div>loading...</div>}>
               <NewsCategory
                 selectedCategory={category}

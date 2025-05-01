@@ -24,7 +24,6 @@ import isEqual from 'lodash/isEqual';
 import useAddTaskMutation from '@/app/_hooks/useAddTaskMutation';
 import useEditTaskMutation from '@/app/_hooks/useEditTaskMutation';
 import useDeleteTaskMutation from '@/app/_hooks/useDeleteTaskMutation';
-import { toZonedTime } from 'date-fns-tz';
 import { GeoSearchResult } from '@/app/_types/location';
 
 export type ModalMode = 'add' | 'edit' | 'detail';
@@ -77,10 +76,8 @@ const initialTask = {
 const normalizeTaskDate = (task: TaskPayload | TaskCalendar): TaskCalendar => {
   if (task.start_time instanceof Date) return task as TaskCalendar;
 
-  const start_time = new Date(toZonedTime(task.start_time, 'UTC'));
-  const end_time = task.end_time
-    ? new Date(toZonedTime(task.end_time, 'UTC'))
-    : start_time;
+  const start_time = new Date(task.start_time);
+  const end_time = task.end_time ? new Date(task.end_time) : start_time;
 
   return { ...task, start_time, end_time };
 };
@@ -217,7 +214,7 @@ function TaskModal({ mode, isOpen, setIsOpen, task, type }: TaskModalProps) {
 
   return (
     isOpen && (
-      <div className='fixed inset-0 z-50 flex h-dvh w-dvw items-center justify-center bg-[rgba(84,87,122,0.3)]'>
+      <div className='fixed inset-0 z-50 flex min-h-dvh w-dvw items-center justify-center bg-[rgba(84,87,122,0.3)]'>
         <div className='bg-primary-0 w-[80%] min-w-[335px] rounded-[10px] px-[30px] py-[20px] shadow-[0_0_30px_0_rgba(84,87,122,0.7)] *:w-full sm:w-[708px] sm:px-[40px] sm:py-[30px]'>
           <div className='mb-[30px] flex justify-between'>
             <p className='text-[24px] font-semibold sm:text-3xl'>
