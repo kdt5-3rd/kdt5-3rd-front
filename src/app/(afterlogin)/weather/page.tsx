@@ -30,7 +30,7 @@ export default function Weather() {
   return (
     <div className='text-secondary-500 inline-flex h-full min-h-screen w-full flex-col bg-[#FAFAFA] sm:flex-row'>
       <Navigation />
-      <div className='relative flex h-dvh w-full flex-col sm:min-w-[752px]'>
+      <div className='relative flex min-h-dvh w-full flex-col sm:min-w-[752px]'>
         <div className='bg-primary-0 flex flex-col'>
           <BoardTitle title='날씨'></BoardTitle>
         </div>
